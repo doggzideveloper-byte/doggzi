@@ -18,7 +18,7 @@
 .ghostLink:focus-visible { outline: 3px solid var(--dz-ink); outline-offset: 4px; }
 .art { position: relative; min-width: 0; }
 .fanAnchor { position: absolute; left: 50%; top: 0; width: 0; height: 0; z-index: 0; }
-.phone { position: absolute; left: 0; top: 0; width: clamp(116px, 12vw, 150px); aspect-ratio: 300 / 650; translate: -50% 0; background: #fff; border: var(--stroke); border-radius: 22px; box-shadow: var(--shadow-sticker); overflow: hidden; transform-origin: 50% 100%; will-change: transform; }
+.phone { position: absolute; left: 0; top: 0; width: clamp(116px, 12vw, 150px); aspect-ratio: 300 / 650; translate: -50% 0; background: var(--screen-bg); border: var(--stroke); border-radius: 22px; box-shadow: var(--shadow-sticker); overflow: hidden; transform-origin: 50% 100%; will-change: transform; }
 .phone img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .slide { position: absolute; inset: 0; }
 .bowl { position: relative; z-index: 1; background: var(--dz-paper); border: var(--stroke); border-radius: var(--r-lg); box-shadow: 6px 6px 0 var(--dz-ink); padding: 16px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; cursor: pointer; outline: none; }
@@ -35,7 +35,7 @@
 
 /* Kibble slider */
 .slider { position: relative; border: var(--stroke); border-radius: var(--r-lg); box-shadow: 6px 6px 0 var(--dz-ink); overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-.kib { background-color: #CBC4B6; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.kib { background-color: var(--dz-kibble); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .layer { padding: clamp(16px, 3vw, 28px) clamp(12px, 3vw, 28px); display: flex; flex-direction: column; gap: 12px; }
 .fresh { position: absolute; inset: 0; background: var(--dz-paper); }
 .sideHead { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 3.4vw, 2.2rem); letter-spacing: .04em; text-transform: uppercase; }
@@ -104,13 +104,13 @@
 .stage { position: relative; height: min(64vh, 580px); perspective: 1400px; display: flex; align-items: center; justify-content: center; }
 .narrow .stage { height: min(52vh, 440px); }
 .tilt { position: relative; height: 100%; aspect-ratio: 300 / 650; transform-style: preserve-3d; }
-.cover { position: absolute; inset: 0; padding: 0; border: var(--stroke); border-radius: var(--r-lg); background: #fff; overflow: hidden; box-shadow: 6px 6px 0 var(--dz-ink); cursor: pointer; transition: transform 700ms var(--ease-out), opacity 700ms var(--ease-out); }
+.cover { position: absolute; inset: 0; padding: 0; border: var(--stroke); border-radius: var(--r-lg); background: var(--screen-bg); overflow: hidden; box-shadow: 6px 6px 0 var(--dz-ink); cursor: pointer; transition: transform 700ms var(--ease-out), opacity 700ms var(--ease-out); }
 .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .orbitLayer { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
 .orbit { position: absolute; left: 50%; top: 50%; transition: opacity var(--dur-base) var(--ease-out); }
 .orbitPill { display: block; white-space: nowrap; font-family: var(--font-accent); font-weight: 700; font-size: clamp(12px, 1.3vw, 15px); letter-spacing: .08em; text-transform: uppercase; padding: 5px 12px; border: var(--stroke); border-radius: var(--r-pill); box-shadow: 3px 3px 0 var(--dz-ink); }
 .grid6 { padding-top: 24px; padding-bottom: clamp(56px, 8vw, 104px); display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 24px; }
-.gridShot { padding: 0; border: var(--stroke); border-radius: 22px; background: #fff; overflow: hidden; box-shadow: var(--shadow-sticker); cursor: zoom-in; display: block; width: 100%; }
+.gridShot { padding: 0; border: var(--stroke); border-radius: 22px; background: var(--screen-bg); overflow: hidden; box-shadow: var(--shadow-sticker); cursor: zoom-in; display: block; width: 100%; }
 .gridShot img { width: 100%; aspect-ratio: 300 / 650; object-fit: cover; display: block; }
 
 /* App wall */
@@ -118,7 +118,7 @@
 .wallPlane { height: clamp(440px, 50vw, 600px); perspective: 1600px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .wallTilt { transform: rotateX(20deg) rotateZ(-8deg); display: flex; flex-direction: column; gap: 24px; width: max-content; }
 .wallRow { display: flex; gap: 24px; width: max-content; will-change: transform; }
-.wallShot { flex: none; width: clamp(140px, 15vw, 190px); aspect-ratio: 300 / 650; padding: 0; border: 2.5px solid var(--dz-cream); border-radius: 22px; background: #fff; overflow: hidden; cursor: zoom-in; transition: transform var(--dur-fast) var(--ease-bouncy); }
+.wallShot { flex: none; width: clamp(140px, 15vw, 190px); aspect-ratio: 300 / 650; padding: 0; border: 2.5px solid var(--dz-cream); border-radius: 22px; background: var(--screen-bg); overflow: hidden; cursor: zoom-in; transition: transform var(--dur-fast) var(--ease-bouncy); }
 .wallShot:hover { transform: translateY(-6px); }
 .wallShot:focus-visible { outline: 3px solid var(--dz-pink); outline-offset: 4px; }
 .wallShot img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -127,7 +127,7 @@
 .lb { position: fixed; inset: 0; z-index: 70; background: rgba(20, 18, 16, .94); display: flex; align-items: center; justify-content: center; padding: 20px; touch-action: pan-y; }
 .lbBtn { flex: none; width: 52px; height: 52px; border-radius: var(--r-pill); background: var(--dz-paper); border: var(--stroke); box-shadow: 3px 3px 0 var(--dz-orange); font: 600 22px/1 var(--font-body); color: var(--dz-ink); cursor: pointer; }
 .lbBtn:focus-visible { outline: 3px solid var(--dz-pink); outline-offset: 3px; }
-.lbImg { height: min(76vh, 650px); max-width: 62vw; aspect-ratio: 300 / 650; object-fit: cover; display: block; background: #fff; border: 2.5px solid var(--dz-cream); border-radius: var(--r-lg); }
+.lbImg { height: min(76vh, 650px); max-width: 62vw; aspect-ratio: 300 / 650; object-fit: cover; display: block; background: var(--screen-bg); border: 2.5px solid var(--dz-cream); border-radius: var(--r-lg); }
 .lbCap { font-family: var(--font-accent); font-weight: 700; font-size: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--dz-cream); text-align: center; }
 
 /* Route */
@@ -139,7 +139,7 @@
 /* Switching */
 .days { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 16px; }
 .day { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 18px 16px 20px; background: var(--dz-cream); border: var(--stroke); border-radius: var(--r-lg); box-shadow: var(--shadow-sticker); }
-.miniBowl { width: 100%; height: 70px; display: flex; overflow: hidden; border: var(--stroke); border-radius: 0 0 50% 50% / 0 0 100% 100%; background-color: #CBC4B6; background-image: radial-gradient(circle at 30% 40%, rgba(20, 18, 16, .35) 3px, transparent 3.5px), radial-gradient(circle at 70% 70%, rgba(20, 18, 16, .35) 3px, transparent 3.5px); background-size: 18px 18px; }
+.miniBowl { width: 100%; height: 70px; display: flex; overflow: hidden; border: var(--stroke); border-radius: 0 0 50% 50% / 0 0 100% 100%; background-color: var(--dz-kibble); background-image: radial-gradient(circle at 30% 40%, rgba(20, 18, 16, .35) 3px, transparent 3.5px), radial-gradient(circle at 70% 70%, rgba(20, 18, 16, .35) 3px, transparent 3.5px); background-size: 18px 18px; }
 .miniFoot { width: 42%; height: 10px; background: var(--dz-green-700); border: var(--stroke); border-top: 0; border-radius: 0 0 6px 6px; }
 
 /* Download + guide */

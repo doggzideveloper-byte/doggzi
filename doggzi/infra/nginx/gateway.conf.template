@@ -1,0 +1,36 @@
+# Doggzi gateway. The frontend only ever talks to /api/<service>/v1/... through here.
+# Rendered by the nginx image's envsubst (only the ${...UPSTREAM} variables below are substituted).
+
+map $http_user_agent $dz_app_store {
+    default                    desktop;
+    ~*(iphone|ipad|ipod)       ios;
+    ~*android                  android;
+}
+
+server {
+    listen 80;
+    server_name _;
+    client_max_body_size 1m;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_http_version 1.1;
+
+    location /api/pet-profile/ { proxy_pass http://${PET_PROFILE_UPSTREAM}; }
+    location /api/booking/     { proxy_pass http://${BOOKING_UPSTREAM}; }
+    location /api/auth/        { proxy_pass http://${AUTH_UPSTREAM}; }
+    # notification is internal only (auth → notification); never exposed publicly.
+    location /api/notification/ { return 404; }
+    location /api/             { return 404; }
+
+    # Smart Download QR target: send phones to the right store, desktops to the download section.
+    location = /app {
+        if ($dz_app_store = ios)     { return 302 https://apps.apple.com/in/app/doggzi/id6757533673; }
+        if ($dz_app_store = android) { return 302 https://play.google.com/store/apps/details?id=com.doggzi.doggzi&hl=en_IN&referrer=utm_source%3Dweb%26utm_medium%3Dqr; }
+        return 302 /fresh-food#download;
+    }
+
+    location / { proxy_pass http://${WEB_UPSTREAM}; }
+}

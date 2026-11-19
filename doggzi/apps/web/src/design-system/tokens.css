@@ -18,6 +18,10 @@
   --dz-paper: #FFFBF2;
   --dz-ink: #141210;
   --dz-ink-60: rgba(20, 18, 16, 0.6);
+  --dz-green-100: #CDEFD9;   /* ticked / selected-on-paper */
+  --dz-disabled: #E4DDCB;    /* full slots, disabled chips */
+  --dz-kibble: #CBC4B6;      /* the dull "kibble" side of comparisons */
+  --screen-bg: #FFFFFF;      /* behind app screenshots */
 
   /* Section colours */
   --section-food: var(--dz-orange);

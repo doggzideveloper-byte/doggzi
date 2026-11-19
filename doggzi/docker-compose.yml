@@ -1,0 +1,75 @@
+# Local stack: `cp .env.example .env`, fill in the secrets, then `docker compose up --build`.
+# Open http://localhost:8080 (the gateway). Mongo arrives with the CCK/Marketplace service.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-doggzi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-doggzi}"]
+      interval: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+
+  pet-profile:
+    build: ./services/pet-profile
+    environment:
+      DATABASE_URL: "postgresql+psycopg://${POSTGRES_USER:-doggzi}:${POSTGRES_PASSWORD}@postgres:5432/pet_profile"
+      REDIS_URL: redis://redis:6379/0
+      GUEST_JWT_SECRET: ${GUEST_JWT_SECRET:?set GUEST_JWT_SECRET in .env}
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?set AUTH_JWT_SECRET in .env}
+    depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_started } }
+
+  notification:
+    build: ./services/notification
+    environment:
+      SMS_PROVIDER: ${SMS_PROVIDER:-console}
+      SMS_PROVIDER_API_KEY: ${SMS_PROVIDER_API_KEY:-}
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:?set INTERNAL_TOKEN in .env}
+
+  auth:
+    build: ./services/auth
+    environment:
+      DATABASE_URL: "postgresql+psycopg://${POSTGRES_USER:-doggzi}:${POSTGRES_PASSWORD}@postgres:5432/auth"
+      REDIS_URL: redis://redis:6379/1
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      OTP_DEV_ECHO: ${OTP_DEV_ECHO:-true}
+      NOTIFICATION_URL: http://notification:8000
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN}
+      ADMIN_PHONES: ${ADMIN_PHONES:-}
+    depends_on: { postgres: { condition: service_healthy }, notification: { condition: service_started } }
+
+  booking:
+    build: ./services/booking
+    environment:
+      DATABASE_URL: "postgresql+psycopg://${POSTGRES_USER:-doggzi}:${POSTGRES_PASSWORD}@postgres:5432/booking"
+      REDIS_URL: redis://redis:6379/2
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      MOCK_AVAILABILITY: "true"
+    depends_on: { postgres: { condition: service_healthy } }
+
+  web:
+    build: ./apps/web
+    environment: {}
+
+  gateway:
+    image: nginx:1.27-alpine
+    ports: ["8080:80"]
+    environment:
+      PET_PROFILE_UPSTREAM: pet-profile:8000
+      BOOKING_UPSTREAM: booking:8000
+      AUTH_UPSTREAM: auth:8000
+      WEB_UPSTREAM: web:80
+    volumes:
+      - ./infra/nginx/gateway.conf.template:/etc/nginx/templates/default.conf.template:ro
+    depends_on: [web, pet-profile, booking, auth]
+
+volumes:
+  pgdata:
