@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createStore } from "./store";
 import { useTweaks } from "./tweaks";
 import type { Activity, Allergy, LifeStage, PetType } from "./api/petProfile";
@@ -44,10 +45,18 @@ export function usePet(): { pet: Passport | null; isDemo: boolean } {
 /** One-shot flag for "came here from page X" (used for welcome-back copy and the orange handoff). */
 export const from = {
   set: (v: string) => { try { sessionStorage.setItem("dz.from", v); } catch { /* ignore */ } },
-  take: (): string | null => {
-    try { const v = sessionStorage.getItem("dz.from"); sessionStorage.removeItem("dz.from"); return v; } catch { return null; }
+  /** Read without clearing (safe in render / StrictMode double-invocation); pair with `clear` in an effect. */
+  peek: (): string | null => {
+    try { return sessionStorage.getItem("dz.from"); } catch { return null; }
   },
-};
+  clear: () => { try { sessionStorage.removeItem("dz.from"); } catch { /* ignore */ } },
+}
+/** Read the one-shot "from" flag once per mount, clearing it after the first commit. */
+export function useFrom(): string | null {
+  const [v] = useState(from.peek);
+  useEffect(() => from.clear(), []);
+  return v;
+}
 
 export const SMALL_BREEDS = new Set(["Beagle", "Shih Tzu", "Pug", "Pomeranian", "Lhasa Apso", "Dachshund", "French Bulldog", "Maltese", "Chihuahua", "Cavalier King Charles Spaniel", "Bichon Frise", "Yorkshire Terrier", "Indian Spitz", "Cocker Spaniel"]);
 export type AvatarVariant = "dog" | "puppy" | "cat";

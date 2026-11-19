@@ -1,0 +1,8 @@
+.wrap { perspective: 1200px; transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.tilt { height: 100%; transform-style: preserve-3d; transition: transform var(--dur-fast) var(--ease-out); }
+.flip { position: relative; height: 100%; transform-style: preserve-3d; transition: transform 600ms var(--ease-out); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: opacity 150ms; border: var(--stroke); border-radius: var(--r-lg); }
+.front { box-shadow: var(--sh, var(--shadow-sticker)); cursor: pointer; text-align: left; }
+.front:focus-visible { outline: 3px solid var(--dz-ink); outline-offset: 4px; }
+.back { transform: rotateY(180deg); background: var(--dz-paper); box-shadow: var(--shadow-sticker); display: flex; flex-direction: column; overflow: hidden; cursor: pointer; }
+.reduced .back { transform: none; }

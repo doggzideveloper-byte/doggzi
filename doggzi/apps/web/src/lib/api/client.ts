@@ -44,4 +44,4 @@ export async function api<T>(service: string, path: string, opts: RequestOpts = 
 }
 
 /** True when the error means the backend isn't there at all (dev without docker compose, offline). */
-export const isUnreachable = (e: unknown) => e instanceof ApiError && (e.status === 0 || e.status === 502 || e.status === 503 || e.status === 504 || (e.status === 404 && typeof e.detail === "string" && /<html/i.test(e.detail)));
+export const isUnreachable = (e: unknown) => e instanceof ApiError && (e.status === 0 || e.status === 502 || e.status === 503 || e.status === 504 || (e.status === 404 && typeof e.detail === "string" && /<html/i.test(e.detail)) || (e.status === 500 && !e.detail));

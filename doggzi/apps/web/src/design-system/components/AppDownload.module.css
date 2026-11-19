@@ -1,0 +1,16 @@
+.root { display: flex; flex-direction: column; gap: 16px; }
+.badgeLink { display: flex; border-radius: var(--r-sm); transition: transform var(--dur-fast) var(--ease-bouncy); }
+.badgeLink:hover { transform: translateY(-2px); }
+.badgeLink:focus-visible { outline: 3px solid var(--dz-ink); outline-offset: 4px; }
+.badgeLink img { width: auto; display: block; }
+.desk { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.badges { display: flex; align-items: flex-start; gap: 12px; }
+.qrBox { display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; background: var(--dz-paper); border: var(--stroke); border-radius: var(--r-md); box-shadow: var(--shadow-sticker); color: var(--dz-ink); }
+.qr { width: 88px; height: 88px; background: var(--dz-paper); border-radius: var(--r-sm); }
+.scan { font-family: var(--font-accent); font-weight: 700; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
+.form { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 16px; background: var(--dz-paper); border: var(--stroke); border-radius: var(--r-md); box-shadow: var(--shadow-sticker); color: var(--dz-ink); }
+.field { flex: 1 1 180px; display: flex; align-items: center; height: 48px; border: var(--stroke); border-radius: var(--r-pill); background: var(--dz-cream); overflow: hidden; }
+.field:focus-within { box-shadow: 3px 3px 0 var(--dz-orange); }
+.field input { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; font: 500 16px var(--font-body); color: var(--dz-ink); outline: none; padding-right: 14px; }
+.err { margin: 0; font-size: 14px; font-weight: 500; color: var(--danger); }
+.note { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-75); }
