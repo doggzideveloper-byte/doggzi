@@ -1,51 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, ButtonLink, FAQ, Header, PassportChip, SiteFooter, Testimonials } from "@/design-system/components";
-import { css } from "@/design-system/motion";
+import { Badge, ButtonLink, FAQ, Header, PassportChip, SiteFooter, Testimonials, useSectionReveals } from "@/design-system/components";
 import { VIDEOS } from "@/content/explore-content";
 import { useNarrow } from "@/lib/device";
 import { possessive } from "@/lib/format";
 import { usePet } from "@/lib/passport";
-import { isReduced } from "@/lib/reducedMotion";
 import { BagIcon, BowlIcon, BrushIcon } from "@/features/choose/icons";
 import { COMPARE } from "./compare";
 import s from "./ExplorePage.module.css";
-
-/** Reveal each [data-reveal] section's [data-ri] children once, plus the how-it-works connector line. */
-function useSectionReveals(root: React.RefObject<HTMLElement>, narrow: boolean) {
-  const narrowRef = useRef(narrow);
-  narrowRef.current = narrow;
-  useEffect(() => {
-    const r = root.current;
-    if (!r || isReduced()) return;
-    const secs = [...r.querySelectorAll<HTMLElement>("[data-reveal]")];
-    const io = new IntersectionObserver(
-      (es) =>
-        es.forEach((e) => {
-          if (!e.isIntersecting) return;
-          io.unobserve(e.target);
-          e.target.querySelectorAll<HTMLElement>("[data-ri]").forEach((el, i) => {
-            el.style.opacity = "";
-            el.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 550, delay: Math.min(i, 8) * 60, easing: css.easeOut, fill: "backwards" });
-          });
-          const line = e.target.querySelector<HTMLElement>("[data-line]");
-          if (line) {
-            const ax = narrowRef.current ? "scaleY" : "scaleX";
-            line.style.transform = "";
-            line.animate([{ transform: `${ax}(0)` }, { transform: `${ax}(1)` }], { duration: 1100, delay: 200, easing: css.easeOut, fill: "backwards" });
-          }
-        }),
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
-    );
-    secs.forEach((sec) => {
-      sec.querySelectorAll<HTMLElement>("[data-ri]").forEach((el) => (el.style.opacity = "0"));
-      const line = sec.querySelector<HTMLElement>("[data-line]");
-      if (line) line.style.transform = narrowRef.current ? "scaleY(0)" : "scaleX(0)";
-      io.observe(sec);
-    });
-    return () => io.disconnect();
-  }, [root]);
-}
 
 /** /explore: for visitors who want to look around before making a passport. */
 export default function ExplorePage() {
@@ -56,7 +18,7 @@ export default function ExplorePage() {
   const [playing, setPlaying] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
   const [finalInView, setFinalInView] = useState(false);
-  useSectionReveals(root, narrow);
+  useSectionReveals(root, { narrow });
 
   // Sticky CTA appears after 40% scroll and hides while the orange closing band is on screen.
   useEffect(() => {

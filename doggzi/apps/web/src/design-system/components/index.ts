@@ -13,3 +13,4 @@ export * from "./HighlightName";
 export * from "./useReveal";
 export * from "./Toast";
 export * from "./FlipCard";
+export * from "./useSectionReveals";
