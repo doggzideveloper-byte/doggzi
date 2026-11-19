@@ -1,0 +1,3 @@
+.frame { flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-pill); border-style: solid; border-color: var(--dz-ink); overflow: hidden; }
+.art { width: 100%; height: 100%; display: block; }
+.ph { font-family: var(--font-accent); font-weight: 700; color: rgba(20, 18, 16, 0.35); }

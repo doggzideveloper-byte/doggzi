@@ -1,0 +1,26 @@
+.btn {
+  --bg: var(--dz-orange); --fg: var(--dz-paper); --sh: var(--dz-ink);
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: 52px; padding: 0 24px; font: 600 16px var(--font-body); color: var(--fg); background: var(--bg);
+  border: var(--stroke); border-radius: var(--r-pill); box-shadow: 4px 4px 0 var(--sh);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: transform var(--dur-fast) var(--ease-bouncy), box-shadow var(--dur-fast) var(--ease-bouncy), background var(--dur-fast);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 0 var(--sh); color: var(--fg); }
+.btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--sh); }
+.btn:focus-visible { outline: 3px solid var(--dz-ink); outline-offset: 4px; }
+.btn:disabled, .btn[aria-disabled="true"] { cursor: default; opacity: .7; transform: none; box-shadow: 4px 4px 0 var(--sh); }
+.primary { --bg: var(--dz-orange); --fg: var(--dz-paper); }
+.secondary { --bg: var(--dz-paper); --fg: var(--dz-ink); }
+.secondary:focus-visible, .ghost:focus-visible { outline-color: var(--dz-orange); }
+.green { --bg: var(--dz-green); --fg: var(--dz-paper); }
+.greenInk { --bg: var(--dz-green); --fg: var(--dz-ink); }
+.pink { --bg: var(--dz-pink); --fg: var(--dz-ink); }
+.ink { --bg: var(--dz-ink); --fg: var(--dz-cream); --sh: var(--dz-paper); }
+.ghost { --bg: transparent; --fg: var(--dz-ink); box-shadow: none; }
+.ghost:hover { background: var(--dz-paper); box-shadow: 4px 4px 0 var(--sh); }
+.ghost:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--sh); }
+.sm { height: 44px; padding: 0 18px; font-size: 15px; box-shadow: 3px 3px 0 var(--sh); }
+.md { height: 52px; }
+.lg { height: 62px; padding: 0 28px; font-size: 19px; }
+.block { width: 100%; }
