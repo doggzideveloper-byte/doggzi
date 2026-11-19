@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<footer ref="{{ rootRef }}" style="position:relative;margin-top:clamp(120px,14vw,170px);color:#F2E7CB;font-family:Poppins,system-ui,sans-serif">
+  <div ref="{{ peekRef }}" aria-hidden="true" style="position:absolute;z-index:0;right:clamp(16px,8vw,140px);bottom:calc(100% - 64px);width:clamp(210px,26vw,320px);aspect-ratio:864/492;pointer-events:auto"></div>
+  <div style="position:relative;z-index:1">
+    <div aria-hidden="true" style="height:32px;margin-bottom:-1px;background:radial-gradient(circle at 50% 100%, #141210 31px, transparent 32px) 0 0 / 56px 32px repeat-x"></div>
+    <div style="background-color:#141210;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='%23F2E7CB' fill-opacity='0.05'%3E%3Cg transform='translate(30 36) rotate(-18)'%3E%3Cellipse cx='0' cy='8' rx='9' ry='7'/%3E%3Cellipse cx='-9' cy='-3' rx='3.4' ry='4.4'/%3E%3Cellipse cx='-3' cy='-9' rx='3.4' ry='4.4'/%3E%3Cellipse cx='4' cy='-9' rx='3.4' ry='4.4'/%3E%3Cellipse cx='10' cy='-3' rx='3.4' ry='4.4'/%3E%3C/g%3E%3Cg transform='translate(100 100) rotate(22)'%3E%3Cellipse cx='0' cy='8' rx='9' ry='7'/%3E%3Cellipse cx='-9' cy='-3' rx='3.4' ry='4.4'/%3E%3Cellipse cx='-3' cy='-9' rx='3.4' ry='4.4'/%3E%3Cellipse cx='4' cy='-9' rx='3.4' ry='4.4'/%3E%3Cellipse cx='10' cy='-3' rx='3.4' ry='4.4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;)">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(40px,5vw,64px) 20px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:{{ colGap }}">
+
+        <div style="display:flex;flex-direction:column;gap:14px;padding-bottom:{{ brandPad }}">
+          <a href="Pet Passport.dc.html" aria-label="Doggzi home" style="display:block;width:min(100%,230px)">
+            <img src="assets/doggzi-wordmark.svg" alt="Doggzi" style="width:100%;display:block">
+          </a>
+          <p style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:#F65322">Not just food. Their food.</p>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(242,231,203,.75)">{{ serviceArea }}</p>
+        </div>
+
+        <sc-for list="{{ cols }}" as="col" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;border-top:{{ col.rule }}">
+            <button type="button" onClick="{{ col.toggle }}" aria-expanded="{{ col.expanded }}" disabled="{{ wide }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:{{ col.headH }};padding:0;background:transparent;border:0;color:#F2E7CB;cursor:{{ col.cursor }};text-align:left;font-family:Atma,system-ui;font-weight:700;font-size:16px;letter-spacing:.14em;text-transform:uppercase" style-focus="outline:3px solid #F65322;outline-offset:3px">
+              <span>{{ col.title }}</span>
+              <span aria-hidden="true" style="display:{{ col.chevDisplay }};font-family:Poppins,system-ui;font-weight:500;font-size:24px;line-height:1;transform:rotate({{ col.rot }});transition:transform 350ms cubic-bezier(.22,1,.36,1)">+</span>
+            </button>
+            <ul style="display:{{ col.bodyDisplay }};margin:0;padding:{{ col.listPad }};list-style:none;flex-direction:column;gap:10px">
+              <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+                <li><a href="{{ l.href }}" style="font-size:15px;color:rgba(242,231,203,.85);text-decoration:none" style-hover="color:#F989EF;text-decoration:underline">{{ l.label }}</a></li>
+              </sc-for>
+              <sc-if value="{{ col.isHelp }}" hint-placeholder-val="{{ false }}">
+                <li style="display:flex;flex-direction:column;gap:12px">
+                  <a href="{{ waHref }}" target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;gap:8px;height:44px;padding:0 18px;font-weight:600;font-size:15px;color:#141210;text-decoration:none;background:#09A460;border:2.5px solid #F2E7CB;border-radius:999px;box-shadow:3px 3px 0 #F2E7CB;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:5px 5px 0 #F2E7CB;color:#141210" style-active="transform:translate(3px,3px);box-shadow:0 0 0 #F2E7CB">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px" fill="none" stroke="#141210" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.2z"></path><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8c-1-.4-1.9-1.3-2.3-2.3l.8-1-1-2z"></path></svg>
+                    WhatsApp us
+                  </a>
+                  <a href="{{ mailHref }}" style="font-size:15px;color:rgba(242,231,203,.85);text-decoration:none" style-hover="color:#F989EF;text-decoration:underline">{{ email }}</a>
+                  <a href="{{ telHref }}" style="font-size:15px;color:rgba(242,231,203,.85);text-decoration:none" style-hover="color:#F989EF;text-decoration:underline">{{ phone }}</a>
+                </li>
+              </sc-if>
+            </ul>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="max-width:1200px;margin:0 auto;padding:28px 20px 32px">
+        <div style="border-top:1.5px solid rgba(242,231,203,.2);padding-top:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:14px;color:rgba(242,231,203,.7)">
+            <span>© {{ year }} {{ company }}</span>
+            <span>{{ city }}</span>
+            <a href="#" style="color:rgba(242,231,203,.85);text-decoration:none" style-hover="color:#F989EF;text-decoration:underline">Privacy</a>
+            <a href="#" style="color:rgba(242,231,203,.85);text-decoration:none" style-hover="color:#F989EF;text-decoration:underline">Terms</a>
+            <a href="#" style="color:rgba(242,231,203,.85);text-decoration:none" style-hover="color:#F989EF;text-decoration:underline">Refunds</a>
+            <sc-if value="{{ fssai }}" hint-placeholder-val="{{ false }}"><span>FSSAI Lic. No. {{ fssai }}</span></sc-if>
+          </div>
+          <div style="display:flex;gap:10px">
+            <a href="{{ ig }}" target="_blank" rel="noopener" aria-label="Doggzi on Instagram" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(242,231,203,.5);border-radius:999px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),border-color 180ms" style-hover="transform:translateY(-2px);border-color:#F989EF">
+              <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px" fill="none" stroke="#F2E7CB" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r=".6" fill="#F2E7CB"></circle></svg>
+            </a>
+            <a href="{{ yt }}" target="_blank" rel="noopener" aria-label="Doggzi on YouTube" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(242,231,203,.5);border-radius:999px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),border-color 180ms" style-hover="transform:translateY(-2px);border-color:#F989EF">
+              <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px" fill="none" stroke="#F2E7CB" stroke-width="2" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="4"></rect><path d="M10 9.2v5.6l4.8-2.8z" fill="#F2E7CB"></path></svg>
+            </a>
+            <a href="{{ li }}" target="_blank" rel="noopener" aria-label="Doggzi on LinkedIn" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(242,231,203,.5);border-radius:999px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),border-color 180ms" style-hover="transform:translateY(-2px);border-color:#F989EF">
+              <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px" fill="none" stroke="#F2E7CB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"></rect><path d="M8 10.5V16M8 7.8v.1M11.5 16v-5.5M11.5 13c0-1.5 1-2.5 2.3-2.5S16 11.3 16 13v3"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:620},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const DEFAULT_SITE = { company: 'Doggzi Private Limited', city: 'Gurgaon, Haryana', serviceArea: 'Serving dogs & cats across Delhi NCR', whatsapp: '', email: '', phone: '', fssai: '', social: {} };
+const COLS = [
+  { key: 'explore', title: 'Explore', links: [['Fresh Food', 'Choose.dc.html'], ['Services', 'Choose.dc.html'], ['Marketplace', 'Choose.dc.html'], ['How it works', 'Explore.dc.html#how-it-works'], ['FAQ', 'Explore.dc.html#faq']] },
+  { key: 'company', title: 'Company', links: [['About', '#'], ['Careers', '#'], ['Partner with us', '#'], ['Contact', '#']] },
+  { key: 'help', title: 'Get help', links: [] },
+];
+
+class Component extends DCLogic {
+  state = { site: DEFAULT_SITE, narrow: false, open: null };
+  rootRef = React.createRef(); peekRef = React.createRef();
+  groups = {};
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() {
+    import(new URL('content/site-config.js', document.baseURI).href).then(m => this.setState({ site: { ...DEFAULT_SITE, ...m.SITE } })).catch(() => {});
+    const root = this.rootRef.current;
+    this.ro = new ResizeObserver(([e]) => { const n = e.contentRect.width < 760; if (n !== this.state.narrow) this.setState({ narrow: n }); });
+    this.ro.observe(root);
+    fetch('assets/pets-trio.svg').then(r => r.text()).then(t => this.injectPets(t));
+  }
+  componentWillUnmount() { this.ro && this.ro.disconnect(); this.io && this.io.disconnect(); }
+
+  injectPets(text) {
+    const host = this.peekRef.current; if (!host) return;
+    host.innerHTML = text;
+    const svg = host.querySelector('svg');
+    svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%'); svg.style.display = 'block'; svg.style.overflow = 'visible';
+    svg.querySelectorAll('[id]').forEach(n => { n.setAttribute('data-id', n.id); n.removeAttribute('id'); });
+    const wrap = (n, origin) => { const w = document.createElementNS('http://www.w3.org/2000/svg', 'g'); n.parentNode.insertBefore(w, n); w.appendChild(n); w.style.transformBox = 'fill-box'; w.style.transformOrigin = origin; return w; };
+    ['puppy', 'lab', 'cat'].forEach(k => { this.groups[k] = wrap(svg.querySelector(`[data-id="${k}"]`), '50% 100%'); });
+    this.tail = wrap(svg.querySelector('[data-id="path70"]'), '0% 100%');
+    ['puppy', 'lab'].forEach(k => {
+      const g = this.groups[k]; g.style.cursor = 'pointer';
+      const hop = () => { if (this.reduced() || (g._h && g._h.playState === 'running')) return; g._h = g.animate([{ transform: 'none' }, { transform: 'translateY(-14px)', offset: 0.4 }, { transform: 'none', offset: 0.75 }, { transform: 'translateY(-3px)', offset: 0.88 }, { transform: 'none' }], { duration: 520, easing: 'ease-out' }); };
+      g.addEventListener('pointerenter', hop); g.addEventListener('pointerdown', hop);
+    });
+    if (this.reduced()) return;
+    host.style.transform = 'translateY(42%)';
+    this.io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      this.io.disconnect();
+      host.animate([{ transform: 'translateY(42%)' }, { transform: 'none' }], { duration: 700, easing: BOUNCY, fill: 'forwards' }).onfinish = () => { host.style.transform = ''; };
+      this.tail.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(12deg)' }, { transform: 'rotate(-9deg)' }, { transform: 'rotate(6deg)' }, { transform: 'rotate(0)' }], { duration: 900, delay: 500, easing: 'ease-in-out' });
+    }, { threshold: 0.15 });
+    this.io.observe(this.rootRef.current);
+  }
+
+  renderVals() {
+    const s = this.state, site = s.site, nar = s.narrow;
+    return {
+      rootRef: this.rootRef, peekRef: this.peekRef,
+      wide: !nar, colGap: nar ? '0' : '32px', brandPad: nar ? '28px' : '0',
+      serviceArea: site.serviceArea,
+      cols: COLS.map(c => {
+        const open = !nar || s.open === c.key;
+        return {
+          title: c.title, isHelp: c.key === 'help',
+          links: c.links.map(([label, href]) => ({ label, href })),
+          toggle: () => nar && this.setState(st => ({ open: st.open === c.key ? null : c.key })),
+          expanded: open ? 'true' : 'false',
+          rule: nar ? '1.5px solid rgba(242,231,203,.2)' : '0',
+          headH: nar ? '56px' : '28px', cursor: nar ? 'pointer' : 'default',
+          chevDisplay: nar ? 'inline' : 'none', rot: s.open === c.key ? '45deg' : '0deg',
+          bodyDisplay: open ? 'flex' : 'none', listPad: nar ? '0 0 20px' : '14px 0 0',
+        };
+      }),
+      waHref: site.whatsapp ? `https://wa.me/${site.whatsapp}` : '#',
+      email: site.email, mailHref: `mailto:${site.email}`,
+      phone: site.phone, telHref: `tel:${(site.phone || '').replace(/\s/g, '')}`,
+      year: new Date().getFullYear(), company: site.company, city: site.city,
+      fssai: site.fssai || null,
+      ig: site.social.instagram || '#', yt: site.social.youtube || '#', li: site.social.linkedin || '#',
+    };
+  }
+}
+</script>
+</body>
+</html>

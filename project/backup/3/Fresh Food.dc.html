@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F65322}
+a:hover{color:#D9431A}
+input[type=range]{accent-color:#F65322}
+@keyframes dzLetter{0%{opacity:0;transform:translateY(10px) scale(.6)}60%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes dzFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;background:#F2E7CB;overflow-x:clip">
+  <svg ref="{{ spriteRef }}" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+  <sc-if value="{{ showOverlay }}" hint-placeholder-val="{{ false }}"><div ref="{{ overlayCb }}" aria-hidden="true" style="position:fixed;inset:0;z-index:60;background:#F65322;pointer-events:none"></div></sc-if>
+
+  <header style="position:sticky;top:0;z-index:30;background:#F2E7CB;border-bottom:2.5px solid #141210">
+    <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;height:clamp(72px,2vw + 56px,84px)">
+      <a href="Pet Passport.dc.html" onMouseEnter="{{ wobble }}" onFocus="{{ wobble }}" aria-label="Doggzi home" style="flex:none;display:flex;align-items:center;justify-content:center;width:clamp(56px,4vw + 26px,64px);height:clamp(56px,4vw + 26px,64px);border-radius:999px;background:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;outline:none" style-focus="outline:3px solid #F65322;outline-offset:4px">
+        <img src="assets/doggzi-mark.svg" alt="" style="width:100%;height:100%;display:block;pointer-events:none">
+      </a>
+      <div style="flex:none;display:flex;align-items:center;justify-content:flex-end;min-width:190px;height:48px">
+        <a href="Choose.dc.html" aria-label="{{ chipLabel }}" style="display:flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 5px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210;color:#141210;text-decoration:none;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);color:#141210" style-focus="outline:3px solid #F65322;outline-offset:3px">
+          <span style="width:36px;height:36px;border-radius:999px;background:#F2E7CB;border:2px solid #141210;overflow:hidden;display:flex;align-items:center;justify-content:center;flex:none">
+            <svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg>
+          </span>
+          <span style="display:flex;flex-direction:column;line-height:1.05">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase">{{ nameUpper }}</span>
+            <span style="font-size:12px;font-weight:500;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ breed }}</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section ref="{{ heroRef }}" style="background:#F65322;border-bottom:2.5px solid #141210">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,72px) 20px clamp(48px,7vw,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 56px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start;min-width:0">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Fresh Food</span>
+          <sc-if value="{{ available }}" hint-placeholder-val="{{ true }}">
+            <h1 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.6rem,6.5vw,4.6rem);line-height:1.02;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Fresh meals for <span style="display:inline-block;background:#F989EF;border:2.5px solid #141210;border-radius:14px;padding:0 .16em;box-shadow:4px 4px 0 #141210;transform:rotate(-2deg)">{{ name }}</span></h1>
+            <p style="margin:0;max-width:40ch;font-size:clamp(1rem,1.6vw,1.15rem);line-height:1.6;font-weight:500;text-wrap:pretty">{{ heroCopy }}</p>
+            <dc-import name="AppDownload" device="{{ device }}" layout="compact" source="fresh_food_hero" hint-size="100%,104px"></dc-import>
+            <a href="{{ guideHref }}" onClick="{{ onGuide }}" download="" style="display:flex;align-items:center;gap:8px;height:48px;padding:0 20px;font-weight:600;font-size:16px;color:#141210;text-decoration:none;border:2.5px solid #141210;border-radius:999px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),background 180ms" style-hover="transform:translateY(-2px);background:#FFFBF2;color:#141210" style-focus="outline:3px solid #141210;outline-offset:4px">Get the free guide (PDF) <span aria-hidden="true">↓</span></a>
+          </sc-if>
+          <sc-if value="{{ comingSoon }}" hint-placeholder-val="{{ false }}">
+            <h1 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.02;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Fresh meals for <span style="display:inline-block;background:#F989EF;border:2.5px solid #141210;border-radius:14px;padding:0 .16em;box-shadow:4px 4px 0 #141210;transform:rotate(-2deg)">{{ name }}</span> are coming soon</h1>
+            <p style="margin:0;max-width:40ch;font-size:clamp(1rem,1.6vw,1.15rem);line-height:1.6;font-weight:500">We're finishing our cat recipes. Tap Notify me and we'll tell you first.</p>
+            <sc-if value="{{ notNotified }}" hint-placeholder-val="{{ true }}">
+              <button type="button" onClick="{{ notifyMe }}" style="height:56px;padding:0 28px;font:600 18px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Notify me</button>
+            </sc-if>
+            <sc-if value="{{ notified }}" hint-placeholder-val="{{ false }}">
+              <p role="status" style="margin:0;display:flex;align-items:center;gap:10px;height:56px;padding:0 22px;font-weight:600;font-size:17px;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px">Saved to {{ poss }} passport. We'll let you know ✓</p>
+            </sc-if>
+          </sc-if>
+        </div>
+
+        <div ref="{{ bowlRef }}" style="position:relative;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:6px 6px 0 #141210;padding:16px 16px 20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0">
+          <svg viewBox="0 0 400 300" role="img" aria-label="{{ bowlAlt }}" style="width:100%;max-width:440px;display:block;overflow:visible" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <g fill="none">
+              <path data-steam="" d="M168 104c-12-14 12-24 0-38s12-24 0-38"></path>
+              <path data-steam="" d="M204 96c-12-14 12-24 0-38s12-24 0-38"></path>
+              <path data-steam="" d="M240 104c-12-14 12-24 0-38s12-24 0-38"></path>
+            </g>
+            <ellipse cx="200" cy="178" rx="140" ry="20" fill="#F2E7CB"></ellipse>
+            <g transform="translate(112 132)"><g data-ing=""><path d="M2 30c-4-18 10-32 32-30s36 12 34 28-16 26-34 24S6 46 2 30z" fill="#FFFBF2"></path><path d="M20 22c8 4 18 4 28 0M24 34c6 2 14 2 20 0" fill="none"></path></g></g>
+            <g transform="translate(180 128)"><g data-ing=""><path d="M4 22C0 8 14-2 28 2s26 14 22 26-18 18-30 14S8 34 4 22z" fill="#F989EF"></path><path d="M18 14c4 4 4 10 0 14" fill="none"></path></g></g>
+            <g transform="translate(250 134)" style="display:{{ vegDisplay }}"><g data-ing=""><rect x="0" y="0" width="34" height="34" rx="7" fill="#09A460" transform="rotate(12 17 17)"></rect><path d="M14 -6c4 2 6 6 4 10" fill="none"></path></g></g>
+            <g transform="translate(146 98)"><g data-ing=""><path d="M0 20 L6 10 L12 18 L18 8 L24 18 L30 10 L36 20 C36 36 0 36 0 20z" fill="#FFFBF2"></path></g></g>
+            <g transform="translate(226 78)"><g data-ing=""><path d="M14 0C14 0 0 18 0 28a14 14 0 0 0 28 0C28 18 14 0 14 0z" fill="#F65322"></path><path d="M8 28a6 6 0 0 0 6 6" fill="none" stroke="#FFFBF2"></path></g></g>
+            <path d="M58 180c6 70 70 98 142 98s136-28 142-98c-30 14-86 20-142 20s-112-6-142-20z" fill="#09A460"></path>
+            <path d="M120 222c20 10 50 14 80 14s60-4 80-14" fill="none" stroke="#FFFBF2" stroke-width="2"></path>
+            <path d="M150 276h100l-6 14h-88z" fill="#077E4A"></path>
+          </svg>
+          <ul aria-label="What goes in the bowl" style="margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px">
+            <sc-for list="{{ labels }}" as="l" hint-placeholder-count="5">
+              <li data-label="" style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:2px solid #141210;border-radius:999px;background:#F2E7CB;transform:rotate({{ l.rot }})">{{ l.label }}</li>
+            </sc-for>
+          </ul>
+          <div data-stamp="" aria-hidden="true" style="position:absolute;right:14px;top:14px;font-family:Atma,system-ui;font-weight:700;font-size:15px;line-height:1.05;letter-spacing:.12em;text-transform:uppercase;text-align:center;color:{{ stampColor }};border:3px solid {{ stampColor }};border-radius:10px;padding:4px 10px;background:rgba(255,251,242,.9);transform:rotate(-6deg)">{{ stampText }}</div>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ comingSoon }}" hint-placeholder-val="{{ false }}">
+      <section data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(48px,7vw,80px) 20px;display:flex;flex-direction:column;gap:24px">
+        <h2 data-ri="" style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase">Meanwhile, for {{ name }}</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px">
+          <a data-ri="" href="Choose.dc.html" style="display:flex;flex-direction:column;gap:6px;padding:22px;background:#09A460;color:#FFFBF2;text-decoration:none;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#FFFBF2">
+            <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:28px;text-transform:uppercase;letter-spacing:.02em">Services →</span>
+            <span style="font-size:16px;font-weight:500">Grooming, boarding and vet visits for cats, at home</span>
+          </a>
+          <a data-ri="" href="Choose.dc.html" style="display:flex;flex-direction:column;gap:6px;padding:22px;background:#F989EF;color:#141210;text-decoration:none;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#141210">
+            <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:28px;text-transform:uppercase;letter-spacing:.02em">Marketplace →</span>
+            <span style="font-size:16px;font-weight:500">Treats, litter and toys from stores near you</span>
+          </a>
+        </div>
+      </section>
+    </sc-if>
+
+    <section id="kibble-vs-fresh" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,36px)">
+      <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Kibble vs fresh</span>
+        <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Drag to see the difference</h2>
+      </div>
+      <div data-ri="" ref="{{ sliderRef }}" onPointerDown="{{ onSliderDown }}" onPointerMove="{{ onSliderMove }}" onPointerUp="{{ onSliderUp }}" onPointerCancel="{{ onSliderUp }}" style="position:relative;border:2.5px solid #141210;border-radius:28px;box-shadow:6px 6px 0 #141210;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:{{ sliderCursor }}">
+        <div style="background-color:#CBC4B6;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);padding:clamp(16px,3vw,28px) clamp(12px,3vw,28px);display:flex;flex-direction:column;gap:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.4rem,3.4vw,2.2rem);letter-spacing:.04em;text-transform:uppercase">
+            <span style="color:rgba(20,18,16,.75)">Kibble</span><span style="visibility:hidden;text-align:right">Doggzi</span>
+          </div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:{{ rowCols }};gap:8px 12px;align-items:center;padding:10px 0;border-top:2px dashed rgba(20,18,16,.25)">
+              <span style="display:flex;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4;color:rgba(20,18,16,.8)"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:999px;border:2px solid rgba(20,18,16,.7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">✗</span>{{ r.kibble }}</span>
+              <span style="order:{{ labelOrder }};grid-column:{{ labelCol }};justify-self:center;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border:2px solid #141210;border-radius:999px;background:#F2E7CB;color:#141210;white-space:nowrap">{{ r.label }}</span>
+              <span style="visibility:hidden;display:flex;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4;font-weight:600"><span aria-hidden="true" style="flex:none;width:22px;height:22px">✓</span>{{ r.doggzi }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div aria-hidden="{{ dLayerHidden }}" style="position:absolute;inset:0;clip-path:{{ clip }};background:#FFFBF2;padding:clamp(16px,3vw,28px) clamp(12px,3vw,28px);display:flex;flex-direction:column;gap:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.4rem,3.4vw,2.2rem);letter-spacing:.04em;text-transform:uppercase">
+            <span style="visibility:hidden">Kibble</span><span style="text-align:right;color:#077E4A">Doggzi</span>
+          </div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:{{ rowCols }};gap:8px 12px;align-items:center;padding:10px 0;border-top:2px dashed rgba(9,164,96,.4)">
+              <span style="visibility:hidden;display:flex;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4"><span style="flex:none;width:22px;height:22px">✗</span>{{ r.kibble }}</span>
+              <span style="order:{{ labelOrder }};grid-column:{{ labelCol }};justify-self:center;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border:2px solid #141210;border-radius:999px;background:#F2E7CB;color:#141210;white-space:nowrap">{{ r.label }}</span>
+              <span style="display:flex;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4;font-weight:600;color:#141210"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:999px;border:2px solid #141210;background:#09A460;color:#FFFBF2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">✓</span>{{ r.doggzi }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ sliderLive }}" hint-placeholder-val="{{ true }}">
+          <div aria-hidden="true" style="position:absolute;top:0;bottom:0;left:{{ splitPct }};width:2.5px;margin-left:-1.25px;background:#141210;pointer-events:none"></div>
+          <div role="slider" tabindex="0" aria-label="Compare kibble and Doggzi fresh food" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ splitRound }}" aria-valuetext="{{ splitText }}" onKeyDown="{{ onHandleKey }}" style="position:absolute;top:50%;left:{{ splitPct }};width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:999px;background:#F989EF;border:2.5px solid #141210;box-shadow:3px 3px 0 #141210;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;outline:none" style-focus="outline:3px solid #F65322;outline-offset:3px">
+            <svg viewBox="0 0 32 16" aria-hidden="true" style="width:28px;height:14px"><path d="M10 2 3 8l7 6M22 2l7 6-7 6" fill="none" stroke="#141210" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+        </sc-if>
+      </div>
+      <p data-ri="" style="margin:0;max-width:760px;align-self:center;padding:14px 18px;background:#FFFBF2;border:2px solid #141210;border-radius:18px;box-shadow:3px 3px 0 #141210;transform:rotate(-.6deg);font-size:14px;line-height:1.55"><strong style="font-family:Atma,system-ui;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Nutritional adequacy · </strong>Doggzi Fresh Food recipes are formulated and reviewed by certified pet nutritionists to meet the nutritional levels established by AAFCO Dog Food Nutrient Profiles for all life stages, including the growth of large-size dogs (70 lbs or more as an adult).</p>
+    </section>
+
+    <sc-if value="{{ available }}" hint-placeholder-val="{{ true }}">
+      <section ref="{{ plansRef }}" id="plans" data-reveal="" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210">
+        <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)">
+          <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">Two ways to start</span>
+            <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Try it, or go all in</h2>
+          </div>
+          <div role="radiogroup" aria-label="Choose how to start" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,32px);align-items:stretch">
+            <div data-ri="" role="radio" tabindex="0" aria-checked="{{ trialChecked }}" onClick="{{ selectTrial }}" onKeyDown="{{ keyTrial }}" style="position:relative;display:flex;flex-direction:column;gap:16px;padding:clamp(22px,3vw,30px);background:{{ trialBg }};border:2.5px solid #141210;border-radius:28px;box-shadow:{{ trialShadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1),background 180ms" style-hover="transform:translateY(-4px)" style-focus="outline:3px solid #F65322;outline-offset:4px">
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.8rem,3vw,2.3rem);line-height:1;letter-spacing:.02em;text-transform:uppercase">Try it once</span>
+              <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;flex:1">
+                <li style="display:flex;gap:10px;font-size:16px;line-height:1.5"><span aria-hidden="true" style="flex:none;width:10px;height:10px;margin-top:7px;border-radius:999px;background:#F65322;border:1.5px solid #141210"></span>A one-time order to see if {{ name }} loves it</li>
+                <li style="display:flex;gap:10px;font-size:16px;line-height:1.5"><span aria-hidden="true" style="flex:none;width:10px;height:10px;margin-top:7px;border-radius:999px;background:#F65322;border:1.5px solid #141210"></span>No commitment</li>
+              </ul>
+              <a href="{{ ctaHref }}" target="{{ ctaTarget }}" onClick="{{ onTrialCta }}" style="align-self:flex-start;display:flex;align-items:center;height:52px;padding:0 22px;font:600 16px Poppins,system-ui;color:#141210;text-decoration:none;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Order a trial in the app →</a>
+              <sc-if value="{{ trialSelected }}" hint-placeholder-val="{{ false }}"><span ref="{{ pawCb }}" aria-hidden="true" style="position:absolute;right:18px;top:16px;width:58px;height:58px;border-radius:999px;border:3px solid #077E4A;color:#077E4A;display:flex;align-items:center;justify-content:center;transform:rotate(-12deg)"><svg viewBox="0 0 24 24" style="width:32px;height:32px" fill="#077E4A"><ellipse cx="12" cy="16" rx="5" ry="4.2"></ellipse><ellipse cx="5.5" cy="10.5" rx="2" ry="2.6"></ellipse><ellipse cx="9.5" cy="6.5" rx="2" ry="2.6"></ellipse><ellipse cx="14.5" cy="6.5" rx="2" ry="2.6"></ellipse><ellipse cx="18.5" cy="10.5" rx="2" ry="2.6"></ellipse></svg></span></sc-if>
+            </div>
+            <div data-ri="" role="radio" tabindex="0" aria-checked="{{ subChecked }}" onClick="{{ selectSub }}" onKeyDown="{{ keySub }}" style="position:relative;display:flex;flex-direction:column;gap:16px;padding:clamp(22px,3vw,30px);background:{{ subBg }};border:2.5px solid #141210;border-radius:28px;box-shadow:{{ subShadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1),background 180ms" style-hover="transform:translateY(-4px)" style-focus="outline:3px solid #F65322;outline-offset:4px">
+              <span style="position:absolute;top:-16px;left:24px;font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210;transform:rotate(-3deg)">Most loved</span>
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.8rem,3vw,2.3rem);line-height:1;letter-spacing:.02em;text-transform:uppercase">Daily subscription</span>
+              <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;flex:1">
+                <li style="display:flex;gap:10px;font-size:16px;line-height:1.5"><span aria-hidden="true" style="flex:none;width:10px;height:10px;margin-top:7px;border-radius:999px;background:#09A460;border:1.5px solid #141210"></span>A personalised nutrition plan from a certified pet nutritionist, built from {{ poss }} exact details</li>
+                <li style="display:flex;gap:10px;font-size:16px;line-height:1.5"><span aria-hidden="true" style="flex:none;width:10px;height:10px;margin-top:7px;border-radius:999px;background:#09A460;border:1.5px solid #141210"></span>Fresh meals delivered daily, cooked in a hygienic kitchen and delivered chilled, not frozen</li>
+                <li style="display:flex;gap:10px;font-size:16px;line-height:1.5"><span aria-hidden="true" style="flex:none;width:10px;height:10px;margin-top:7px;border-radius:999px;background:#09A460;border:1.5px solid #141210"></span>Pause, skip or edit meals any time</li>
+              </ul>
+              <a href="{{ ctaHref }}" target="{{ ctaTarget }}" onClick="{{ onSubCta }}" style="align-self:flex-start;display:flex;align-items:center;height:52px;padding:0 22px;font:600 16px Poppins,system-ui;color:#FFFBF2;text-decoration:none;background:#F65322;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#FFFBF2" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Start the plan in the app →</a>
+              <sc-if value="{{ subSelected }}" hint-placeholder-val="{{ false }}"><span ref="{{ pawCb }}" aria-hidden="true" style="position:absolute;right:18px;top:16px;width:58px;height:58px;border-radius:999px;border:3px solid #077E4A;display:flex;align-items:center;justify-content:center;transform:rotate(-12deg)"><svg viewBox="0 0 24 24" style="width:32px;height:32px" fill="#077E4A"><ellipse cx="12" cy="16" rx="5" ry="4.2"></ellipse><ellipse cx="5.5" cy="10.5" rx="2" ry="2.6"></ellipse><ellipse cx="9.5" cy="6.5" rx="2" ry="2.6"></ellipse><ellipse cx="14.5" cy="6.5" rx="2" ry="2.6"></ellipse><ellipse cx="18.5" cy="10.5" rx="2" ry="2.6"></ellipse></svg></span></sc-if>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plan-preview" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 56px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+          <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">{{ poss }} plan</span>
+            <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.8rem,4.2vw,2.8rem);line-height:1.08;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Your nutritionist needs a few more things about {{ name }}</h2>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(20,18,16,.8)">No portions, calories or prices here. Your nutritionist sets those in the app.</p>
+          </div>
+          <form data-ri="" onSubmit="{{ saveNut }}" novalidate="" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <label for="ff-weight" style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:600;font-size:18px">Weight <span style="font-family:Atma,system-ui;font-weight:700;font-size:22px;font-variant-numeric:tabular-nums">{{ weightLabel }}</span></label>
+              <input id="ff-weight" type="range" min="1" max="80" step="0.5" value="{{ weightVal }}" onChange="{{ onWeight }}" aria-valuetext="{{ weightLabel }}" style="width:100%;height:32px;cursor:pointer">
+              <div aria-hidden="true" style="display:flex;justify-content:space-between;font-size:13px;color:rgba(20,18,16,.7)"><span>1 kg</span><span>80 kg</span></div>
+            </div>
+            <div role="group" aria-labelledby="ff-age-l" style="display:flex;flex-direction:column;gap:10px">
+              <span id="ff-age-l" style="font-weight:600;font-size:18px">Age</span>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                <sc-for list="{{ stages }}" as="c" hint-placeholder-count="3">
+                  <button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="min-height:44px;padding:0 18px;font:600 15px Poppins,system-ui;color:#141210;background:{{ c.bg }};border:2.5px solid #141210;border-radius:999px;box-shadow:{{ c.shadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #F65322;outline-offset:3px">{{ c.label }}</button>
+                </sc-for>
+                <label style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:500"><input type="number" min="0" max="25" step="0.5" inputmode="decimal" value="{{ years }}" onChange="{{ onYears }}" aria-label="Age in years" placeholder="0" style="width:76px;height:44px;padding:0 12px;font:600 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:14px;outline:none" style-focus="box-shadow:3px 3px 0 #F65322">years</label>
+              </div>
+            </div>
+            <div role="group" aria-labelledby="ff-all-l" style="display:flex;flex-direction:column;gap:10px">
+              <span id="ff-all-l" style="font-weight:600;font-size:18px">Allergies</span>
+              <div style="display:flex;flex-wrap:wrap;gap:10px">
+                <sc-for list="{{ allergies }}" as="c" hint-placeholder-count="5">
+                  <button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="min-height:44px;padding:0 18px;font:600 15px Poppins,system-ui;color:#141210;background:{{ c.bg }};border:2.5px solid #141210;border-radius:999px;box-shadow:{{ c.shadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #F65322;outline-offset:3px">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div role="group" aria-labelledby="ff-act-l" style="display:flex;flex-direction:column;gap:10px">
+              <span id="ff-act-l" style="font-weight:600;font-size:18px">Activity</span>
+              <div style="display:flex;flex-wrap:wrap;gap:10px">
+                <sc-for list="{{ activities }}" as="c" hint-placeholder-count="3">
+                  <button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="min-height:44px;padding:0 18px;font:600 15px Poppins,system-ui;color:#141210;background:{{ c.bg }};border:2.5px solid #141210;border-radius:999px;box-shadow:{{ c.shadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #F65322;outline-offset:3px">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ nutErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:15px;font-weight:500;color:#D9431A">{{ nutErr }}</p></sc-if>
+            <button type="submit" style="height:58px;width:100%;font:600 18px Poppins,system-ui;color:#FFFBF2;background:#F65322;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Save to {{ poss }} passport</button>
+          </form>
+        </div>
+
+        <div data-ri="" style="display:flex;flex-direction:column;gap:20px;min-width:0;position:sticky;top:104px">
+          <div style="background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;overflow:hidden">
+            <div style="background:#F65322;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:2.5px solid #141210;font-family:Atma,system-ui;font-weight:700;font-size:15px;letter-spacing:.14em;text-transform:uppercase"><span>Doggzi pet passport</span><span>Delhi NCR</span></div>
+            <div style="display:flex;align-items:center;gap:18px;padding:18px 20px">
+              <div style="flex:none;width:88px;height:88px;border-radius:999px;background:#F2E7CB;border:2.5px solid #141210;overflow:hidden;display:flex"><svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg></div>
+              <div style="min-width:0;display:flex;flex-direction:column;gap:4px">
+                <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.8rem,4vw,2.3rem);line-height:1;letter-spacing:.03em;text-transform:uppercase;overflow-wrap:anywhere">{{ nameUpper }}</span>
+                <span style="font-size:15px;font-weight:500;color:rgba(20,18,16,.75)">{{ metaLine }}</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-rows:{{ nutRows }};transition:grid-template-rows 520ms cubic-bezier(.22,1,.36,1)">
+              <div style="overflow:hidden">
+                <div style="border-top:2.5px dashed #141210;padding:14px 20px 18px;display:flex;flex-direction:column;gap:10px">
+                  <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#077E4A">Nutrition</span>
+                  <dl style="margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;align-items:baseline">
+                    <sc-for list="{{ nutVals }}" as="v" hint-placeholder-count="4">
+                      <dt style="font-family:Atma,system-ui;font-weight:500;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(20,18,16,.65)">{{ v.k }}</dt>
+                      <dd style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;min-height:1.2em"><sc-for list="{{ v.letters }}" as="ch" hint-placeholder-count="0"><span style="display:inline-block;white-space:pre;animation:{{ letterAnim }}">{{ ch }}</span></sc-for><sc-if value="{{ v.empty }}" hint-placeholder-val="{{ true }}"><span style="color:rgba(20,18,16,.3)">—</span></sc-if></dd>
+                    </sc-for>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+          <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+            <div ref="{{ savedCb }}" role="status" style="display:flex;flex-direction:column;gap:14px;padding:18px 20px;background:#09A460;color:#141210;border:2.5px solid #141210;border-radius:18px;box-shadow:4px 4px 0 #141210">
+              <p style="margin:0;font-weight:600;font-size:17px;line-height:1.45">Saved to {{ poss }} passport ✓. Your nutritionist will use this in the app.</p>
+              <dc-import name="AppDownload" device="{{ device }}" layout="compact" source="fresh_food_plan" hint-size="100%,104px"></dc-import>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <section id="inside-the-app" data-reveal="" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">Inside the app</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Ordering happens in the app</h2>
+        </div>
+        <sc-if value="{{ appWide }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:64px;align-items:start">
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column">
+              <sc-for list="{{ screens }}" as="sc" hint-placeholder-count="6">
+                <li data-screen="{{ sc.i }}" style="min-height:min(72vh,620px);display:flex;flex-direction:column;justify-content:center;gap:12px;opacity:{{ sc.blockOp }};transition:opacity 350ms cubic-bezier(.22,1,.36,1)">
+                  <span style="align-self:flex-start;width:44px;height:44px;border-radius:999px;background:#F65322;color:#FFFBF2;border:2.5px solid #141210;box-shadow:3px 3px 0 #141210;display:flex;align-items:center;justify-content:center;font-family:Atma,system-ui;font-weight:700;font-size:20px">{{ sc.n }}</span>
+                  <h3 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.8rem,3vw,2.4rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase">{{ sc.title }}</h3>
+                  <p style="margin:0;max-width:36ch;font-size:18px;line-height:1.6;text-wrap:pretty">{{ sc.body }}</p>
+                </li>
+              </sc-for>
+            </ol>
+            <div style="position:sticky;top:120px;padding-bottom:40px">
+              <div style="position:relative;width:300px;aspect-ratio:300/650;background:#FFFFFF;border:2.5px solid #141210;border-radius:28px;box-shadow:6px 6px 0 #141210;overflow:hidden">
+                <sc-for list="{{ screens }}" as="sc" hint-placeholder-count="6">
+                  <img src="{{ sc.src }}" alt="{{ sc.alt }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:{{ sc.op }};transform:{{ sc.t }};transition:{{ phoneTransition }}">
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ appNarrow }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:4px 20px 16px;scrollbar-width:thin">
+            <sc-for list="{{ screens }}" as="sc" hint-placeholder-count="6">
+              <figure style="margin:0;flex:none;width:min(78vw,280px);scroll-snap-align:center;display:flex;flex-direction:column;gap:14px">
+                <img src="{{ sc.src }}" alt="{{ sc.alt }}" loading="lazy" style="width:100%;aspect-ratio:300/650;object-fit:cover;display:block;background:#FFFFFF;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210">
+                <figcaption style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase">{{ sc.n }}. {{ sc.title }}</span>
+                  <span style="font-size:15px;line-height:1.5">{{ sc.body }}</span>
+                </figcaption>
+              </figure>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+
+    <section id="kitchen-to-door" ref="{{ routeRef }}" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)">
+      <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Kitchen to door</span>
+        <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Track every bowl, live</h2>
+      </div>
+      <svg viewBox="0 0 1000 250" role="img" aria-label="Route from the kitchen, in a chilled van, to your door" style="width:100%;display:block;overflow:visible" stroke="#141210" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path ref="{{ routePathRef }}" d="M110 135 C 260 20, 360 250, 500 135 S 740 20, 890 135" fill="none" stroke-width="3" stroke-dasharray="2 12"></path>
+        <g transform="translate(110 135)"><circle r="54" fill="#F65322"></circle><g fill="#F2E7CB"><path d="M-24 -2h48v16c0 10-8 18-18 18h-12c-10 0-18-8-18-18z"></path><path d="M-30 -2h60" fill="none"></path><path d="M-6 -10h12" fill="none"></path><path d="M-8 -22c-3-4 3-6 0-10M8 -22c-3-4 3-6 0-10" fill="none"></path></g></g>
+        <g transform="translate(500 135)"><circle r="54" fill="#09A460"></circle><g fill="none" stroke="#F2E7CB" stroke-width="3.2"><path d="M0 -26v52M-22 -13l44 26M-22 13l44 -26"></path><path d="M-6 -22l6 5 6 -5M-6 22l6 -5 6 5"></path></g></g>
+        <g transform="translate(890 135)"><circle r="54" fill="#F989EF"></circle><g fill="#F2E7CB"><path d="M-18 30v-52a6 6 0 0 1 6-6h24a6 6 0 0 1 6 6v52z"></path><circle cx="8" cy="4" r="2.6" fill="#141210"></circle><path d="M-30 30h60" fill="none"></path></g></g>
+        <g ref="{{ vanRef }}" transform="translate(110 135)"><g transform="translate(-30 -66)"><path d="M2 8h36v26H2z" fill="#FFFBF2"></path><path d="M38 14h12l8 10v10H38z" fill="#F65322"></path><path d="M42 17h7l5 7h-12z" fill="#F2E7CB" stroke-width="2"></path><circle cx="14" cy="36" r="5.5" fill="#141210"></circle><circle cx="48" cy="36" r="5.5" fill="#141210"></circle><path d="M14 16v10M9 21h10" stroke="#09A460" stroke-width="2.6"></path></g></g>
+      </svg>
+      <div data-ri="" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;text-align:center">
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:Atma,system-ui;font-weight:700;font-size:clamp(15px,2vw,20px);letter-spacing:.06em;text-transform:uppercase">Kitchen</span><span style="font-size:clamp(13px,1.6vw,16px);line-height:1.4">Cooked fresh</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:Atma,system-ui;font-weight:700;font-size:clamp(15px,2vw,20px);letter-spacing:.06em;text-transform:uppercase">Chilled van</span><span style="font-size:clamp(13px,1.6vw,16px);line-height:1.4">Kept chilled, never frozen</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:Atma,system-ui;font-weight:700;font-size:clamp(15px,2vw,20px);letter-spacing:.06em;text-transform:uppercase">Your door</span><span style="font-size:clamp(13px,1.6vw,16px);line-height:1.4">On time, portioned &amp; labelled</span></div>
+      </div>
+    </section>
+
+    <sc-if value="{{ available }}" hint-placeholder-val="{{ true }}">
+      <section id="switching" data-reveal="" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210">
+        <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)">
+          <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">Switching from kibble</span>
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;border:2px dashed #D9431A;color:#D9431A;border-radius:999px;padding:3px 12px">Draft ratios — confirm before launch</span>
+            </div>
+            <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">A gentle week-long switch</h2>
+            <p style="margin:0;font-size:15px;color:rgba(20,18,16,.8)">General guide — your nutritionist will tailor it.</p>
+          </div>
+          <ol style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px">
+            <sc-for list="{{ transition }}" as="t" hint-placeholder-count="4">
+              <li data-ri="" style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 16px 20px;background:#F2E7CB;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210">
+                <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;letter-spacing:.08em;text-transform:uppercase">{{ t.days }}</span>
+                <div aria-hidden="true" style="width:100%;max-width:170px;display:flex;flex-direction:column;align-items:center">
+                  <div style="width:100%;height:70px;display:flex;overflow:hidden;border:2.5px solid #141210;border-radius:0 0 50% 50% / 0 0 100% 100%;background-color:#CBC4B6;background-image:radial-gradient(circle at 30% 40%, rgba(20,18,16,.35) 3px, transparent 3.5px),radial-gradient(circle at 70% 70%, rgba(20,18,16,.35) 3px, transparent 3.5px);background-size:18px 18px">
+                    <div style="width:{{ t.freshW }};background:#F65322;border-right:{{ t.divider }}"></div>
+                  </div>
+                  <div style="width:42%;height:10px;background:#077E4A;border:2.5px solid #141210;border-top:0;border-radius:0 0 6px 6px"></div>
+                </div>
+                <span style="font-size:15px;font-weight:500;text-align:center">{{ t.caption }}</span>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+      </section>
+    </sc-if>
+
+    <section id="download" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:32px 56px;align-items:center;scroll-margin-top:84px">
+      <div data-ri="" style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Get the app</span>
+        <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">{{ downloadTitle }}</h2>
+        <p style="margin:0;max-width:40ch;font-size:17px;line-height:1.6">Trial orders, daily plans, live tracking and quick reorders all live in the Doggzi app.</p>
+      </div>
+      <div data-ri="">
+        <dc-import name="AppDownload" device="{{ device }}" layout="full" source="fresh_food_download" hint-size="100%,240px"></dc-import>
+      </div>
+    </section>
+
+    <dc-import name="Testimonials" tag="fresh-food" heading="Happy bowls" force-reduced-motion="{{ forceReduced }}" hint-size="100%,560px"></dc-import>
+
+    <dc-import name="FAQ" set="freshFood" heading="Fresh food questions" force-reduced-motion="{{ forceReduced }}" hint-size="100%,640px"></dc-import>
+
+    <section data-reveal="" style="background:#F989EF;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(48px,7vw,80px) 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:8px;max-width:620px">
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.9rem,4.5vw,3rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Get the Doggzi Fresh Food guide</h2>
+          <p style="margin:0;font-size:17px;line-height:1.55">Everything about the meals and how to serve them, in one PDF.</p>
+        </div>
+        <a data-ri="" href="{{ guideHref }}" onClick="{{ onGuide }}" download="" style="display:flex;align-items:center;gap:10px;height:60px;padding:0 28px;font:600 18px Poppins,system-ui;color:#FFFBF2;text-decoration:none;background:#141210;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #FFFBF2;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #FFFBF2;color:#FFFBF2" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #FFFBF2" style-focus="outline:3px solid #141210;outline-offset:4px">Download PDF <span aria-hidden="true">↓</span></a>
+      </div>
+    </section>
+  </main>
+
+  <dc-import name="SiteFooter" force-reduced-motion="{{ forceReduced }}" hint-size="100%,560px"></dc-import>
+
+  <sc-if value="{{ barMounted }}" hint-placeholder-val="{{ false }}">
+    <div aria-hidden="{{ barHidden }}" style="position:fixed;left:0;right:0;bottom:0;z-index:25;background:#FFFBF2;border-top:2.5px solid #141210;padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:12px;transform:{{ barT }};transition:transform 450ms cubic-bezier(.22,1,.36,1);visibility:{{ barVis }}">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <span style="flex:none;width:40px;height:40px;border-radius:999px;background:#F2E7CB;border:2px solid #141210;overflow:hidden;display:flex"><svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg></span>
+        <span style="display:flex;flex-direction:column;line-height:1.15;min-width:0">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase">Get Doggzi app</span>
+          <span style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Fresh meals for {{ name }}</span>
+        </span>
+      </div>
+      <div style="flex:none;transform:scale(.82);transform-origin:right center">
+        <dc-import name="AppDownload" device="{{ device }}" layout="badge" source="fresh_food_bar" hint-size="150px,52px"></dc-import>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoPet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Saved passport&quot;,&quot;Dog&quot;,&quot;Cat&quot;],&quot;default&quot;:&quot;Saved passport&quot;,&quot;tsType&quot;:&quot;'Saved passport' | 'Dog' | 'Cat'&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;catsSupported&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Config&quot;},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Auto&quot;,&quot;iOS&quot;,&quot;Android&quot;,&quot;Desktop&quot;],&quot;default&quot;:&quot;Auto&quot;,&quot;tsType&quot;:&quot;'Auto' | 'iOS' | 'Android' | 'Desktop'&quot;,&quot;section&quot;:&quot;Smart Download&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const DEMO = { Dog: { name: 'Bruno', type: 'dog', breed: 'Labrador Retriever' }, Cat: { name: 'Mishti', type: 'cat', breed: 'Persian' } };
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const KEY = 'dz.passport';
+const COMPARE = [
+  { label: 'Ingredients', doggzi: 'Human-grade fresh meat, veggies and oils', kibble: 'Processed meat meals, fillers, artificial flavours' },
+  { label: 'Nutrition', doggzi: 'Balanced with vitamins and minerals, no preservatives', kibble: 'Nutrient loss from high-heat processing' },
+  { label: 'Digestibility', doggzi: 'Highly digestible, easy on the gut', kibble: 'Harder to digest, may cause bloating or gas' },
+  { label: 'Palatability', doggzi: 'They love the fresh smell and taste', kibble: 'Often sprayed with fat to add taste' },
+  { label: 'Health outcome', doggzi: 'Shiny coat, more energy, fewer vet visits', kibble: 'Possible long-term allergies, obesity, joint issues' },
+];
+const ALLERGIES = ['Chicken', 'Beef', 'Grains', 'Dairy', 'None'];
+const ACTIVITY = [['couch', 'Couch potato'], ['normal', 'Normal'], ['zoomies', 'Zoomies']];
+const ROTS = ['-3deg', '2deg', '-1deg', '3deg', '-2deg'];
+
+class Component extends DCLogic {
+  state = {
+    pet: DEMO.Dog, vb: { dog: '0 0 100 100', puppy: '0 0 100 100', cat: '0 0 100 100' }, cfg: null, autoDevice: 'Desktop',
+    narrow: false, appWide: true, split: 50, dragging: false, active: 0, plan: null,
+    nut: { weight: null, stage: null, years: '', allergies: [], activity: null }, nutErr: null, saved: false, notified: false,
+    heroVis: true, plansVis: false, showOverlay: false,
+  };
+  rootRef = React.createRef(); spriteRef = React.createRef(); heroRef = React.createRef(); plansRef = React.createRef(); sliderRef = React.createRef();
+  bowlRef = React.createRef(); routeRef = React.createRef(); routePathRef = React.createRef(); vanRef = React.createRef();
+  seen = new WeakSet();
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  catsOn() { return this.props.catsSupported ?? (this.state.cfg ? this.state.cfg.FRESH_FOOD.catsSupported : false); }
+  comingSoon() { return this.state.pet.type === 'cat' && !this.catsOn(); }
+  device() { const d = this.props.device ?? 'Auto'; return d === 'Auto' ? this.state.autoDevice : d; }
+
+  readPet() {
+    const mode = this.props.demoPet ?? 'Saved passport';
+    if (DEMO[mode]) return { pet: DEMO[mode], saved: null };
+    try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.name) return { pet: { name: s.name, type: s.type, breed: s.breed || 'Mixed / Not sure' }, saved: s }; } catch (e) {}
+    return { pet: DEMO.Dog, saved: null };
+  }
+
+  applyPet() {
+    const { pet, saved } = this.readPet();
+    const n = saved && saved.nutrition;
+    this.setState({
+      pet, saved: false, nutErr: null, notified: !!(saved && saved.notify_fresh_food),
+      nut: n ? { weight: n.weight_kg ?? null, stage: n.life_stage ?? null, years: n.age_years != null ? String(n.age_years) : '', allergies: n.allergies || [], activity: n.activity_level ?? null } : { weight: null, stage: null, years: '', allergies: [], activity: null },
+    });
+  }
+
+  componentDidMount() {
+    this.applyPet();
+    let fromChoose = false;
+    try { fromChoose = sessionStorage.getItem('dz.from') === 'choose'; sessionStorage.removeItem('dz.from'); } catch (e) {}
+    if (fromChoose) this.setState({ showOverlay: true });
+    const base = document.baseURI;
+    Promise.all([import(new URL('content/fresh-food.js', base).href), import(new URL('content/site-config.js', base).href)]).then(([ff, site]) => {
+      this.site = site;
+      this.setState({ cfg: ff, autoDevice: site.detectDevice() }, () => this.playBowl());
+    });
+    fetch('assets/pets-trio.svg').then(r => r.text()).then(t => this.buildSprite(t));
+    this.ro = new ResizeObserver(([e]) => { const w = e.contentRect.width; const n = w < 720, aw = w >= 960; if (n !== this.state.narrow || aw !== this.state.appWide) this.setState({ narrow: n, appWide: aw }); });
+    this.ro.observe(this.rootRef.current);
+    this.io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { this.io.unobserve(e.target); this.reveal(e.target); } }), { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+    this.visIO = new IntersectionObserver(es => es.forEach(e => { if (e.target === this.heroRef.current) this.setState({ heroVis: e.isIntersecting }); else if (e.target === this.plansRef.current) this.setState({ plansVis: e.isIntersecting }); }));
+    this.screenIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) this.setState({ active: +e.target.dataset.screen }); }), { rootMargin: '-45% 0px -45% 0px' });
+    this.wire();
+  }
+
+  componentWillUnmount() { [this.ro, this.io, this.visIO, this.screenIO, this.routeIO].forEach(o => o && o.disconnect()); cancelAnimationFrame(this.vanRaf); cancelAnimationFrame(this.hintRaf); }
+
+  componentDidUpdate(pp, ps) {
+    if (pp.demoPet !== this.props.demoPet) this.applyPet();
+    if ((ps.pet.type !== this.state.pet.type || pp.catsSupported !== this.props.catsSupported) && this.state.cfg) this.playBowl();
+    this.wire();
+  }
+
+  wire() {
+    const root = this.rootRef.current; if (!root) return;
+    root.querySelectorAll('[data-reveal]').forEach(sec => {
+      if (this.seen.has(sec)) return; this.seen.add(sec);
+      if (this.reduced()) return;
+      sec.querySelectorAll('[data-ri]').forEach(el => { el.style.opacity = '0'; });
+      this.io.observe(sec);
+    });
+    [this.heroRef.current, this.plansRef.current].forEach(el => { if (el && !this.seen.has(el)) { this.seen.add(el); this.visIO.observe(el); } });
+    root.querySelectorAll('[data-screen]').forEach(el => { if (!this.seen.has(el)) { this.seen.add(el); this.screenIO.observe(el); } });
+    const rt = this.routeRef.current;
+    if (rt && !this.routeIO) { this.routeIO = new IntersectionObserver(([e]) => { if (e.isIntersecting) { this.routeIO.disconnect(); this.driveVan(); } }, { threshold: 0.35 }); this.routeIO.observe(rt); if (this.reduced()) this.placeVan(1); }
+  }
+
+  reveal(sec) {
+    sec.querySelectorAll('[data-ri]').forEach((el, i) => {
+      el.style.opacity = '';
+      el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 550, delay: Math.min(i, 8) * 60, easing: EASE, fill: 'backwards' });
+    });
+    if (sec.id === 'kibble-vs-fresh') this.hintSlider();
+  }
+
+  hintSlider() {
+    if (this.reduced()) return;
+    const keys = [[0, 50], [0.35, 72], [0.7, 34], [1, 50]], dur = 1600, t0 = performance.now() + 500;
+    const step = now => {
+      const t = Math.max(0, Math.min(1, (now - t0) / dur));
+      if (this.state.dragging) return;
+      let i = 0; while (i < keys.length - 2 && t > keys[i + 1][0]) i++;
+      const [a, va] = keys[i], [b, vb] = keys[i + 1], k = (t - a) / (b - a), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      this.setState({ split: va + (vb - va) * e });
+      if (t < 1) this.hintRaf = requestAnimationFrame(step);
+    };
+    this.hintRaf = requestAnimationFrame(step);
+  }
+
+  playBowl() {
+    const root = this.bowlRef.current; if (!root) return;
+    root.getAnimations({ subtree: true }).forEach(a => a.cancel());
+    if (this.reduced()) return;
+    const ings = [...root.querySelectorAll('[data-ing]')].filter(g => g.parentNode.style.display !== 'none');
+    const labels = [...root.querySelectorAll('[data-label]')];
+    let t = 350;
+    ings.forEach((g, i) => {
+      g.animate([{ transform: 'translateY(-260px)', opacity: 0 }, { transform: 'translateY(-260px)', opacity: 1, offset: 0.01 }, { transform: 'translateY(0)', offset: 0.6 }, { transform: 'translateY(-14px)', offset: 0.78 }, { transform: 'translateY(0)' }], { duration: 640, delay: t, easing: 'ease-in', fill: 'backwards' });
+      if (labels[i]) labels[i].animate([{ scale: '0', opacity: 0 }, { scale: '1', opacity: 1 }], { duration: 380, delay: t + 420, easing: BOUNCY, fill: 'backwards' });
+      t += 420;
+    });
+    root.querySelectorAll('[data-steam]').forEach((p, i) => {
+      const len = p.getTotalLength();
+      p.animate([{ strokeDasharray: len, strokeDashoffset: len, opacity: 1 }, { strokeDasharray: len, strokeDashoffset: 0, opacity: 1 }], { duration: 900, delay: t + 300 + i * 120, easing: EASE, fill: 'backwards' });
+    });
+    const st = root.querySelector('[data-stamp]');
+    if (st) st.animate([{ transform: 'scale(1.5) rotate(-14deg)', opacity: 0 }, { transform: 'scale(1) rotate(-6deg)', opacity: 1 }], { duration: 420, delay: t + 1200, easing: BOUNCY, fill: 'backwards' });
+  }
+
+  placeVan(p) {
+    const path = this.routePathRef.current, van = this.vanRef.current; if (!path || !van) return;
+    const L = path.getTotalLength(), pt = path.getPointAtLength(L * p), pt2 = path.getPointAtLength(Math.min(L, L * p + 1));
+    const ang = Math.max(-18, Math.min(18, Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI));
+    van.setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+  }
+
+  driveVan() {
+    const path = this.routePathRef.current; if (!path) return;
+    if (this.reduced()) { this.placeVan(1); return; }
+    path.animate([{ strokeDashoffset: 600, opacity: 0 }, { strokeDashoffset: 0, opacity: 1 }], { duration: 900, easing: EASE });
+    const t0 = performance.now() + 400, dur = 2800;
+    const step = now => { const t = Math.max(0, Math.min(1, (now - t0) / dur)); const e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; this.placeVan(e); if (t < 1) this.vanRaf = requestAnimationFrame(step); };
+    this.vanRaf = requestAnimationFrame(step);
+  }
+
+  buildSprite(text) {
+    const s = this.spriteRef.current; if (!s) return;
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    [...doc.documentElement.children].forEach(c => s.appendChild(document.importNode(c, true)));
+    const sq = id => { const el = s.querySelector('#' + id); el.id = 'dzf-' + id; const b = el.getBBox(); const p = 12, w = b.width + p * 2, h = b.height + p * 2, m = Math.max(w, h); return `${b.x - p - (m - w) / 2} ${b.y - p - (m - h) / 2 + m * 0.06} ${m} ${m}`; };
+    const vb = { dog: sq('lab'), puppy: sq('puppy'), cat: sq('cat') };
+    s.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dzf-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  overlayCb = el => {
+    if (!el) return;
+    el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: this.reduced() ? 150 : 600, delay: this.reduced() ? 0 : 120, easing: EASE, fill: 'forwards' }).onfinish = () => this.setState({ showOverlay: false });
+  };
+  pawCb = el => { if (el && !this.reduced()) el.animate([{ transform: 'scale(1.6) rotate(-30deg)', opacity: 0 }, { transform: 'scale(1) rotate(-12deg)', opacity: 1 }], { duration: 420, easing: BOUNCY }); };
+  savedCb = el => { if (el) el.animate(this.reduced() ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'translateY(16px) scale(.96)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: this.reduced() ? 150 : 450, easing: BOUNCY }); };
+
+  setSplitFromEvent(e) {
+    const r = this.sliderRef.current.getBoundingClientRect();
+    this.setState({ split: Math.max(4, Math.min(96, ((e.clientX - r.left) / r.width) * 100)) });
+  }
+
+  setNut(patch) { this.setState(s => ({ nut: { ...s.nut, ...patch }, nutErr: null, saved: false })); }
+
+  track(ev, d) { if (this.site) this.site.track(ev, d); }
+
+  savePassport(patch) {
+    try {
+      const cur = JSON.parse(localStorage.getItem(KEY) || 'null') || { name: this.state.pet.name, type: this.state.pet.type, breed: this.state.pet.breed, created_at: new Date().toISOString() };
+      localStorage.setItem(KEY, JSON.stringify({ ...cur, ...patch, updated_at: new Date().toISOString() }));
+    } catch (e) {}
+  }
+
+  chip(on) { return { bg: on ? '#F989EF' : '#FFFBF2', shadow: on ? '3px 3px 0 #141210' : '0 0 0 #141210', pressed: on ? 'true' : 'false' }; }
+
+  renderVals() {
+    const s = this.state, p = s.pet, cfg = s.cfg, red = this.reduced(), n = s.narrow, dev = this.device();
+    const v = p.type === 'cat' ? 'cat' : SMALL.has(p.breed) ? 'puppy' : 'dog';
+    const poss = p.name + (/s$/i.test(p.name) ? "'" : "'s");
+    const soon = this.comingSoon();
+    const ingKey = p.type === 'cat' ? 'cat' : 'dog';
+    const ings = cfg ? cfg.INGREDIENTS[ingKey] : [];
+    const site = this.site ? this.site.SITE : {};
+    const mobile = dev !== 'Desktop';
+    const nut = s.nut;
+    const stageOpts = [[p.type === 'cat' ? 'kitten' : 'puppy', p.type === 'cat' ? 'Kitten' : 'Puppy'], ['adult', 'Adult'], ['senior', 'Senior']];
+    const stageLabel = (stageOpts.find(o => o[0] === nut.stage) || [])[1];
+    const actLabel = (ACTIVITY.find(o => o[0] === nut.activity) || [])[1];
+    const ageTxt = [stageLabel, nut.years !== '' ? `${nut.years} yrs` : null].filter(Boolean).join(' · ');
+    const vals = [['Weight', nut.weight != null ? `${nut.weight} kg` : ''], ['Age', ageTxt], ['Allergies', nut.allergies.join(', ')], ['Activity', actLabel || '']];
+    const anyNut = vals.some(x => x[1]);
+    const split = red ? 50 : s.split;
+    const barMounted = mobile && !soon;
+    const barShow = barMounted && !s.heroVis && !s.plansVis;
+    const selPlan = k => { this.setState({ plan: k }); this.track('fresh_food_plan_select', { plan: k }); };
+    const keySel = k => e => { if (e.key === 'Enter' || e.key === ' ') { if (e.target !== e.currentTarget) return; e.preventDefault(); selPlan(k); } };
+    const ctaClick = k => e => { e.stopPropagation(); this.track('app_download_click', { source: `fresh_food_plan_${k}` }); };
+    return {
+      rootRef: this.rootRef, spriteRef: this.spriteRef, heroRef: this.heroRef, plansRef: this.plansRef, sliderRef: this.sliderRef,
+      bowlRef: this.bowlRef, routeRef: this.routeRef, routePathRef: this.routePathRef, vanRef: this.vanRef,
+      overlayCb: this.overlayCb, pawCb: this.pawCb, savedCb: this.savedCb, showOverlay: s.showOverlay,
+      forceReduced: !!this.props.forceReducedMotion, device: dev,
+      wobble: e => { if (red) return; const a = e.currentTarget; if (a._w && a._w.playState === 'running') return; a._w = a.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)', offset: 0.3 }, { transform: 'rotate(6deg)', offset: 0.65 }, { transform: 'rotate(0)' }], { duration: 480, easing: BOUNCY }); },
+      name: p.name, poss, nameUpper: p.name.toUpperCase(), breed: p.breed, chipLabel: `${poss} passport — back to choices`,
+      metaLine: `${p.type === 'cat' ? 'Cat' : 'Dog'} · ${p.breed}`,
+      avatarVB: s.vb[v], avatarHref: `#dzf-${v === 'dog' ? 'lab' : v}`,
+      available: !soon, comingSoon: soon,
+      heroCopy: p.type === 'cat'
+        ? `Planned by a certified pet nutritionist from ${poss} exact details. Cooked fresh, delivered chilled — never frozen.`
+        : `Planned by a certified pet nutritionist from ${poss} exact details. Cooked fresh, delivered chilled — never frozen.`,
+      notified: s.notified, notNotified: !s.notified,
+      notifyMe: () => { this.savePassport({ notify_fresh_food: true }); this.track('fresh_food_notify', {}); this.setState({ notified: true }); },
+      vegDisplay: ingKey === 'cat' ? 'none' : 'inline',
+      bowlAlt: `A green bowl filled with ${ings.map(i => i.label.toLowerCase()).join(', ')}`,
+      labels: ings.map((i, k) => ({ label: i.label, rot: ROTS[k % ROTS.length] })),
+      stampText: soon ? 'Coming soon' : 'Approved by nutritionist', stampColor: soon ? '#D9431A' : '#077E4A',
+      guideHref: cfg ? cfg.FRESH_FOOD.guidePdf : 'brand/downloads/doggzi-fresh-food-guide.pdf',
+      onGuide: () => this.track('fresh_food_guide_download', {}),
+
+      rows: COMPARE, rowCols: n ? '1fr 1fr' : '40% 20% 40%', labelOrder: n ? -1 : 0, labelCol: n ? '1 / -1' : 'auto',
+      splitPct: split + '%', splitRound: Math.round(split), splitText: `${Math.round(split)}% kibble shown`,
+      clip: `inset(0 0 0 ${split}%)`, dLayerHidden: 'false', sliderLive: !red, sliderCursor: red ? 'default' : (s.dragging ? 'grabbing' : 'ew-resize'),
+      onSliderDown: e => { if (red || (e.pointerType === 'mouse' && e.button !== 0)) return; cancelAnimationFrame(this.hintRaf); e.currentTarget.setPointerCapture(e.pointerId); this.setState({ dragging: true }); this.setSplitFromEvent(e); },
+      onSliderMove: e => { if (s.dragging) this.setSplitFromEvent(e); },
+      onSliderUp: () => s.dragging && this.setState({ dragging: false }),
+      onHandleKey: e => {
+        const d = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5, PageDown: -20, PageUp: 20 }[e.key];
+        if (d) { e.preventDefault(); cancelAnimationFrame(this.hintRaf); this.setState(st => ({ split: Math.max(4, Math.min(96, st.split + d)) })); }
+        else if (e.key === 'Home') { e.preventDefault(); this.setState({ split: 4 }); } else if (e.key === 'End') { e.preventDefault(); this.setState({ split: 96 }); }
+      },
+
+      trialSelected: s.plan === 'trial', subSelected: s.plan === 'sub',
+      trialChecked: s.plan === 'trial' ? 'true' : 'false', subChecked: s.plan === 'sub' ? 'true' : 'false',
+      trialBg: s.plan === 'trial' ? '#FCD3F8' : '#F2E7CB', subBg: s.plan === 'sub' ? '#FCD3F8' : '#F2E7CB',
+      trialShadow: s.plan === 'trial' ? '6px 6px 0 #141210' : '4px 4px 0 #141210', subShadow: s.plan === 'sub' ? '6px 6px 0 #141210' : '4px 4px 0 #141210',
+      selectTrial: () => selPlan('trial'), selectSub: () => selPlan('sub'), keyTrial: keySel('trial'), keySub: keySel('sub'),
+      ctaHref: mobile ? ((dev === 'iOS' ? site.appStoreUrl : site.playStoreUrl) || '#') : '#download', ctaTarget: mobile ? '_blank' : '_self',
+      onTrialCta: ctaClick('trial'), onSubCta: ctaClick('sub'),
+
+      weightVal: nut.weight ?? 15, weightLabel: nut.weight != null ? `${nut.weight} kg` : '— kg',
+      onWeight: e => this.setNut({ weight: parseFloat(e.target.value) }),
+      stages: stageOpts.map(([k, l]) => ({ label: l, ...this.chip(nut.stage === k), pick: () => this.setNut({ stage: nut.stage === k ? null : k }) })),
+      years: nut.years, onYears: e => { const val = e.target.value; if (val === '' || (+val >= 0 && +val <= 25)) this.setNut({ years: val }); },
+      allergies: ALLERGIES.map(a => ({ label: a, ...this.chip(nut.allergies.includes(a)), pick: () => {
+        let l = nut.allergies;
+        if (a === 'None') l = l.includes('None') ? [] : ['None'];
+        else l = l.includes(a) ? l.filter(x => x !== a) : [...l.filter(x => x !== 'None'), a];
+        this.setNut({ allergies: l });
+      } })),
+      activities: ACTIVITY.map(([k, l]) => ({ label: l, ...this.chip(nut.activity === k), pick: () => this.setNut({ activity: nut.activity === k ? null : k }) })),
+      nutErr: s.nutErr,
+      saveNut: e => {
+        e.preventDefault();
+        const miss = [nut.weight == null && 'weight', !nut.stage && 'age', !nut.allergies.length && 'allergies (or None)', !nut.activity && 'activity'].filter(Boolean);
+        if (miss.length) { this.setState({ nutErr: `Almost there — add ${miss.join(', ')}.` }); return; }
+        this.savePassport({ nutrition: { weight_kg: nut.weight, life_stage: nut.stage, age_years: nut.years === '' ? null : +nut.years, allergies: nut.allergies.includes('None') ? [] : nut.allergies.map(x => x.toLowerCase()), activity_level: nut.activity } });
+        this.track('fresh_food_nutrition_saved', {});
+        this.setState({ saved: true });
+      },
+      saved: s.saved,
+      nutRows: anyNut ? '1fr' : '0fr',
+      nutVals: vals.map(([k, val]) => ({ k, letters: val.split(''), empty: !val })),
+      letterAnim: red ? 'dzFade 150ms both' : `dzLetter 360ms ${BOUNCY} both`,
+
+      appWide: s.appWide, appNarrow: !s.appWide,
+      screens: (cfg ? cfg.APP_SCREENS : []).map((sc, i) => ({ ...sc, i, n: i + 1, alt: `Doggzi app: ${sc.title}`, op: s.active === i ? 1 : 0, t: red || s.active === i ? 'none' : (i < s.active ? 'translateY(-4%)' : 'translateY(4%)'), blockOp: s.active === i ? 1 : 0.35 })),
+      phoneTransition: red ? 'none' : 'opacity 450ms cubic-bezier(.22,1,.36,1), transform 450ms cubic-bezier(.22,1,.36,1)',
+
+      transition: (cfg ? cfg.TRANSITION : []).map(t => ({ days: t.days, freshW: t.fresh + '%', divider: t.fresh > 0 && t.fresh < 100 ? '2.5px solid #141210' : '0', caption: t.fresh >= 100 ? 'All fresh' : `${t.fresh}% fresh · ${100 - t.fresh}% kibble` })),
+      downloadTitle: `Get the app for ${p.name}`,
+
+      barMounted, barHidden: barShow ? 'false' : 'true', barT: barShow ? 'none' : 'translateY(110%)', barVis: barShow ? 'visible' : 'hidden',
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-direction:column;align-items:{{ align }};gap:16px">
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <a href="{{ storeUrl }}" onClick="{{ onStore }}" target="_blank" rel="noopener" aria-label="{{ storeLabel }}" style="display:flex;border-radius:10px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #141210;outline-offset:4px">
+      <sc-if value="{{ iosReady }}" hint-placeholder-val="{{ false }}"><img src="{{ appBadge }}" alt="Download on the App Store" style="height:52px;width:auto;display:block"></sc-if>
+      <sc-if value="{{ androidReady }}" hint-placeholder-val="{{ false }}"><img src="{{ playBadge }}" alt="Get it on Google Play" style="height:52px;width:auto;display:block"></sc-if>
+    </a>
+  </sc-if>
+
+  <sc-if value="{{ desktopReady }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+      <div style="display:flex;flex-direction:{{ badgeDir }};align-items:flex-start;gap:12px">
+        <a href="{{ appStoreUrl }}" onClick="{{ onApple }}" target="_blank" rel="noopener" style="display:flex;border-radius:10px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #141210;outline-offset:4px"><img src="{{ appBadge }}" alt="Download on the App Store" style="height:48px;width:auto;display:block"></a>
+        <a href="{{ playStoreUrl }}" onClick="{{ onPlay }}" target="_blank" rel="noopener" style="display:flex;border-radius:10px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #141210;outline-offset:4px"><img src="{{ playBadge }}" alt="Get it on Google Play" style="height:48px;width:auto;display:block"></a>
+      </div>
+      <sc-if value="{{ showQr }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 14px 8px 8px;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;box-shadow:4px 4px 0 #141210">
+          <div ref="{{ qrRef }}" role="img" aria-label="QR code to get the Doggzi app on your phone" style="width:88px;height:88px;background:#FFFBF2;border-radius:10px"></div>
+          <span style="display:flex;flex-direction:column;gap:2px;max-width:120px">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#141210">Scan me</span>
+            <span style="font-size:13px;line-height:1.35;color:#141210">Opens the right store on your phone</span>
+          </span>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showSend }}" hint-placeholder-val="{{ false }}">
+    <form onSubmit="{{ send }}" novalidate="" style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:8px;padding:14px 16px 16px;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;box-shadow:4px 4px 0 #141210;color:#141210">
+      <label for="{{ inputId }}" style="font-weight:600;font-size:15px">Send the link to my phone</label>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div style="flex:1 1 180px;display:flex;align-items:center;height:48px;border:2.5px solid #141210;border-radius:999px;background:#F2E7CB;overflow:hidden">
+          <span aria-hidden="true" style="padding:0 4px 0 16px;font-weight:600;font-size:16px">+91</span>
+          <input id="{{ inputId }}" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="11" value="{{ phone }}" onChange="{{ onPhone }}" placeholder="98765 43210" aria-invalid="{{ phoneInvalid }}" style="flex:1;min-width:0;height:100%;border:0;background:transparent;font:500 16px Poppins,system-ui;color:#141210;outline:none;padding-right:14px">
+        </div>
+        <button type="submit" style="height:48px;padding:0 18px;display:flex;align-items:center;gap:8px;font:600 15px Poppins,system-ui;color:#141210;background:#09A460;border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:5px 5px 0 #141210" style-active="transform:translate(3px,3px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #F65322;outline-offset:3px">Send via WhatsApp</button>
+      </div>
+      <sc-if value="{{ phoneErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:14px;font-weight:500;color:#D9431A">{{ phoneErr }}</p></sc-if>
+      <p style="margin:0;font-size:13px;line-height:1.45;color:rgba(20,18,16,.75)">Opens WhatsApp with the download link. We never store your number.</p>
+    </form>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:560,&quot;height&quot;:300},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Auto&quot;,&quot;iOS&quot;,&quot;Android&quot;,&quot;Desktop&quot;],&quot;default&quot;:&quot;Auto&quot;,&quot;tsType&quot;:&quot;'Auto' | 'iOS' | 'Android' | 'Desktop'&quot;},&quot;layout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;compact&quot;,&quot;full&quot;,&quot;badge&quot;],&quot;default&quot;:&quot;compact&quot;,&quot;tsType&quot;:&quot;'compact' | 'full' | 'badge'&quot;},&quot;align&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;start&quot;,&quot;center&quot;],&quot;default&quot;:&quot;start&quot;,&quot;tsType&quot;:&quot;'start' | 'center'&quot;},&quot;source&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;fresh_food&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const QR_LIB = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
+let qrLoading = null;
+const loadQr = () => qrLoading || (qrLoading = new Promise((res, rej) => { if (window.qrcode) return res(window.qrcode); const s = document.createElement('script'); s.src = QR_LIB; s.onload = () => res(window.qrcode); s.onerror = rej; document.head.appendChild(s); }));
+
+class Component extends DCLogic {
+  state = { site: null, auto: 'Desktop', phone: '', phoneErr: null };
+  qrRef = React.createRef();
+  uid = 'dl-' + Math.random().toString(36).slice(2, 7);
+
+  componentDidMount() {
+    import(new URL('content/site-config.js', document.baseURI).href).then(m => { this.mod = m; this.setState({ site: m.SITE, auto: m.detectDevice() }); });
+  }
+  componentDidUpdate() { this.drawQr(); }
+
+  device() { const d = this.props.device ?? 'Auto'; return d === 'Auto' ? this.state.auto : d; }
+
+  redirectUrl() { const site = this.state.site || {}; return new URL(site.appRedirectPath || '/app', window.location.origin).href; }
+
+  drawQr() {
+    const el = this.qrRef.current; if (!el) return;
+    const url = this.redirectUrl();
+    if (el.dataset.url === url) return;
+    el.dataset.url = url;
+    loadQr().then(qrcode => {
+      const qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+      const n = qr.getModuleCount(), m = 2; let d = '';
+      for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c + m} ${r + m}h1v1h-1z`;
+      el.innerHTML = `<svg viewBox="0 0 ${n + m * 2} ${n + m * 2}" width="100%" height="100%" shape-rendering="crispEdges" style="display:block"><path d="${d}" fill="#141210"/></svg>`;
+    }).catch(() => { el.textContent = ''; });
+  }
+
+  track(event, data) { if (this.mod) this.mod.track(event, { source: this.props.source || 'web', ...data }); }
+
+  renderVals() {
+    const site = this.state.site || {}, dev = this.device(), layout = this.props.layout ?? 'compact';
+    const mobile = dev !== 'Desktop';
+    const storeUrl = dev === 'iOS' ? site.appStoreUrl : site.playStoreUrl;
+    return {
+      qrRef: this.qrRef, inputId: this.uid + '-phone',
+      align: this.props.align === 'center' ? 'center' : 'flex-start',
+      isMobile: mobile && !!this.state.site, desktopReady: !mobile && !!this.state.site, iosReady: dev === 'iOS', androidReady: dev === 'Android',
+      storeUrl: storeUrl || '#', storeLabel: dev === 'iOS' ? 'Download Doggzi on the App Store' : 'Get Doggzi on Google Play',
+      appStoreUrl: site.appStoreUrl || '#', playStoreUrl: site.playStoreUrl || '#',
+      appBadge: site.appStoreBadge || '', playBadge: site.playStoreBadge || '',
+      badgeDir: layout === 'badge' ? 'row' : 'column',
+      showQr: !mobile && layout !== 'badge',
+      showSend: !mobile && layout === 'full',
+      onStore: () => this.track('app_download_click', { store: dev === 'iOS' ? 'app_store' : 'play_store' }),
+      onApple: () => this.track('app_download_click', { store: 'app_store' }),
+      onPlay: () => this.track('app_download_click', { store: 'play_store' }),
+      phone: this.state.phone, phoneErr: this.state.phoneErr, phoneInvalid: this.state.phoneErr ? 'true' : 'false',
+      onPhone: e => this.setState({ phone: e.target.value.replace(/[^\d ]/g, ''), phoneErr: null }),
+      send: e => {
+        e.preventDefault();
+        const digits = this.state.phone.replace(/\D/g, '');
+        if (!/^[6-9]\d{9}$/.test(digits)) { this.setState({ phoneErr: 'Enter a 10-digit Indian mobile number.' }); return; }
+        const text = `Get the Doggzi app: ${this.redirectUrl()}`;
+        this.track('app_link_whatsapp', {});
+        window.open(`https://wa.me/91${digits}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

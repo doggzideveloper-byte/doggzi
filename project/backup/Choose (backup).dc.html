@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F65322}
+a:hover{color:#D9431A}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#F2E7CB">
+  <svg ref="{{ spriteRef }}" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+
+  <header style="position:sticky;top:0;z-index:20;background:#F2E7CB">
+    <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;height:clamp(72px,2vw + 56px,84px)">
+      <a href="Pet Passport.dc.html" onMouseEnter="{{ wobble }}" onFocus="{{ wobble }}" aria-label="Doggzi home" style="flex:none;display:flex;align-items:center;justify-content:center;width:clamp(56px,4vw + 26px,64px);height:clamp(56px,4vw + 26px,64px);border-radius:999px;background:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;outline:none" style-focus="outline:3px solid #F65322;outline-offset:4px">
+        <img src="assets/doggzi-mark.svg" alt="" style="width:100%;height:100%;display:block;pointer-events:none">
+      </a>
+      <div style="position:relative;flex:none;display:flex;align-items:center;justify-content:flex-end;min-width:190px;height:48px">
+        <button type="button" ref="{{ chipCb }}" onClick="{{ toggleMenu }}" aria-haspopup="menu" aria-expanded="{{ menuOpenAttr }}" style="display:flex;align-items:center;gap:10px;height:48px;padding:0 12px 0 5px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210;cursor:pointer;color:#141210;font:inherit;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px)" style-focus="outline:3px solid #F65322;outline-offset:3px">
+          <span style="width:36px;height:36px;border-radius:999px;background:#F2E7CB;border:2px solid #141210;overflow:hidden;display:flex;align-items:center;justify-content:center;flex:none">
+            <svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg>
+          </span>
+          <span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.05;text-align:left">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase">{{ nameUpper }}</span>
+            <span style="font-size:12px;font-weight:500;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ breed }}</span>
+          </span>
+          <svg viewBox="0 0 12 8" aria-hidden="true" style="width:12px;height:8px;flex:none"><path d="M1.5 1.5 6 6l4.5-4.5" fill="none" stroke="#141210" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+        <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+          <div role="menu" ref="{{ menuCb }}" style="position:absolute;right:0;top:calc(100% + 10px);width:236px;padding:6px;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;box-shadow:4px 4px 0 #141210;display:flex;flex-direction:column;gap:2px;transform-origin:top right">
+            <a role="menuitem" href="Pet Passport.dc.html?edit=1" style="display:flex;align-items:center;min-height:44px;padding:0 14px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;color:#141210" style-hover="background:#FCD3F8">Edit passport</a>
+            <div role="menuitem" aria-disabled="true" style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;font-weight:500;font-size:15px;color:rgba(20,18,16,.6)">Add another pet <span style="font-family:Atma,system-ui;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid rgba(20,18,16,.6);border-radius:999px;padding:1px 7px">Coming soon</span></div>
+            <button type="button" role="menuitem" onClick="{{ startOver }}" style="display:flex;align-items:center;min-height:44px;padding:0 14px;border-radius:10px;font:500 15px Poppins,system-ui;color:#D9431A;background:transparent;border:0;text-align:left;cursor:pointer" style-hover="background:#FCD3F8">Start over</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1200px;margin:0 auto;padding:clamp(24px,5vw,56px) 20px 80px;display:flex;flex-direction:column;align-items:center;gap:clamp(28px,4vw,48px)">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <sc-if value="{{ returning }}" hint-placeholder-val="{{ false }}">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:15px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Welcome back, {{ name }}</span>
+      </sc-if>
+      <h1 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.1rem,5.5vw,4rem);line-height:1.08;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">What does <span style="position:relative;display:inline-block;padding:0 .14em"><span ref="{{ sweepCb }}" aria-hidden="true" style="position:absolute;left:0;right:0;top:.12em;bottom:.06em;background:#F989EF;border-radius:10px;transform-origin:left center;transform:rotate(-1.5deg)"></span><span style="position:relative">{{ name }}</span></span> need today?</h1>
+      <p style="margin:0;font-size:18px;line-height:1.6;color:rgba(20,18,16,.75)">Pick one. You can always come back.</p>
+    </div>
+
+    <div style="width:100%;max-width:1020px;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(20px,3vw,32px)">
+
+      <div ref="{{ fresh.wrapRef }}" onKeyDown="{{ fresh.onKey }}" style="flex:1 1 280px;max-width:340px;height:clamp(300px,30vw + 120px,400px);perspective:1200px;opacity:{{ fresh.opacity }};transform:scale({{ fresh.scale }});transition:opacity 350ms cubic-bezier(.22,1,.36,1),transform 350ms cubic-bezier(.22,1,.36,1)">
+        <div onPointerMove="{{ fresh.onMove }}" onPointerLeave="{{ fresh.onLeave }}" style="height:100%;transform-style:preserve-3d;transition:transform 180ms cubic-bezier(.22,1,.36,1)">
+          <div style="position:relative;height:100%;transform-style:preserve-3d;transform:{{ fresh.flipT }};transition:transform 600ms cubic-bezier(.22,1,.36,1)">
+            <button type="button" onClick="{{ fresh.toggle }}" aria-expanded="{{ fresh.expanded }}" tabindex="{{ fresh.frontTab }}" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;opacity:{{ fresh.frontOp }};pointer-events:{{ fresh.frontPE }};transition:opacity 150ms;background:#F65322;color:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:var(--sh,4px 4px 0 #141210);padding:22px 22px 24px;display:flex;flex-direction:column;gap:8px;text-align:left;cursor:pointer;font:inherit" style-focus="outline:3px solid #141210;outline-offset:4px">
+              <span style="align-self:flex-start;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:2px 10px;background:#FFFBF2;color:#141210">Premium</span>
+              <span style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 120 100" aria-hidden="true" style="height:100%;max-height:140px;width:auto;overflow:visible" fill="#F2E7CB" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M50 26c-4-5 4-8 0-14M62 24c-4-5 4-8 0-14M74 26c-4-5 4-8 0-14" fill="none"></path>
+                  <path d="M30 50c4-14 18-20 30-20s26 6 30 20"></path>
+                  <path d="M44 40c3-3 7-4 10-2M64 37c4-1 8 0 11 3" fill="none"></path>
+                  <path d="M42 84l-2 7h40l-2-7"></path>
+                  <path d="M20 52c2 20 18 32 40 32s38-12 40-32"></path>
+                  <ellipse cx="60" cy="52" rx="40" ry="7"></ellipse>
+                  <path d="M50 66c1.5 3 4 4.5 6 3M64 69c2 1.5 4.5 0 6-3" fill="none"></path>
+                </svg>
+              </span>
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.9rem,2.6vw + 1rem,2.5rem);line-height:1;letter-spacing:.02em;text-transform:uppercase">Fresh Food</span>
+              <span style="font-size:16px;font-weight:500;line-height:1.45">{{ fresh.desc }}</span>
+            </button>
+            <div onClick="{{ fresh.toggle }}" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:{{ backT }};opacity:{{ fresh.backOp }};pointer-events:{{ fresh.backPE }};transition:opacity 150ms;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;display:flex;flex-direction:column;overflow:hidden;cursor:pointer">
+              <div style="background:#F65322;color:#FFFBF2;border-bottom:2.5px solid #141210;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:Atma,system-ui;font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase"><span>Fresh Food</span><span>for {{ name }}</span></div>
+              <div style="flex:1;min-height:0;padding:14px 18px 0;display:flex;flex-direction:column;gap:10px">
+                <p style="margin:0;font-weight:600;font-size:17px;line-height:1.3">{{ fresh.lead }}</p>
+                <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px">
+                  <sc-for list="{{ fresh.points }}" as="p" hint-placeholder-count="3">
+                    <li style="display:flex;gap:9px;align-items:flex-start;font-size:14px;line-height:1.4"><span aria-hidden="true" style="flex:none;width:9px;height:9px;margin-top:5px;border-radius:999px;background:#09A460;border:1.5px solid #141210"></span>{{ p }}</li>
+                  </sc-for>
+                </ul>
+                <p style="margin:auto 0 0;font-size:15px">Starts at <strong style="font-weight:600">{{ fresh.price }}</strong> / week</p>
+              </div>
+              <div style="padding:12px 18px 18px">
+                <button type="button" data-continue="" tabindex="{{ fresh.backTab }}" onClick="{{ fresh.cont }}" style="width:100%;height:50px;font:600 17px Poppins,system-ui;color:#FFFBF2;background:#F65322;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Continue →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ref="{{ svc.wrapRef }}" onKeyDown="{{ svc.onKey }}" style="flex:1 1 280px;max-width:340px;height:clamp(300px,30vw + 120px,400px);perspective:1200px;opacity:{{ svc.opacity }};transform:scale({{ svc.scale }});transition:opacity 350ms cubic-bezier(.22,1,.36,1),transform 350ms cubic-bezier(.22,1,.36,1)">
+        <div onPointerMove="{{ svc.onMove }}" onPointerLeave="{{ svc.onLeave }}" style="height:100%;transform-style:preserve-3d;transition:transform 180ms cubic-bezier(.22,1,.36,1)">
+          <div style="position:relative;height:100%;transform-style:preserve-3d;transform:{{ svc.flipT }};transition:transform 600ms cubic-bezier(.22,1,.36,1)">
+            <button type="button" onClick="{{ svc.toggle }}" aria-expanded="{{ svc.expanded }}" tabindex="{{ svc.frontTab }}" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;opacity:{{ svc.frontOp }};pointer-events:{{ svc.frontPE }};transition:opacity 150ms;background:#09A460;color:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:var(--sh,4px 4px 0 #141210);padding:22px 22px 24px;display:flex;flex-direction:column;gap:8px;text-align:left;cursor:pointer;font:inherit" style-focus="outline:3px solid #141210;outline-offset:4px">
+              <span style="align-self:flex-start;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:2px 10px;background:#FFFBF2;color:#141210">Dogs &amp; cats</span>
+              <span style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 120 100" aria-hidden="true" style="height:100%;max-height:140px;width:auto;overflow:visible" fill="#F2E7CB" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M77 44l26-12c3-1.5 6.5 0 7.5 3s-.5 6-3.5 7L81 54"></path>
+                  <rect x="16" y="34" width="66" height="26" rx="12" transform="rotate(-12 49 47)"></rect>
+                  <path d="M24 64l-1 12M33 62l-1 13M42 60l-1 14M51 58l-1 14M60 56l-1 14M69 54l-1 13" fill="none" transform="rotate(-12 49 47)"></path>
+                  <path d="M30 22l2 6M24 26l5 3M38 20l0 6" fill="none"></path>
+                  <path d="M92 70c0-3 2.5-5 5-5s5 2 5 5c0 4-5 8-5 8s-5-4-5-8z"></path>
+                </svg>
+              </span>
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.9rem,2.6vw + 1rem,2.5rem);line-height:1;letter-spacing:.02em;text-transform:uppercase">Services</span>
+              <span style="font-size:16px;font-weight:500;line-height:1.45">{{ svc.desc }}</span>
+            </button>
+            <div onClick="{{ svc.toggle }}" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:{{ backT }};opacity:{{ svc.backOp }};pointer-events:{{ svc.backPE }};transition:opacity 150ms;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;display:flex;flex-direction:column;overflow:hidden;cursor:pointer">
+              <div style="background:#09A460;color:#FFFBF2;border-bottom:2.5px solid #141210;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:Atma,system-ui;font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase"><span>Services</span><span>for {{ name }}</span></div>
+              <div style="flex:1;min-height:0;padding:14px 18px 0;display:flex;flex-direction:column;gap:12px">
+                <p style="margin:0;font-weight:600;font-size:17px;line-height:1.3">{{ svc.lead }}</p>
+                <ul style="margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ svc.items }}" as="it" hint-placeholder-count="4">
+                    <li style="font-size:14px;font-weight:500;padding:5px 12px;border:2px solid #141210;border-radius:999px;background:#F2E7CB">{{ it }}</li>
+                  </sc-for>
+                </ul>
+                <p style="margin:auto 0 0;font-size:15px;display:flex;align-items:center;gap:8px"><span aria-hidden="true" style="width:9px;height:9px;border-radius:999px;background:#09A460;border:1.5px solid #141210"></span>Booked &amp; tracked end to end</p>
+              </div>
+              <div style="padding:12px 18px 18px">
+                <button type="button" data-continue="" tabindex="{{ svc.backTab }}" onClick="{{ svc.cont }}" style="width:100%;height:50px;font:600 17px Poppins,system-ui;color:#FFFBF2;background:#09A460;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Continue →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ref="{{ mkt.wrapRef }}" onKeyDown="{{ mkt.onKey }}" style="flex:1 1 280px;max-width:340px;height:clamp(300px,30vw + 120px,400px);perspective:1200px;opacity:{{ mkt.opacity }};transform:scale({{ mkt.scale }});transition:opacity 350ms cubic-bezier(.22,1,.36,1),transform 350ms cubic-bezier(.22,1,.36,1)">
+        <div onPointerMove="{{ mkt.onMove }}" onPointerLeave="{{ mkt.onLeave }}" style="height:100%;transform-style:preserve-3d;transition:transform 180ms cubic-bezier(.22,1,.36,1)">
+          <div style="position:relative;height:100%;transform-style:preserve-3d;transform:{{ mkt.flipT }};transition:transform 600ms cubic-bezier(.22,1,.36,1)">
+            <button type="button" onClick="{{ mkt.toggle }}" aria-expanded="{{ mkt.expanded }}" tabindex="{{ mkt.frontTab }}" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;opacity:{{ mkt.frontOp }};pointer-events:{{ mkt.frontPE }};transition:opacity 150ms;background:#F989EF;color:#141210;border:2.5px solid #141210;border-radius:28px;box-shadow:var(--sh,4px 4px 0 #141210);padding:22px 22px 24px;display:flex;flex-direction:column;gap:8px;text-align:left;cursor:pointer;font:inherit" style-focus="outline:3px solid #141210;outline-offset:4px">
+              <span style="align-self:flex-start;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:2px 10px;background:#FFFBF2;color:#141210">Local stores</span>
+              <span style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 120 100" aria-hidden="true" style="height:100%;max-height:140px;width:auto;overflow:visible" fill="#F2E7CB" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M47 38c0-12 6-20 13-20s13 8 13 20" fill="none"></path>
+                  <path d="M30 36h60l-5 54H35z"></path>
+                  <path d="M47 38v4M73 38v4" fill="none"></path>
+                  <ellipse cx="60" cy="72" rx="8" ry="6.5"></ellipse>
+                  <ellipse cx="49" cy="61" rx="3.6" ry="4.6"></ellipse>
+                  <ellipse cx="56" cy="56" rx="3.6" ry="4.6"></ellipse>
+                  <ellipse cx="64" cy="56" rx="3.6" ry="4.6"></ellipse>
+                  <ellipse cx="71" cy="61" rx="3.6" ry="4.6"></ellipse>
+                </svg>
+              </span>
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.9rem,2.6vw + 1rem,2.5rem);line-height:1;letter-spacing:.02em;text-transform:uppercase">Marketplace</span>
+              <span style="font-size:16px;font-weight:500;line-height:1.45">{{ mkt.desc }}</span>
+            </button>
+            <div onClick="{{ mkt.toggle }}" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:{{ backT }};opacity:{{ mkt.backOp }};pointer-events:{{ mkt.backPE }};transition:opacity 150ms;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;display:flex;flex-direction:column;overflow:hidden;cursor:pointer">
+              <div style="background:#F989EF;color:#141210;border-bottom:2.5px solid #141210;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:Atma,system-ui;font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase"><span>Marketplace</span><span>for {{ name }}</span></div>
+              <div style="flex:1;min-height:0;padding:14px 18px 0;display:flex;flex-direction:column;gap:10px">
+                <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column">
+                  <sc-for list="{{ mkt.cats }}" as="c" hint-placeholder-count="4">
+                    <li style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1.5px dashed rgba(20,18,16,.3);font-size:15px"><span style="font-weight:600">{{ c.name }}</span><span style="font-variant-numeric:tabular-nums;white-space:nowrap">{{ c.range }}</span></li>
+                  </sc-for>
+                </ul>
+                <p style="margin:auto 0 0;font-size:15px">{{ mkt.stores }}</p>
+              </div>
+              <div style="padding:12px 18px 18px">
+                <button type="button" data-continue="" tabindex="{{ mkt.backTab }}" onClick="{{ mkt.cont }}" style="width:100%;height:50px;font:600 17px Poppins,system-ui;color:#141210;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Continue →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <sc-if value="{{ handoff }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ handoffCb }}" role="dialog" aria-modal="true" aria-label="{{ handoffTitle }}" style="position:fixed;inset:0;z-index:40;background:{{ handoffBg }};color:{{ handoffFg }};border:2.5px solid #141210;transform-origin:0 0;display:flex;align-items:center;justify-content:center;padding:24px">
+      <div data-handoff-content="" style="max-width:640px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;opacity:0">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2;color:#141210">{{ handoffRoute }} — next page</span>
+        <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.02;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">{{ handoffTitle }}</h2>
+        <button type="button" data-back="" onClick="{{ closeHandoff }}" style="height:52px;padding:0 24px;font:600 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">← Back to choices</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoPet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Saved passport&quot;,&quot;Dog&quot;,&quot;Cat&quot;],&quot;default&quot;:&quot;Saved passport&quot;,&quot;tsType&quot;:&quot;'Saved passport' | 'Dog' | 'Cat'&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const DEMO = { dog: { name: 'Bruno', type: 'dog', breed: 'Labrador Retriever' }, cat: { name: 'Mishti', type: 'cat', breed: 'Persian' } };
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const SOFT = 'cubic-bezier(0.2, 1.25, 0.4, 1)';
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const KEY = 'dz.passport';
+const inr = n => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
+const range = (a, b) => `${inr(a)} – ${inr(b)}`;
+
+// Teasers keyed by pet type (placeholder prices; mirrors features/choose/teasers.ts)
+const TEASERS = {
+  dog: {
+    services: ['Grooming', 'Walking', 'Boarding', 'Training', 'Vet consult'],
+    market: [['Treats', 99, 799], ['Toys', 149, 1299], ['Beds', 899, 4999], ['Grooming kits', 199, 1499]],
+    svcDesc: 'Grooming, walks, vet visits — at home',
+  },
+  cat: {
+    services: ['Grooming', 'Boarding', 'Vet consult'],
+    market: [['Treats', 99, 699], ['Litter', 249, 1199], ['Scratchers', 399, 2999], ['Toys', 99, 899]],
+    svcDesc: 'Grooming, boarding, vet visits — at home',
+  },
+};
+const FRESH_POINTS = ['Tailored by a certified pet nutritionist', 'Cooked weekly, delivered chilled — not frozen', 'Pause, skip or edit meals anytime'];
+const CARDS = [
+  { key: 'fresh', title: 'Fresh Food', route: '/fresh-food', bg: '#F65322', fg: '#FFFBF2', tilt: -4 },
+  { key: 'svc', title: 'Services', route: '/services', bg: '#09A460', fg: '#FFFBF2', tilt: 0 },
+  { key: 'mkt', title: 'Marketplace', route: '/marketplace', bg: '#F989EF', fg: '#141210', tilt: 4 },
+];
+
+class Component extends DCLogic {
+  state = { pet: DEMO.dog, returning: false, flipped: null, menuOpen: false, handoff: null, vb: { dog: '0 0 100 100', puppy: '0 0 100 100', cat: '0 0 100 100' } };
+  spriteRef = React.createRef();
+  wraps = {};
+  wrapRefs = Object.fromEntries(CARDS.map(c => [c.key, el => { this.wraps[c.key] = el; }]));
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  readPet() {
+    const mode = this.props.demoPet ?? 'Saved passport';
+    if (mode === 'Dog') return { pet: DEMO.dog, returning: false };
+    if (mode === 'Cat') return { pet: DEMO.cat, returning: false };
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    if (!saved || !saved.name) return { pet: DEMO.dog, returning: false, noPassport: true };
+    let fromP = false;
+    try { fromP = sessionStorage.getItem('dz.from') === 'passport'; sessionStorage.removeItem('dz.from'); } catch (e) {}
+    return { pet: { name: saved.name, type: saved.type, breed: saved.breed || 'Mixed / Not sure' }, returning: !fromP };
+  }
+
+  componentDidMount() {
+    const r = this.readPet();
+    this.setState({ pet: r.pet, returning: r.returning });
+    fetch('assets/pets-trio.svg').then(x => x.text()).then(t => this.buildSprite(t));
+    this.deal();
+    this.onDoc = e => { if (this.state.menuOpen && !e.target.closest('[role=menu],[aria-haspopup=menu]')) this.setState({ menuOpen: false }); };
+    this.onEsc = e => { if (e.key === 'Escape') { if (this.state.menuOpen) this.setState({ menuOpen: false }); else if (this.state.handoff) this.closeHandoff(); } };
+    document.addEventListener('pointerdown', this.onDoc);
+    document.addEventListener('keydown', this.onEsc);
+  }
+  componentWillUnmount() { document.removeEventListener('pointerdown', this.onDoc); document.removeEventListener('keydown', this.onEsc); }
+
+  componentDidUpdate(pp) {
+    if (pp.demoPet !== this.props.demoPet) { const r = this.readPet(); this.setState({ pet: r.pet, returning: r.returning }); }
+  }
+
+  buildSprite(text) {
+    const s = this.spriteRef.current; if (!s) return;
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    [...doc.documentElement.children].forEach(c => s.appendChild(document.importNode(c, true)));
+    const sq = id => { const el = s.querySelector('#' + id); el.id = 'dzc-' + id; const b = el.getBBox(); const p = 12, w = b.width + p * 2, h = b.height + p * 2, m = Math.max(w, h); return `${b.x - p - (m - w) / 2} ${b.y - p - (m - h) / 2 + m * 0.06} ${m} ${m}`; };
+    const vb = { dog: sq('lab'), puppy: sq('puppy'), cat: sq('cat') };
+    s.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dzc-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  deal() {
+    CARDS.forEach((c, i) => {
+      const el = this.wraps[c.key]; if (!el) return;
+      if (this.reduced()) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, fill: 'backwards' }); return; }
+      el.animate([{ transform: `translateY(140px) rotate(${c.tilt}deg)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 750, delay: 120 + i * 80, easing: SOFT, fill: 'backwards' });
+    });
+  }
+
+  sweepCb = el => { if (!el) return; if (this.reduced()) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); return; } el.animate([{ transform: 'rotate(-1.5deg) scaleX(0)' }, { transform: 'rotate(-1.5deg) scaleX(1)' }], { duration: 520, delay: 380, easing: EASE, fill: 'backwards' }); };
+  chipCb = el => { if (el && !el._p) { el._p = 1; el.animate(this.reduced() ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'scale(.4)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: this.reduced() ? 150 : 420, easing: BOUNCY }); } };
+  menuCb = el => { if (el) el.animate(this.reduced() ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'scale(.9) translateY(-6px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: this.reduced() ? 150 : 260, easing: BOUNCY }); };
+
+  toggle(key) {
+    const next = this.state.flipped === key ? null : key;
+    const tilt = this.wraps[key] && this.wraps[key].firstElementChild;
+    if (tilt) { tilt.style.transform = ''; tilt.style.removeProperty('--sh'); }
+    this.setState({ flipped: next }, () => {
+      const w = this.wraps[key]; if (!w) return;
+      setTimeout(() => { const t = next ? w.querySelector('[data-continue]') : w.querySelector('button'); if (t && w.contains(document.activeElement)) t.focus({ preventScroll: true }); }, this.reduced() ? 0 : 320);
+    });
+  }
+
+  cont(c) {
+    const w = this.wraps[c.key];
+    const r = (w.firstElementChild || w).getBoundingClientRect();
+    this.handoffFrom = r;
+    this.setState({ handoff: c.key });
+  }
+
+  handoffCb = el => {
+    if (!el) return;
+    const content = el.querySelector('[data-handoff-content]');
+    const showContent = () => { content.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: EASE, fill: 'forwards' }); el.querySelector('[data-back]').focus({ preventScroll: true }); };
+    if (this.reduced() || !this.handoffFrom) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }).onfinish = showContent; return; }
+    const r = this.handoffFrom, W = window.innerWidth, H = window.innerHeight;
+    el.animate([
+      { transform: `translate(${r.left}px,${r.top}px) scale(${r.width / W},${r.height / H})`, borderRadius: `${28 * W / r.width}px / ${28 * H / r.height}px` },
+      { transform: 'none', borderRadius: '0px' },
+    ], { duration: 600, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }).onfinish = showContent;
+  };
+
+  closeHandoff = () => {
+    const el = document.querySelector('[role=dialog][aria-modal]');
+    const done = () => this.setState({ handoff: null, flipped: null });
+    if (!el) return done();
+    el.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-12px)' }], { duration: this.reduced() ? 150 : 220, easing: EASE, fill: 'forwards' }).onfinish = done;
+  };
+
+  card(c) {
+    const s = this.state, flipped = s.flipped === c.key, other = s.flipped && !flipped, red = this.reduced();
+    return {
+      wrapRef: this.wrapRefs[c.key],
+      opacity: other ? 0.5 : 1, scale: other && !red ? 0.95 : 1,
+      flipT: flipped && !red ? 'rotateY(180deg)' : 'none',
+      frontOp: red && flipped ? 0 : 1, backOp: red ? (flipped ? 1 : 0) : 1,
+      frontPE: flipped ? 'none' : 'auto', backPE: flipped ? 'auto' : 'none',
+      frontTab: flipped ? -1 : 0, backTab: flipped ? 0 : -1,
+      expanded: flipped ? 'true' : 'false',
+      toggle: e => { if (e.target.closest('[data-continue]')) return; this.toggle(c.key); },
+      cont: e => { e.stopPropagation(); this.cont(c); },
+      onKey: e => { if (e.key === 'Escape' && flipped) { e.stopPropagation(); this.toggle(c.key); } },
+      onMove: e => {
+        if (red || flipped || e.pointerType !== 'mouse') return;
+        const el = e.currentTarget, b = el.getBoundingClientRect();
+        const px = (e.clientX - b.left) / b.width - 0.5, py = (e.clientY - b.top) / b.height - 0.5;
+        el.style.transform = `translateY(-2px) rotateX(${(-py * 12).toFixed(2)}deg) rotateY(${(px * 12).toFixed(2)}deg)`;
+        el.style.setProperty('--sh', '6px 6px 0 #141210');
+      },
+      onLeave: e => { e.currentTarget.style.transform = ''; e.currentTarget.style.removeProperty('--sh'); },
+    };
+  }
+
+  renderVals() {
+    const s = this.state, p = s.pet, t = TEASERS[p.type] || TEASERS.dog;
+    const v = p.type === 'cat' ? 'cat' : SMALL.has(p.breed) ? 'puppy' : 'dog';
+    const poss = p.name + (/s$/i.test(p.name) ? "'" : "'s");
+    const [fresh, svc, mkt] = CARDS.map(c => this.card(c));
+    const hc = CARDS.find(c => c.key === s.handoff);
+    const handTitles = { fresh: `Fresh meals for ${p.name}`, svc: `Services for ${p.name}`, mkt: `Shop for ${p.name}` };
+    return {
+      spriteRef: this.spriteRef, chipCb: this.chipCb, menuCb: this.menuCb, sweepCb: this.sweepCb, handoffCb: this.handoffCb,
+      name: p.name, nameUpper: p.name.toUpperCase(), breed: p.breed, returning: s.returning,
+      avatarVB: s.vb[v], avatarHref: `#dzc-${v === 'dog' ? 'lab' : v}`,
+      menuOpen: s.menuOpen, menuOpenAttr: s.menuOpen ? 'true' : 'false',
+      toggleMenu: () => this.setState(st => ({ menuOpen: !st.menuOpen })),
+      startOver: () => { try { localStorage.removeItem(KEY); } catch (e) {} window.location.href = 'Pet Passport.dc.html'; },
+      wobble: e => { if (this.reduced()) return; const a = e.currentTarget; if (a._w && a._w.playState === 'running') return; a._w = a.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)', offset: 0.3 }, { transform: 'rotate(6deg)', offset: 0.65 }, { transform: 'rotate(0)' }], { duration: 480, easing: BOUNCY }); },
+      backT: this.reduced() ? 'none' : 'rotateY(180deg)',
+      fresh: { ...fresh, desc: `Chef-cooked meals for ${p.name}`, lead: `Meals portioned for ${poss} size`, points: FRESH_POINTS, price: inr(1299) },
+      svc: { ...svc, desc: t.svcDesc, lead: `What we can do for ${p.name}`, items: t.services },
+      mkt: { ...mkt, desc: 'Food, toys and gear from stores near you', cats: t.market.map(([n, a, b]) => ({ name: n, range: range(a, b) })), stores: 'From 40+ local stores near you' },
+      handoff: !!hc, handoffBg: hc ? hc.bg : '#F2E7CB', handoffFg: hc ? hc.fg : '#141210',
+      handoffRoute: hc ? hc.route : '', handoffTitle: hc ? handTitles[hc.key] : '',
+      closeHandoff: this.closeHandoff,
+    };
+  }
+}
+</script>
+</body>
+</html>

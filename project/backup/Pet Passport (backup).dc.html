@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F65322}
+a:hover{color:#D9431A}
+input::placeholder{color:rgba(20,18,16,.5)}
+@keyframes dzLetter{0%{opacity:0;transform:translateY(10px) scale(.6)}60%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes dzFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#F2E7CB">
+  <svg ref="{{ spriteRef }}" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+
+  <header style="position:sticky;top:0;z-index:20;background:#F2E7CB">
+    <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;height:clamp(72px,2vw + 56px,84px)">
+      <a href="#" onClick="{{ goHome }}" onMouseEnter="{{ wobble }}" onFocus="{{ wobble }}" aria-label="Doggzi home" style="flex:none;display:flex;align-items:center;justify-content:center;width:clamp(56px,4vw + 26px,64px);height:clamp(56px,4vw + 26px,64px);border-radius:999px;background:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;outline:none" style-focus="outline:3px solid #F65322;outline-offset:4px">
+        <img src="assets/doggzi-mark.svg" alt="" style="width:100%;height:100%;display:block;pointer-events:none">
+      </a>
+      <div ref="{{ slotRef }}" style="flex:none;display:flex;align-items:center;justify-content:flex-end;width:190px;height:48px">
+        <sc-if value="{{ isChoose }}" hint-placeholder-val="{{ false }}">
+          <div ref="{{ chipCb }}" style="display:flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 5px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210">
+            <div style="width:36px;height:36px;border-radius:999px;background:#F2E7CB;border:2px solid #141210;overflow:hidden;display:flex;align-items:center;justify-content:center">
+              <svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg>
+            </div>
+            <div style="display:flex;flex-direction:column;line-height:1">
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase">{{ nameUpper }}</span>
+              <span style="font-family:Atma,system-ui;font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase">Pet passport</span>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <sc-if value="{{ isPassport }}" hint-placeholder-val="{{ true }}">
+    <main style="max-width:1200px;margin:0 auto;padding:28px 20px 72px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 56px;align-items:center">
+      <section aria-label="Doggzi" style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <img ref="{{ wordCb }}" src="assets/doggzi-wordmark.svg" alt="Doggzi — Not just food. Their food." style="width:min(100%,520px);min-width:160px;display:block">
+        <div ref="{{ heroCb }}" aria-hidden="true" style="width:min(100%,560px);aspect-ratio:864/492"></div>
+      </section>
+
+      <section aria-labelledby="dz-h1" style="display:flex;flex-direction:column;gap:24px;min-width:0">
+        <h1 id="dz-h1" style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.9rem,4.2vw,2.9rem);line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">
+          <sc-if value="{{ hasName }}" hint-placeholder-val="{{ false }}">Let's make <span style="background:#F989EF;border:2.5px solid #141210;border-radius:10px;padding:0 .18em;box-shadow:3px 3px 0 #141210;display:inline-block;transform:rotate(-1.5deg)">{{ namePossessive }}</span> passport</sc-if>
+          <sc-if value="{{ noName }}" hint-placeholder-val="{{ true }}">Let's make a pet passport</sc-if>
+        </h1>
+
+        <div ref="{{ cardRef }}" style="position:relative;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;overflow:hidden;transform-origin:0 0">
+          <div style="background:#F65322;color:#FFFBF2;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:2.5px solid #141210;font-family:Atma,system-ui;font-weight:700;font-size:15px;letter-spacing:.14em;text-transform:uppercase">
+            <span>Doggzi pet passport</span>
+            <span>Delhi NCR</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px;padding:20px 22px 24px">
+            <div style="flex:none;width:104px;height:104px;border-radius:999px;background:#F2E7CB;border:2.5px solid #141210;overflow:hidden;display:flex;align-items:center;justify-content:center">
+              <sc-if value="{{ hasType }}" hint-placeholder-val="{{ false }}">
+                <svg ref="{{ avatarRef }}" viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg>
+              </sc-if>
+              <sc-if value="{{ noType }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:Atma,system-ui;font-weight:700;font-size:44px;color:rgba(20,18,16,.35)">?</span>
+              </sc-if>
+            </div>
+            <div style="min-width:0;display:flex;flex-direction:column;gap:4px">
+              <span style="font-family:Atma,system-ui;font-weight:500;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,18,16,.6)">Name</span>
+              <div aria-live="polite" style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,2.6rem);line-height:1;letter-spacing:.03em;text-transform:uppercase;min-height:1em;overflow-wrap:anywhere">
+                <sc-if value="{{ hasName }}" hint-placeholder-val="{{ false }}">
+                  <sc-for list="{{ letters }}" as="l" hint-placeholder-count="0"><span style="display:inline-block;white-space:pre;animation:{{ letterAnim }}">{{ l }}</span></sc-for>
+                </sc-if>
+                <sc-if value="{{ noName }}" hint-placeholder-val="{{ true }}"><span style="color:rgba(20,18,16,.25)">Your pet</span></sc-if>
+              </div>
+              <span style="font-size:16px;font-weight:500;color:rgba(20,18,16,.75)">{{ metaLine }}</span>
+            </div>
+          </div>
+          <sc-if value="{{ approved }}" hint-placeholder-val="{{ false }}">
+            <div ref="{{ stampCb }}" aria-live="assertive" style="position:absolute;right:18px;bottom:16px;pointer-events:none">
+              <div data-stamp="" style="font-family:Atma,system-ui;font-weight:700;font-size:28px;letter-spacing:.12em;text-transform:uppercase;color:#077E4A;border:3px solid #09A460;border-radius:10px;padding:2px 14px;background:rgba(255,251,242,.85);transform:rotate(-3deg)">Approved</div>
+              <sc-for list="{{ splats }}" as="s" hint-placeholder-count="0">
+                <span data-splat="{{ s.v }}" style="position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4px;border-radius:999px;background:#09A460;opacity:0"></span>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <form onSubmit="{{ submit }}" novalidate="" style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <label for="dz-name" style="display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px">
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:2px 10px;background:#FFFBF2">Step 1</span>
+              What's their name?
+            </label>
+            <input id="dz-name" value="{{ name }}" onChange="{{ onName }}" maxlength="24" autocomplete="off" placeholder="e.g. Bruno" aria-invalid="{{ nameInvalid }}" aria-describedby="dz-name-err" style="height:56px;padding:0 18px;font:500 17px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;outline:none;transition:box-shadow 180ms cubic-bezier(.22,1,.36,1)" style-focus="box-shadow:4px 4px 0 #F65322">
+            <sc-if value="{{ nameErr }}" hint-placeholder-val="{{ false }}"><p id="dz-name-err" role="alert" style="margin:0;font-size:15px;font-weight:500;color:#D9431A">{{ nameErr }}</p></sc-if>
+          </div>
+
+          <div role="radiogroup" aria-labelledby="dz-type-l" style="display:flex;flex-direction:column;gap:10px">
+            <div id="dz-type-l" style="display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px">
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:2px 10px;background:#FFFBF2">Step 2</span>
+              Dog or cat?
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <button type="button" role="radio" aria-checked="{{ isDog }}" onClick="{{ pickDog }}" style="height:56px;display:flex;align-items:center;justify-content:center;gap:10px;font:600 17px Poppins,system-ui;color:#141210;background:{{ dogBg }};border:2.5px solid #141210;border-radius:999px;box-shadow:{{ dogShadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px)" style-active="transform:translate(3px,3px)" style-focus="outline:3px solid #F65322;outline-offset:3px"><span aria-hidden="true">🐶</span>Dog</button>
+              <button type="button" role="radio" aria-checked="{{ isCat }}" onClick="{{ pickCat }}" style="height:56px;display:flex;align-items:center;justify-content:center;gap:10px;font:600 17px Poppins,system-ui;color:#141210;background:{{ catBg }};border:2.5px solid #141210;border-radius:999px;box-shadow:{{ catShadow }};cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px)" style-active="transform:translate(3px,3px)" style-focus="outline:3px solid #F65322;outline-offset:3px"><span aria-hidden="true">🐱</span>Cat</button>
+            </div>
+            <sc-if value="{{ typeErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:15px;font-weight:500;color:#D9431A">{{ typeErr }}</p></sc-if>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;position:relative">
+            <label for="dz-breed" style="display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px">
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:2px 10px;background:#FFFBF2">Step 3</span>
+              Breed <span style="font-weight:400;font-size:15px;color:rgba(20,18,16,.65)">(optional)</span>
+            </label>
+            <input id="dz-breed" role="combobox" aria-expanded="{{ open }}" aria-controls="dz-breed-list" aria-autocomplete="list" value="{{ q }}" onChange="{{ onQ }}" onFocus="{{ openList }}" onBlur="{{ closeList }}" onKeyDown="{{ onKey }}" disabled="{{ noType }}" autocomplete="off" placeholder="{{ breedPlaceholder }}" style="height:56px;padding:0 18px;font:500 17px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;outline:none;transition:box-shadow 180ms cubic-bezier(.22,1,.36,1);opacity:{{ breedOpacity }}" style-focus="box-shadow:4px 4px 0 #F65322">
+            <sc-if value="{{ showList }}" hint-placeholder-val="{{ false }}">
+              <ul id="dz-breed-list" role="listbox" ref="{{ listRef }}" style="position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:10;margin:0;padding:6px;list-style:none;max-height:264px;overflow:auto;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;box-shadow:4px 4px 0 #141210">
+                <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+                  <li role="option" aria-selected="{{ o.active }}" onMouseDown="{{ o.pick }}" onMouseEnter="{{ o.hover }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 14px;border-radius:10px;cursor:pointer;font-size:16px;font-weight:500;background:{{ o.bg }}">
+                    <span>{{ o.name }}</span>
+                    <sc-if value="{{ o.pinned }}" hint-placeholder-val="{{ false }}"><span style="font-family:Atma,system-ui;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#077E4A">Popular</span></sc-if>
+                  </li>
+                </sc-for>
+                <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+                  <li style="padding:12px 14px;font-size:15px;color:rgba(20,18,16,.7)">No match — we'll save it as Mixed / Not sure.</li>
+                </sc-if>
+              </ul>
+            </sc-if>
+          </div>
+
+          <button type="submit" disabled="{{ approved }}" style="margin-top:6px;height:62px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font:600 19px Poppins,system-ui;color:#FFFBF2;background:#F65322;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Create passport <span aria-hidden="true">→</span></button>
+        </form>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isChoose }}" hint-placeholder-val="{{ false }}">
+    <main ref="{{ chooseCb }}" style="max-width:760px;margin:0 auto;padding:72px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center">
+      <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">/choose — placeholder</span>
+      <h1 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">{{ chooseTitle }}</h1>
+      <p style="margin:0;font-size:18px;line-height:1.6;max-width:34ch;text-wrap:pretty">Fresh Food, Services and Marketplace cards land here next.</p>
+      <button type="button" onClick="{{ reset }}" style="height:52px;padding:0 24px;font:600 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #F65322;outline-offset:4px">Make another passport</button>
+    </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;prefillDemo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const PIN = ['Indie / Desi', 'Mixed / Not sure'];
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const BREEDS = {
+  dog: ['Indie / Desi','Mixed / Not sure','Labrador Retriever','Golden Retriever','German Shepherd','Beagle','Shih Tzu','Pug','Siberian Husky','Rottweiler','Pomeranian','Doberman','Cocker Spaniel','Lhasa Apso','Boxer','Great Dane','Dachshund','French Bulldog','Maltese','Saint Bernard','Indian Spitz','Chihuahua','Pit Bull','Border Collie','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Dalmatian','Poodle','Belgian Malinois','Samoyed','Akita'],
+  cat: ['Indian / Indie','Mixed / Not sure','Persian','Siamese','Maine Coon','British Shorthair','Bengal','Ragdoll','Himalayan','Scottish Fold','Russian Blue','Exotic Shorthair','Abyssinian','Sphynx'],
+};
+const PINNED = new Set(['Indie / Desi','Indian / Indie','Mixed / Not sure']);
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const KEY = 'dz.passport';
+
+class Component extends DCLogic {
+  state = { stage: 'passport', name: '', type: null, breed: null, q: '', open: false, active: 0, errors: {}, approved: false, returning: false, vb: { dog: '0 0 100 100', puppy: '0 0 100 100', cat: '0 0 100 100' } };
+  spriteRef = React.createRef(); slotRef = React.createRef(); cardRef = React.createRef(); avatarRef = React.createRef(); listRef = React.createRef();
+  groups = {};
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    const editing = /[?&]edit=1/.test(window.location.search);
+    if (saved && saved.name && !editing) { window.location.replace('Choose.dc.html'); return; }
+    if (saved && saved.name && editing) this.setState({ name: saved.name, type: saved.type, breed: saved.breed, q: saved.breed || '' }, () => this.applyType(false));
+    else if (this.props.prefillDemo) this.setState({ name: 'Bruno', type: 'dog', breed: 'Labrador Retriever', q: 'Labrador Retriever' });
+    fetch('assets/pets-trio.svg').then(r => r.text()).then(t => {
+      this.svgText = t;
+      this.buildSprite();
+      if (this.heroEl) this.injectHero(this.heroEl);
+    });
+  }
+
+  componentDidUpdate(_, ps) {
+    if (this.variant(ps) !== this.variant(this.state) && this.avatarRef.current) {
+      this.avatarRef.current.animate([{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: this.reduced() ? 150 : 350, easing: EASE });
+    }
+    const l = this.listRef.current;
+    if (l && this.state.open && ps.active !== this.state.active) {
+      const li = l.children[this.state.active];
+      if (li) { if (li.offsetTop < l.scrollTop) l.scrollTop = li.offsetTop - 6; else if (li.offsetTop + li.offsetHeight > l.scrollTop + l.clientHeight) l.scrollTop = li.offsetTop + li.offsetHeight - l.clientHeight + 6; }
+    }
+  }
+
+  buildSprite() {
+    const s = this.spriteRef.current; if (!s) return;
+    const doc = new DOMParser().parseFromString(this.svgText, 'image/svg+xml');
+    const src = doc.documentElement;
+    [...src.children].forEach(c => s.appendChild(document.importNode(c, true)));
+    const vb = {};
+    const box = (id, pad) => { const el = s.querySelector('#' + id); el.id = 'dz-' + id; const b = el.getBBox(); return [b.x - pad, b.y - pad, b.width + pad * 2, b.height + pad * 2]; };
+    const sq = ([x, y, w, h]) => { const m = Math.max(w, h); return `${x - (m - w) / 2} ${y - (m - h) / 2 + m * 0.06} ${m} ${m}`; };
+    vb.dog = sq(box('lab', 12)); vb.puppy = sq(box('puppy', 12)); vb.cat = sq(box('cat', 12));
+    s.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dz-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  heroCb = el => { this.heroEl = el; if (el && this.svgText && !el.firstChild) this.injectHero(el); };
+
+  injectHero(el) {
+    el.innerHTML = this.svgText;
+    const svg = el.querySelector('svg');
+    svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%'); svg.style.display = 'block'; svg.style.overflow = 'visible';
+    svg.querySelectorAll('[id]').forEach(n => { n.setAttribute('data-id', n.id); n.removeAttribute('id'); });
+    const wrap = (n, origin) => { const w = document.createElementNS('http://www.w3.org/2000/svg', 'g'); n.parentNode.insertBefore(w, n); w.appendChild(n); w.style.transformBox = 'fill-box'; w.style.transformOrigin = origin; w.style.transition = `opacity 350ms ${EASE}`; return w; };
+    ['puppy', 'lab', 'cat'].forEach(k => { this.groups[k] = wrap(svg.querySelector(`[data-id="${k}"]`), '50% 100%'); });
+    this.tail = wrap(svg.querySelector('[data-id="path70"]'), '0% 100%');
+    if (this.reduced()) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); }
+    else {
+      svg.querySelectorAll('path,ellipse').forEach((p, i) => {
+        const len = p.getTotalLength ? p.getTotalLength() : 0;
+        p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.fillOpacity = 0;
+        const a = p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 950, delay: 200 + i * 3, easing: EASE, fill: 'forwards' });
+        const f = p.animate([{ fillOpacity: 0 }, { fillOpacity: 1 }], { duration: 350, delay: 900 + i * 2, easing: EASE, fill: 'forwards' });
+        f.onfinish = () => { p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; p.style.fillOpacity = ''; a.cancel(); f.cancel(); };
+      });
+    }
+    this.applyType(false);
+  }
+
+  applyType(animate) {
+    const t = this.state.type, g = this.groups;
+    if (!g.cat) return;
+    ['puppy', 'lab', 'cat'].forEach(k => { const dim = t && ((t === 'dog') === (k === 'cat')); g[k].style.opacity = dim ? 0.4 : 1; });
+    if (!animate || this.reduced()) return;
+    const hop = (w, d, h) => w.animate([{ transform: 'none' }, { transform: `translateY(-${h}px)`, offset: 0.35 }, { transform: 'none', offset: 0.7 }, { transform: `translateY(-${h * 0.3}px)`, offset: 0.85 }, { transform: 'none' }], { duration: 620, delay: d, easing: 'ease-out' });
+    if (t === 'dog') { hop(g.puppy, 0, 22); hop(g.lab, 90, 16); }
+    else { hop(g.cat, 0, 10); this.tail.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(12deg)' }, { transform: 'rotate(-9deg)' }, { transform: 'rotate(6deg)' }, { transform: 'rotate(0)' }], { duration: 900, delay: 120, easing: 'ease-in-out' }); }
+  }
+
+  wordCb = el => { if (el && !this.reduced()) el.animate([{ transform: 'scale(.6)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 520, easing: BOUNCY }); };
+  chipCb = el => { if (el) el.animate(this.reduced() ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'scale(.4)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: this.reduced() ? 150 : 420, easing: BOUNCY }); };
+  chooseCb = el => { if (el) el.animate(this.reduced() ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'translateY(24px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: this.reduced() ? 150 : 520, easing: EASE }); };
+  stampCb = el => {
+    if (!el) return;
+    const st = el.querySelector('[data-stamp]');
+    if (this.reduced()) { st.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, fill: 'both' }); return; }
+    st.animate([{ transform: 'scale(1.4) rotate(-8deg)', opacity: 0 }, { transform: 'scale(1) rotate(-3deg)', opacity: 1 }], { duration: 420, easing: BOUNCY, fill: 'both' });
+    el.querySelectorAll('[data-splat]').forEach((d, i) => {
+      const a = (i / 7) * Math.PI * 2 + 0.3, r = 70 + (i % 3) * 14;
+      d.animate([{ transform: 'translate(0,0) scale(.3)', opacity: 0 }, { transform: 'translate(0,0) scale(1)', opacity: 1, offset: 0.2 }, { transform: `translate(${Math.cos(a) * r}px,${Math.sin(a) * r * 0.55}px) scale(.5)`, opacity: 0 }], { duration: 520, delay: 260, easing: EASE, fill: 'both' });
+    });
+  };
+
+  variant(s) { if (!s.type) return null; if (s.type === 'cat') return 'cat'; return SMALL.has(s.breed) ? 'puppy' : 'dog'; }
+
+  options() {
+    const t = this.state.type; if (!t) return [];
+    const q = this.state.q.trim().toLowerCase();
+    const list = BREEDS[t];
+    const exact = list.includes(this.state.q);
+    return list.filter(n => !q || exact || n.toLowerCase().includes(q));
+  }
+
+  setType(type) {
+    if (this.state.approved) return;
+    const keep = this.state.breed && BREEDS[type].includes(this.state.breed);
+    this.setState(s => ({ type, breed: keep ? s.breed : null, q: keep ? s.q : '', errors: { ...s.errors, type: null } }), () => this.applyType(true));
+  }
+
+  pick(n) { this.setState({ breed: n, q: n, open: false }); }
+
+  validateName(n) {
+    const v = n.trim();
+    if (!v) return this.state.type === 'cat' ? 'Every cat deserves a name 🐾' : 'Every good boy needs a name 🐾';
+    if (!/^[A-Za-z .'\-]{1,24}$/.test(v)) return "Letters, spaces and . ' - only, please.";
+    return null;
+  }
+
+  submit = e => {
+    e.preventDefault();
+    if (this.state.approved) return;
+    const nameErr = this.validateName(this.state.name);
+    const typeErr = this.state.type ? null : 'Dog or cat? Pick one so we get it right.';
+    if (nameErr || typeErr) { this.setState({ errors: { name: nameErr, type: typeErr } }); return; }
+    const list = BREEDS[this.state.type];
+    const breed = this.state.breed || list.find(n => n.toLowerCase() === this.state.q.trim().toLowerCase()) || 'Mixed / Not sure';
+    this.setState({ breed, q: breed, open: false, errors: {}, approved: true, name: this.state.name.trim() });
+    setTimeout(() => this.fly(), this.reduced() ? 600 : 1150);
+  };
+
+  fly() {
+    const card = this.cardRef.current, slot = this.slotRef.current;
+    const done = () => {
+      try { localStorage.setItem(KEY, JSON.stringify({ name: this.state.name, type: this.state.type, breed: this.state.breed, created_at: new Date().toISOString() })); } catch (e) {}
+      try { sessionStorage.setItem('dz.from', 'passport'); } catch (e) {}
+      this.setState({ stage: 'choose', returning: false });
+      setTimeout(() => { window.location.href = 'Choose.dc.html'; }, this.reduced() ? 150 : 450);
+    };
+    if (!card || !slot) return done();
+    if (this.reduced()) { card.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: 'forwards' }).onfinish = done; return; }
+    const c = card.getBoundingClientRect(), s = slot.getBoundingClientRect();
+    const k = 48 / c.height;
+    const dx = s.right - c.width * k - c.left, dy = s.top - c.top;
+    card.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(${k})`, opacity: 0.15 }], { duration: 650, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' }).onfinish = done;
+  }
+
+  reset = () => {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    this.groups = {}; this.tail = null;
+    this.setState({ stage: 'passport', name: '', type: null, breed: null, q: '', open: false, active: 0, errors: {}, approved: false, returning: false });
+  };
+
+  renderVals() {
+    const s = this.state, name = s.name.trim();
+    const opts = this.options();
+    const v = this.variant(s);
+    const typeLabel = s.type === 'dog' ? 'Dog' : s.type === 'cat' ? 'Cat' : null;
+    const meta = typeLabel ? (s.breed ? `${typeLabel} · ${s.breed}` : typeLabel) : 'Dog or cat · Breed';
+    const sel = '#F989EF', off = '#FFFBF2';
+    return {
+      isPassport: s.stage === 'passport', isChoose: s.stage === 'choose',
+      spriteRef: this.spriteRef, slotRef: this.slotRef, cardRef: this.cardRef, avatarRef: this.avatarRef, listRef: this.listRef,
+      heroCb: this.heroCb, wordCb: this.wordCb, chipCb: this.chipCb, chooseCb: this.chooseCb, stampCb: this.stampCb,
+      goHome: e => { e.preventDefault(); window.scrollTo(0, 0); if (s.stage === 'choose') { this.groups = {}; this.tail = null; this.setState({ stage: 'passport', approved: false, returning: false, open: false }); } },
+      wobble: e => { if (this.reduced()) return; const a = e.currentTarget; if (a._w && a._w.playState === 'running') return; a._w = a.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)', offset: 0.3 }, { transform: 'rotate(6deg)', offset: 0.65 }, { transform: 'rotate(0)' }], { duration: 480, easing: BOUNCY }); },
+      name: s.name, hasName: !!name, noName: !name,
+      letters: name.toUpperCase().split(''),
+      letterAnim: this.reduced() ? 'dzFade 150ms both' : `dzLetter 360ms ${BOUNCY} both`,
+      nameUpper: name.toUpperCase(),
+      namePossessive: name + (/s$/i.test(name) ? "'" : "'s"),
+      metaLine: meta,
+      hasType: !!s.type && !!v, noType: !s.type,
+      avatarVB: v ? s.vb[v] : '0 0 100 100', avatarHref: v ? `#dz-${v === 'dog' ? 'lab' : v}` : '',
+      onName: e => { const val = e.target.value; this.setState(st => ({ name: val, errors: { ...st.errors, name: val && !/^[A-Za-z .'\-]*$/.test(val) ? "Letters, spaces and . ' - only, please." : null } })); },
+      nameErr: s.errors.name || null, nameInvalid: s.errors.name ? 'true' : 'false', typeErr: s.errors.type || null,
+      isDog: s.type === 'dog' ? 'true' : 'false', isCat: s.type === 'cat' ? 'true' : 'false',
+      dogBg: s.type === 'dog' ? sel : off, catBg: s.type === 'cat' ? sel : off,
+      dogShadow: s.type === 'dog' ? '4px 4px 0 #141210' : '2px 2px 0 #141210', catShadow: s.type === 'cat' ? '4px 4px 0 #141210' : '2px 2px 0 #141210',
+      pickDog: () => this.setType('dog'), pickCat: () => this.setType('cat'),
+      q: s.q, open: s.open ? 'true' : 'false', showList: s.open && !!s.type,
+      breedPlaceholder: s.type ? (s.type === 'dog' ? 'Search — Labrador, Indie, Shih Tzu…' : 'Search — Persian, Indie, Siamese…') : 'Pick dog or cat first',
+      breedOpacity: s.type ? 1 : 0.55,
+      onQ: e => { const val = e.target.value; this.setState({ q: val, open: true, active: 0, breed: BREEDS[s.type].includes(val) ? val : null }); },
+      openList: () => this.setState({ open: true }),
+      closeList: () => this.setState({ open: false }),
+      onKey: e => {
+        const n = opts.length;
+        if (e.key === 'ArrowDown') { e.preventDefault(); this.setState(st => ({ open: true, active: Math.min(n - 1, st.open ? st.active + 1 : 0) })); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); this.setState(st => ({ active: Math.max(0, st.active - 1) })); }
+        else if (e.key === 'Enter' && s.open && opts[s.active]) { e.preventDefault(); this.pick(opts[s.active]); }
+        else if (e.key === 'Escape') this.setState({ open: false });
+      },
+      options: opts.map((n, i) => ({ name: n, pinned: PINNED.has(n), active: i === s.active ? 'true' : 'false', bg: i === s.active ? '#FCD3F8' : (n === s.breed ? '#F2E7CB' : 'transparent'), pick: e => { e.preventDefault(); this.pick(n); }, hover: () => this.setState({ active: i }) })),
+      noResults: s.open && !!s.type && opts.length === 0,
+      approved: s.approved,
+      splats: [0, 1, 2, 3, 4, 5, 6].map(v => ({ v })),
+      submit: this.submit,
+      chooseTitle: s.returning ? `Welcome back, ${name}` : `${name}'s passport is ready`,
+      reset: this.reset,
+    };
+  }
+}
+</script>
+</body>
+</html>
