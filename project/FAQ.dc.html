@@ -36,9 +36,9 @@
   </section>
 </sc-if>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:720},&quot;set&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;explore&quot;,&quot;freshFood&quot;,&quot;services&quot;],&quot;default&quot;:&quot;explore&quot;,&quot;tsType&quot;:&quot;'explore' | 'freshFood'&quot;},&quot;heading&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Good questions&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:720},&quot;set&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;explore&quot;,&quot;freshFood&quot;,&quot;services&quot;,&quot;marketplace&quot;],&quot;default&quot;:&quot;explore&quot;,&quot;tsType&quot;:&quot;'explore' | 'freshFood'&quot;},&quot;heading&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Good questions&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
-const SETS = { explore: 'FAQS', freshFood: 'FRESH_FOOD_FAQS', services: 'SERVICES_FAQS' };
+const SETS = { explore: 'FAQS', freshFood: 'FRESH_FOOD_FAQS', services: 'SERVICES_FAQS', marketplace: 'MARKETPLACE_FAQS' };
 
 class Component extends DCLogic {
   state = { list: null, open: -1 };

@@ -13,6 +13,8 @@ const ExplorePage = lazy(() => import("@/features/explore/ExplorePage"));
 const FreshFoodPage = lazy(() => import("@/features/fresh-food/FreshFoodPage"));
 const ServicesPage = lazy(() => import("@/features/services/ServicesPage"));
 const MarketplacePage = lazy(() => import("@/features/marketplace/MarketplacePage"));
+const NotFound = lazy(() => import("./NotFound"));
+const OrderPage = lazy(() => import("@/features/marketplace/OrderPage"));
 const AppRedirect = lazy(() => import("./AppRedirect"));
 
 /** Signature move 6: old page fades out lifting 12px, new page slides up on a soft spring. */
@@ -54,7 +56,8 @@ export function App() {
             <Route path="/services" element={<Page><ServicesPage /></Page>} />
             <Route path="/marketplace" element={<Page><MarketplacePage /></Page>} />
             <Route path="/app" element={<AppRedirect />} />
-            <Route path="*" element={<Page><MarketplacePage notFound /></Page>} />
+            <Route path="/orders/:id" element={<Page><OrderPage /></Page>} />
+            <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>
         </AnimatePresence>
       </Suspense>

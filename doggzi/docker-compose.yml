@@ -55,6 +55,15 @@ services:
       MOCK_AVAILABILITY: "true"
     depends_on: { postgres: { condition: service_healthy } }
 
+  market:
+    build: ./services/market
+    environment:
+      DATABASE_URL: "postgresql+psycopg://${POSTGRES_USER:-doggzi}:${POSTGRES_PASSWORD}@postgres:5432/market"
+      REDIS_URL: redis://redis:6379/3
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      PAYMENTS_MODE: ${PAYMENTS_MODE:-mock}
+    depends_on: { postgres: { condition: service_healthy } }
+
   web:
     build: ./apps/web
     environment: {}
@@ -66,10 +75,11 @@ services:
       PET_PROFILE_UPSTREAM: pet-profile:8000
       BOOKING_UPSTREAM: booking:8000
       AUTH_UPSTREAM: auth:8000
+      MARKET_UPSTREAM: market:8000
       WEB_UPSTREAM: web:80
     volumes:
       - ./infra/nginx/gateway.conf.template:/etc/nginx/templates/default.conf.template:ro
-    depends_on: [web, pet-profile, booking, auth]
+    depends_on: [web, pet-profile, booking, auth, market]
 
 volumes:
   pgdata:

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F989EF}
+a:hover{color:#D9431A}
+</style>
+</helmet>
+<sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:#F2E7CB;display:flex;flex-direction:column">
+  <header style="position:sticky;top:0;z-index:20;background:#FFFBF2;border-bottom:1.5px solid #141210">
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap">
+      <a href="Console-Login.dc.html" aria-label="Doggzi Console" style="flex:none;width:42px;height:42px;border-radius:999px;background:#FFFBF2 url('assets/doggzi-mark.svg') center / contain no-repeat;border:1.5px solid #141210;box-shadow:2px 2px 0 #141210"></a>
+      <div style="display:flex;flex-direction:column;gap:1px;min-width:0;flex:1">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase;line-height:1">{{ storeName }}</span>
+        <span style="font-size:12px;color:rgba(20,18,16,.75)">Vendor console · {{ nowLabel }} IST</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600">{{ userName }}<span style="font-family:Atma,system-ui;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:1px 8px;border-radius:999px;background:#F989EF;border:1.5px solid #141210">Vendor</span></span>
+        <sc-if value="{{ multi }}" hint-placeholder-val="{{ false }}">
+          <label style="display:flex"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Switch panel</span>
+            <select onChange="{{ switchPanel }}" value="VENDOR" style="height:36px;padding:0 8px;font:600 13px Poppins,system-ui;color:#141210;background:#F2E7CB;border:1.5px solid #141210;border-radius:999px;cursor:pointer">
+              <sc-for list="{{ panelOpts }}" as="o" hint-placeholder-count="2"><option value="{{ o.role }}">{{ o.label }}</option></sc-for>
+            </select>
+          </label>
+        </sc-if>
+        <button type="button" onClick="{{ toggleMute }}" aria-pressed="{{ mutedAttr }}" aria-label="{{ muteLabel }}" style="width:36px;height:36px;border-radius:999px;border:1.5px solid #141210;background:#FFFBF2;display:flex;align-items:center;justify-content:center;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:2px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px" fill="none" stroke="#141210" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#F2E7CB"></path><path d="{{ muteIcon }}"></path></svg></button>
+        <button type="button" onClick="{{ logout }}" style="height:36px;padding:0 14px;font:600 13px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:2px">Log out</button>
+      </div>
+    </div>
+    <sc-if value="{{ holiday }}" hint-placeholder-val="{{ false }}">
+      <p role="status" style="margin:0;padding:8px 16px;background:#FBE3DF;border-top:1.5px solid #D93A2B;font-size:14px;font-weight:600">Holiday mode is on. Your listings are hidden from the Marketplace.</p>
+    </sc-if>
+  </header>
+
+  <div style="flex:1;display:grid;grid-template-columns:{{ shellCols }};min-height:0">
+    <nav aria-label="Vendor sections" style="background:#FFFBF2;border-right:{{ navBorderR }};border-bottom:{{ navBorderB }};padding:{{ navPad }};display:flex;flex-direction:{{ navDir }};gap:6px;overflow-x:auto;position:{{ navPos }};top:{{ navTop }};align-self:start;height:{{ navH }}">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+        <button type="button" onClick="{{ t.go }}" aria-current="{{ t.current }}" style="flex:none;display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;font:600 14px Poppins,system-ui;color:#141210;background:{{ t.bg }};border:1.5px solid {{ t.border }};border-radius:12px;cursor:pointer;text-align:left;white-space:nowrap" style-focus="outline:3px solid #F65322;outline-offset:2px">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;flex:none" fill="none" stroke="#141210" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.icon }}"></path></svg>
+          <span style="flex:1">{{ t.label }}</span>
+          <sc-if value="{{ t.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:{{ t.countBg }};border:1.5px solid #141210;font-size:12px;display:flex;align-items:center;justify-content:center">{{ t.count }}</span></sc-if>
+        </button>
+      </sc-for>
+    </nav>
+
+    <main style="min-width:0;padding:16px;display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ tabOrders }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Orders</h1>
+          <span style="font-size:13px;color:rgba(20,18,16,.75)">Accept new orders within {{ acceptMins }} minutes</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px;align-items:start">
+          <sc-for list="{{ columns }}" as="col" hint-placeholder-count="3">
+            <section aria-label="{{ col.title }}" style="display:flex;flex-direction:column;gap:10px;padding:10px;background:#EDE2C4;border:1.5px solid #141210;border-radius:16px;min-height:200px">
+              <h2 style="margin:0;display:flex;align-items:center;justify-content:space-between;font-family:Atma,system-ui;font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase">{{ col.title }}<span style="min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:#FFFBF2;border:1.5px solid #141210;font:600 12px Poppins,system-ui;display:flex;align-items:center;justify-content:center">{{ col.count }}</span></h2>
+              <sc-if value="{{ col.empty }}" hint-placeholder-val="{{ false }}"><p style="margin:0;padding:18px 8px;text-align:center;font-size:13px;color:rgba(20,18,16,.7)">Nothing here.</p></sc-if>
+              <sc-for list="{{ col.cards }}" as="o" hint-placeholder-count="1">
+                <article data-order="{{ o.id }}" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:#FFFBF2;border:1.5px solid {{ o.border }};border-radius:14px;box-shadow:2px 2px 0 #141210">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span style="font-weight:600;font-size:14px;font-variant-numeric:tabular-nums">{{ o.id }}</span>
+                    <span data-chip="" style="font-family:Atma,system-ui;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:1px 8px;border-radius:999px;background:{{ o.chipBg }};color:{{ o.chipFg }};border:1.5px solid {{ o.chipBorder }}">{{ o.status }}</span>
+                    <span style="margin-left:auto;font-size:12px;color:rgba(20,18,16,.75)">{{ o.placed }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="flex:none;width:40px;height:40px;border-radius:999px;background:#F2E7CB;border:1.5px solid #141210;overflow:hidden;display:flex"><svg viewBox="{{ o.avVB }}" style="width:100%;height:100%"><use href="{{ o.avHref }}"></use></svg></span>
+                    <span style="display:flex;flex-direction:column;font-size:13px;line-height:1.3"><span style="font-weight:600;font-size:14px">for {{ o.petName }}</span><span>{{ o.area }} · {{ o.phone }}</span></span>
+                  </div>
+                  <sc-if value="{{ o.isNew }}" hint-placeholder-val="{{ false }}">
+                    <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:14px">
+                      <sc-for list="{{ o.items }}" as="it" hint-placeholder-count="2"><li style="display:flex;gap:8px"><strong style="font-weight:600;min-width:28px">{{ it.qty }}×</strong><span style="flex:1">{{ it.name }}</span></li></sc-for>
+                    </ul>
+                    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:{{ o.timerBg }};border:1.5px solid #141210;border-radius:10px" role="timer" aria-label="{{ o.timerLabel }}">
+                      <span style="font-size:13px;font-weight:600;flex:1">Accept within</span>
+                      <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px;font-variant-numeric:tabular-nums">{{ o.timer }}</span>
+                    </div>
+                    <sc-if value="{{ o.rejecting }}" hint-placeholder-val="{{ false }}">
+                      <div role="group" aria-label="Reason for rejecting" style="display:flex;flex-wrap:wrap;gap:6px">
+                        <sc-for list="{{ o.reasons }}" as="r" hint-placeholder-count="3"><button type="button" onClick="{{ r.pick }}" style="min-height:40px;padding:0 12px;font:600 13px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #D93A2B;border-radius:999px;cursor:pointer">{{ r.label }}</button></sc-for>
+                      </div>
+                    </sc-if>
+                    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:8px">
+                      <button type="button" onClick="{{ o.reject }}" style="height:46px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:2px">{{ o.rejectLabel }}</button>
+                      <button type="button" onClick="{{ o.accept }}" style="height:46px;font:600 15px Poppins,system-ui;color:#141210;background:#09A460;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210;cursor:pointer" style-active="transform:translate(2px,2px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:2px">Accept</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ o.isPacking }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <sc-for list="{{ o.checks }}" as="c" hint-placeholder-count="2">
+                        <label style="display:flex;align-items:center;gap:10px;min-height:40px;padding:0 8px;border-radius:8px;background:{{ c.bg }};font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ c.done }}" onChange="{{ c.toggle }}" style="width:20px;height:20px;accent-color:#09A460">{{ c.qty }}× {{ c.name }}</label>
+                      </sc-for>
+                    </div>
+                    <button type="button" onClick="{{ o.packed }}" disabled="{{ o.packDisabled }}" style="height:46px;font:600 15px Poppins,system-ui;color:#141210;background:#F989EF;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210;cursor:pointer;opacity:{{ o.packOp }}">Mark packed</button>
+                  </sc-if>
+                  <sc-if value="{{ o.isReady }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13px">{{ o.itemsLine }}</span>
+                    <sc-if value="{{ o.isOut }}" hint-placeholder-val="{{ false }}">
+                      <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600">Delivery code (optional)
+                        <input inputmode="numeric" maxlength="4" value="{{ o.dcode }}" onChange="{{ o.onCode }}" style="height:42px;padding:0 12px;font:600 18px Atma,system-ui;letter-spacing:.4em;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none" style-focus="box-shadow:2px 2px 0 #F989EF"></label>
+                    </sc-if>
+                    <button type="button" onClick="{{ o.advance }}" style="height:46px;font:600 15px Poppins,system-ui;color:#141210;background:{{ o.advBg }};border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210;cursor:pointer">{{ o.advLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ o.isActive }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ o.tel }}" style="align-self:flex-start;display:flex;align-items:center;height:36px;padding:0 12px;font-size:13px;font-weight:600;text-decoration:none;border:1.5px solid #141210;border-radius:999px;background:#F2E7CB">Call customer</a>
+                  </sc-if>
+                </article>
+              </sc-for>
+            </section>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabProducts }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Products</h1>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" onClick="{{ openAdd }}" style="height:40px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#F989EF;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210;cursor:pointer">+ Add product</button>
+            <label style="display:flex;align-items:center;height:40px;padding:0 14px;font:600 14px Poppins,system-ui;border:1.5px solid #141210;border-radius:999px;background:#FFFBF2;cursor:pointer"><input type="file" accept=".csv,text/csv" onChange="{{ importCsv }}" style="position:absolute;width:1px;height:1px;opacity:0">Import CSV</label>
+            <button type="button" onClick="{{ exportCsv }}" style="height:40px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Export CSV template</button>
+          </div>
+        </div>
+        <sc-if value="{{ lowCount }}" hint-placeholder-val="{{ false }}">
+          <p role="alert" style="margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;background:#FBE3DF;border:1.5px solid #D93A2B;border-radius:12px;font-size:14px;font-weight:600">{{ lowText }}<button type="button" onClick="{{ showLow }}" style="height:34px;padding:0 12px;font:600 13px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Show them</button></p>
+        </sc-if>
+        <sc-if value="{{ importMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin:0;padding:8px 12px;background:#E2F4EA;border:1.5px solid #09A460;border-radius:12px;font-size:14px;font-weight:600">{{ importMsg }}</p></sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <input type="search" value="{{ pq }}" onChange="{{ onPq }}" aria-label="Search your products" placeholder="Search name or brand" style="flex:1 1 220px;height:40px;padding:0 14px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;outline:none" style-focus="box-shadow:2px 2px 0 #F989EF">
+          <select value="{{ pcat }}" onChange="{{ onPcat }}" aria-label="Category" style="height:40px;padding:0 10px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px">
+            <sc-for list="{{ catOpts }}" as="c" hint-placeholder-count="1"><option value="{{ c.v }}">{{ c.label }}</option></sc-for>
+          </select>
+          <label style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;cursor:pointer"><input type="checkbox" checked="{{ lowOnly }}" onChange="{{ onLowOnly }}" style="width:18px;height:18px;accent-color:#D93A2B">Low stock only</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600">Alert below
+            <input type="number" min="0" max="99" value="{{ threshold }}" onChange="{{ onThreshold }}" style="width:64px;height:40px;padding:0 8px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px"></label>
+        </div>
+        <div style="overflow-x:auto;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+          <table style="width:100%;min-width:860px;border-collapse:collapse;font-size:14px">
+            <thead>
+              <tr style="background:#F2E7CB;text-align:left">
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Product</th>
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Category</th>
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600;text-align:right">Price</th>
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">MRP</th>
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Stock</th>
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Photo</th>
+                <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Active</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                <tr style="background:{{ r.bg }};opacity:{{ r.op }}">
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);max-width:340px"><span style="display:block;font-weight:600;line-height:1.3">{{ r.name }}</span><span style="font-size:12px;font-family:Atma,system-ui;font-weight:700;letter-spacing:.06em;text-transform:uppercase">{{ r.brand }}</span></td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);white-space:nowrap">{{ r.cat }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ r.price }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15)"><label style="display:flex;align-items:center;gap:4px;height:36px;padding:0 8px;border:1.5px solid {{ r.mrpBorder }};border-radius:8px;background:#FFFBF2;width:110px"><span aria-hidden="true">₹</span><input inputmode="numeric" value="{{ r.mrp }}" onChange="{{ r.onMrp }}" aria-label="{{ r.mrpLabel }}" placeholder="Add" style="width:100%;border:0;background:transparent;font:500 14px Poppins,system-ui;color:#141210;outline:none"></label></td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15)">
+                    <span role="group" aria-label="{{ r.stockLabel }}" style="display:inline-flex;align-items:center;height:36px;border:1.5px solid {{ r.stockBorder }};border-radius:999px;background:{{ r.stockBg }}">
+                      <button type="button" onClick="{{ r.dec }}" aria-label="One less" style="width:32px;height:100%;border:0;background:transparent;font:600 16px Poppins,system-ui;color:#141210;cursor:pointer;border-radius:999px">−</button>
+                      <span style="min-width:28px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums">{{ r.stock }}</span>
+                      <button type="button" onClick="{{ r.inc }}" aria-label="One more" style="width:32px;height:100%;border:0;background:transparent;font:600 16px Poppins,system-ui;color:#141210;cursor:pointer;border-radius:999px">+</button>
+                    </span>
+                  </td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15)">
+                    <sc-if value="{{ r.hasPhoto }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px"><img src="{{ r.photo }}" alt="" style="width:36px;height:36px;object-fit:cover;border:1.5px solid #141210;border-radius:6px"><span style="font-family:Atma,system-ui;font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:1px 6px;border-radius:999px;background:#F65322;border:1.5px solid #141210">Pending</span></span></sc-if>
+                    <sc-if value="{{ r.noPhoto }}" hint-placeholder-val="{{ true }}"><label style="display:inline-flex;align-items:center;height:34px;padding:0 10px;font-size:13px;font-weight:600;border:1.5px dashed #141210;border-radius:8px;cursor:pointer;white-space:nowrap"><input type="file" accept="image/*" capture="environment" onChange="{{ r.onPhoto }}" style="position:absolute;width:1px;height:1px;opacity:0">Upload</label></sc-if>
+                  </td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15)"><button type="button" role="switch" aria-checked="{{ r.activeAttr }}" aria-label="{{ r.activeLabel }}" onClick="{{ r.toggle }}" style="position:relative;width:42px;height:26px;border-radius:999px;border:1.5px solid #141210;background:{{ r.swBg }};cursor:pointer;padding:0"><span aria-hidden="true" style="position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:999px;background:#FFFBF2;border:1.5px solid #141210;transform:translateX({{ r.knob }});transition:transform 160ms ease-out"></span></button></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <span style="font-size:12px;color:rgba(20,18,16,.7)">{{ rowsCount }}. Photos go to Doggzi for approval before they replace the line-art tile on the site.</span>
+      </sc-if>
+
+      <sc-if value="{{ tabPayouts }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Payouts</h1>
+          <button type="button" onClick="{{ exportStatement }}" style="height:40px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Download November statement (CSV)</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+          <sc-for list="{{ payTotals }}" as="t" hint-placeholder-count="3">
+            <div style="padding:12px;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px">{{ t.k }}</span><span style="font-family:Atma,system-ui;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums">{{ t.v }}</span></div>
+          </sc-for>
+        </div>
+        <div style="overflow-x:auto;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+          <table style="width:100%;min-width:720px;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums">
+            <thead><tr style="background:#F2E7CB;text-align:left">
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Sub-order</th>
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Date</th>
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600;text-align:right">Order value</th>
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600;text-align:right">Commission</th>
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600;text-align:right">Delivery fee</th>
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600;text-align:right">Net payout</th>
+              <th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600">Status</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ payRows }}" as="p" hint-placeholder-count="6">
+                <tr>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);font-weight:600">{{ p.id }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15)">{{ p.date }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);text-align:right">{{ p.value }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);text-align:right">−{{ p.comm }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);text-align:right">{{ p.fee }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);text-align:right;font-weight:700">{{ p.net }}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15)"><span style="font-family:Atma,system-ui;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:1px 8px;border-radius:999px;background:{{ p.bg }};color:{{ p.fg }};border:1.5px solid {{ p.border }};white-space:nowrap">{{ p.status }}</span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <span style="font-size:12px;color:rgba(20,18,16,.7)">Commission {{ commission }} (draft). On hold until delivered, then released and settled via Razorpay Route.</span>
+      </sc-if>
+
+      <sc-if value="{{ tabStore }}" hint-placeholder-val="{{ false }}">
+        <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Store profile</h1>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;align-items:start">
+          <section style="display:flex;flex-direction:column;gap:12px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:16px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Shown in "Meet the stores"</h2>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600">Shop name<input value="{{ store.name }}" onChange="{{ store.onName }}" style="height:42px;padding:0 12px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none" style-focus="box-shadow:2px 2px 0 #F989EF"></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600">One-line story<input value="{{ store.story }}" onChange="{{ store.onStory }}" maxlength="90" style="height:42px;padding:0 12px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none" style-focus="box-shadow:2px 2px 0 #F989EF"></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;width:140px">Since<input inputmode="numeric" maxlength="4" value="{{ store.since }}" onChange="{{ store.onSince }}" style="height:42px;padding:0 12px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none"></label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-for list="{{ store.photos }}" as="ph" hint-placeholder-count="3">
+                <label style="width:84px;height:84px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;border:1.5px dashed #141210;border-radius:12px;background:#F2E7CB;cursor:pointer;overflow:hidden"><input type="file" accept="image/*" onChange="{{ ph.onFile }}" style="position:absolute;width:1px;height:1px;opacity:0"><sc-if value="{{ ph.has }}" hint-placeholder-val="{{ false }}"><img src="{{ ph.src }}" alt="Store photo" style="width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ ph.none }}" hint-placeholder-val="{{ true }}"><span>+ Photo</span></sc-if></label>
+              </sc-for>
+            </div>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:12px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:16px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Opening &amp; delivery</h2>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:{{ holidayBg }};border:1.5px solid #141210;border-radius:12px">
+              <span style="display:flex;flex-direction:column"><span style="font-weight:600;font-size:15px">Holiday mode</span><span style="font-size:12px">Hides all your listings</span></span>
+              <button type="button" role="switch" aria-checked="{{ holidayAttr }}" aria-label="Holiday mode" onClick="{{ toggleHoliday }}" style="position:relative;width:46px;height:28px;border-radius:999px;border:1.5px solid #141210;background:{{ holidaySw }};cursor:pointer;padding:0"><span aria-hidden="true" style="position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:999px;background:#FFFBF2;border:1.5px solid #141210;transform:translateX({{ holidayKnob }});transition:transform 160ms ease-out"></span></button>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600">Hours<input value="{{ store.hours }}" onChange="{{ store.onHours }}" style="height:42px;padding:0 12px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none"></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;width:180px">Delivery fee (₹)<input inputmode="numeric" value="{{ store.fee }}" onChange="{{ store.onFee }}" style="height:42px;padding:0 12px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none"></label>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:13px;font-weight:600">Delivery pincodes</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ store.pins }}" as="p" hint-placeholder-count="6"><span style="height:30px;padding:0 10px;display:flex;align-items:center;font-size:12px;font-weight:600;background:#F2E7CB;border:1.5px solid #141210;border-radius:999px;font-variant-numeric:tabular-nums">{{ p }}</span></sc-for>
+              </div>
+            </div>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:12px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:16px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Staff logins</h2>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ staff }}" as="m" hint-placeholder-count="2"><li style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#F2E7CB;border-radius:10px;font-size:14px"><span style="flex:1;font-weight:600">{{ m.name }}</span><span style="font-variant-numeric:tabular-nums">{{ m.phone }}</span><span style="font-size:12px;font-weight:600">{{ m.role }}</span></li></sc-for>
+            </ul>
+            <form onSubmit="{{ invite }}" style="display:flex;gap:8px;flex-wrap:wrap">
+              <input type="tel" inputmode="numeric" maxlength="10" value="{{ invitePhone }}" onChange="{{ onInvite }}" aria-label="Staff phone number" placeholder="Staff phone" style="flex:1 1 160px;height:42px;padding:0 12px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none">
+              <button type="submit" style="height:42px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#F989EF;border:1.5px solid #141210;border-radius:10px;cursor:pointer">Invite</button>
+            </form>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabHelp }}" hint-placeholder-val="{{ false }}">
+        <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Help</h1>
+        <a href="https://wa.me/910000000000?text=Hi%20Doggzi%20OPS%2C%20I%20need%20help%20with%20my%20store." target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;height:48px;padding:0 20px;font-weight:600;text-decoration:none;background:#09A460;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210">Message Doggzi OPS on WhatsApp</a>
+        <dl style="margin:0;display:flex;flex-direction:column;gap:10px;max-width:720px">
+          <sc-for list="{{ helpFaq }}" as="f" hint-placeholder-count="4">
+            <div style="padding:12px 14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:12px"><dt style="font-weight:600;font-size:15px">{{ f.q }}</dt><dd style="margin:4px 0 0;font-size:14px;line-height:1.5">{{ f.a }}</dd></div>
+          </sc-for>
+        </dl>
+      </sc-if>
+    </main>
+  </div>
+
+  <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(20,18,16,.45)">
+      <div role="dialog" aria-modal="true" aria-labelledby="ad-t" onKeyDown="{{ escAdd }}" style="width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;padding:16px;background:#FFFBF2;border:1.5px solid #141210;border-radius:18px;box-shadow:2px 2px 0 #141210;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 id="ad-t" style="margin:0;font-size:18px;font-weight:600">Add a product</h2><button type="button" data-close="" onClick="{{ closeAdd }}" aria-label="Close" style="width:40px;height:40px;border-radius:999px;border:1.5px solid #141210;background:#F2E7CB;font:500 22px/1 Poppins,system-ui;cursor:pointer">×</button></div>
+        <p style="margin:0;font-size:13px">Search the Doggzi catalog first so products aren't duplicated.</p>
+        <input type="search" value="{{ aq }}" onChange="{{ onAq }}" aria-label="Search Doggzi catalog" placeholder="e.g. JerHigh, rope toy" style="height:44px;padding:0 14px;font:500 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;outline:none" style-focus="box-shadow:2px 2px 0 #F989EF">
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ addResults }}" as="r" hint-placeholder-count="0">
+            <li style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#F2E7CB;border-radius:10px;font-size:14px"><span style="flex:1;min-width:0"><span style="display:block;font-weight:600">{{ r.name }}</span><span style="font-size:12px">{{ r.brand }}</span></span><span style="font-size:12px;font-weight:600">{{ r.note }}</span></li>
+          </sc-for>
+        </ul>
+        <sc-if value="{{ addNone }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border:1.5px dashed #141210;border-radius:12px">
+            <span style="font-weight:600;font-size:14px">Not in the catalog? Request it.</span>
+            <button type="button" onClick="{{ requestNew }}" style="align-self:flex-start;height:42px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#F989EF;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Request "{{ aq }}"</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cropOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(20,18,16,.45)">
+      <div role="dialog" aria-modal="true" aria-labelledby="cr-t" style="width:100%;max-width:420px;padding:16px;background:#FFFBF2;border:1.5px solid #141210;border-radius:18px;display:flex;flex-direction:column;gap:12px">
+        <h2 id="cr-t" style="margin:0;font-size:18px;font-weight:600">Crop to square</h2>
+        <div style="position:relative;width:100%;aspect-ratio:1;overflow:hidden;border:1.5px solid #141210;border-radius:12px;background:#E4DDCB">
+          <img src="{{ cropSrc }}" alt="Photo preview" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ cropPos }}">
+        </div>
+        <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600">Position<input type="range" min="0" max="100" value="{{ cropX }}" onChange="{{ onCropX }}" style="accent-color:#F989EF"></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button type="button" onClick="{{ cancelCrop }}" style="height:46px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Cancel</button>
+          <button type="button" onClick="{{ saveCrop }}" style="height:46px;font:600 14px Poppins,system-ui;color:#141210;background:#F989EF;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Send for approval</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ toastCb }}" role="status" style="position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:60;max-width:calc(100% - 32px);padding:12px 16px;background:#141210;color:#FFFBF2;border-radius:14px;font-size:14px;font-weight:500">{{ toast }}</div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;newOrder&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;},&quot;lowStock&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;},&quot;holiday&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const CHIP = { new: ['#F65322', '#141210', '#141210'], acc: ['#FFFBF2', '#077E4A', '#09A460'], prog: ['#09A460', '#141210', '#141210'], done: ['#141210', '#FFFBF2', '#141210'], alert: ['#D93A2B', '#FFFBF2', '#141210'] };
+const ICON = {
+  orders: 'M5 8h14l-1.5 12h-11zM9 8a3 3 0 0 1 6 0',
+  products: 'M4 7l8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10',
+  payouts: 'M4 7h16v11H4zM4 11h16M8 15h3',
+  store: 'M3 10l2-6h14l2 6M4 10h16v10H4zM10 20v-5h4v5',
+  help: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01',
+};
+const ACCEPT_MIN = 10; // draft config
+const COMMISSION_BPS = 1000; // draft 10%
+const CATS = { treats: 'Treats', toys: 'Toys', grooming: 'Grooming & hygiene', walking: 'Walking gear', health: 'Health & supplements' };
+const ago = m => new Date(Date.now() - m * 60000);
+
+class Component extends DCLogic {
+  state = {
+    ready: false, session: null, tab: 'orders', muted: false, narrow: window.innerWidth < 900, vb: null, now: Date.now(),
+    orders: [], listings: [], threshold: 5, pq: '', pcat: 'all', lowOnly: false, importMsg: null,
+    addOpen: false, aq: '', crop: null, toast: null, holiday: false,
+    store: { name: 'Doggzi Store', story: "Doggzi's own shop, stocked by people who love pets.", since: '2024', hours: 'Mon–Sun, 9 am – 9 pm', fee: '49', pins: Array.from({ length: 18 }, (_, i) => String(122001 + i)), photos: [null, null, null] },
+    staff: [{ name: 'Meera Shah', phone: '9000000002', role: 'Owner' }, { name: 'Rohit', phone: '98xxxxxx41', role: 'Staff' }], invitePhone: '',
+  };
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() {
+    const base = document.baseURI;
+    Promise.all([import(new URL('content/console.js', base).href), import(new URL('content/marketplace.js', base).href)]).then(([C, M]) => {
+      this.C = C; this.M = M;
+      const s = C.guard(['VENDOR']); if (!s) return;
+      const stockSeed = [14, 8, 22, 6, 30, 12, 9, 18, 25, 7, 11, 16];
+      const listings = M.PRODUCTS.map((p, i) => ({ ...p, stock: stockSeed[i % stockSeed.length], active: true, mrp: '', photo: null }));
+      this.setState({ ready: true, session: s, listings, orders: this.seed(M.PRODUCTS) }, () => this.applyTweaks({}));
+    });
+    fetch('assets/pets-trio.svg').then(r => r.text()).then(t => this.buildSprite(t));
+    this.onResize = () => { const w = window.innerWidth, c = this.state.narrow, n = c ? w < 920 : w < 880; if (n !== c) this.setState({ narrow: n }); };
+    window.addEventListener('resize', this.onResize);
+    this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000);
+  }
+  componentWillUnmount() { clearInterval(this.tick); clearTimeout(this.toastT); window.removeEventListener('resize', this.onResize); this.sprite && this.sprite.remove(); }
+  componentDidUpdate(pp) { if (this.state.ready) this.applyTweaks(pp); }
+
+  applyTweaks(pp) {
+    const p = this.props;
+    if (pp.newOrder !== p.newOrder && p.newOrder) this.incoming();
+    if (pp.lowStock !== p.lowStock) this.setState(s => ({ listings: s.listings.map((l, i) => p.lowStock && [2, 9, 20, 33].includes(i) ? { ...l, stock: [2, 0, 3, 1][[2, 9, 20, 33].indexOf(i)] } : (!p.lowStock && l.stock < 5 && [2, 9, 20, 33].includes(i) ? { ...l, stock: 12 } : l)) }));
+    if (pp.holiday !== p.holiday) this.setState({ holiday: !!p.holiday });
+  }
+
+  buildSprite(text) {
+    if (document.getElementById('dzv-lab')) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const h = document.createElementNS(NS, 'svg'); h.setAttribute('aria-hidden', 'true'); h.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    doc.querySelectorAll('*').forEach(n => { if (n.namespaceURI !== NS || n.tagName === 'metadata') n.remove(); });
+    [...doc.documentElement.children].forEach(c => h.appendChild(document.importNode(c, true)));
+    document.body.appendChild(h); this.sprite = h;
+    const sq = id => { const el = h.querySelector('#' + id); el.id = 'dzv-' + id; const b = el.getBBox(), p = 12, w = b.width + p * 2, hh = b.height + p * 2, m = Math.max(w, hh); return `${b.x - p - (m - w) / 2} ${b.y - p - (m - hh) / 2 + m * 0.06} ${m} ${m}`; };
+    const vb = { dog: sq('lab'), puppy: sq('puppy'), cat: sq('cat') };
+    h.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dzv-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  seed(P) {
+    const pick = sku => P.find(p => p.sku === sku) || P[0];
+    const it = (sku, qty) => ({ sku, name: pick(sku).name, qty, price: pick(sku).price_paise });
+    return [
+      { id: 'SO-1182', status: 'new', placed: ago(2), deadline: Date.now() + 8 * 60000, pet: { name: 'Bruno', type: 'dog', breed: 'Labrador Retriever' }, area: 'Sector 56, Gurgaon', phone: '9876543210', items: [it('DZ-MKT-049', 2), it('DZ-MKT-021', 1)] },
+      { id: 'SO-1179', status: 'packing', placed: ago(18), pet: { name: 'Coco', type: 'dog', breed: 'Shih Tzu' }, area: 'Sector 57, Gurgaon', phone: '9812345609', items: [it('DZ-MKT-038', 3), it('DZ-MKT-015', 1), it('DZ-MKT-022', 1)], checks: [true, false, false] },
+      { id: 'SO-1175', status: 'ready', placed: ago(46), pet: { name: 'Mishti', type: 'cat', breed: 'Persian' }, area: 'Sector 50, Gurgaon', phone: '9988776612', items: [it('DZ-MKT-031', 1), it('DZ-MKT-032', 1)] },
+      { id: 'SO-1171', status: 'out', placed: ago(75), pet: { name: 'Leo', type: 'dog', breed: 'Beagle' }, area: 'DLF Phase 3, Gurgaon', phone: '9900112233', items: [it('DZ-MKT-024', 1)], dcode: '' },
+    ];
+  }
+
+  incoming() {
+    const P = this.M.PRODUCTS, a = P[Math.floor(Math.random() * P.length)], b = P[Math.floor(Math.random() * P.length)];
+    const id = 'SO-' + (1183 + Math.floor(Math.random() * 800));
+    this.setState(s => ({ tab: 'orders', orders: [{ id, status: 'new', placed: new Date(), deadline: Date.now() + ACCEPT_MIN * 60000, pet: { name: 'Simba', type: 'dog', breed: 'Golden Retriever' }, area: 'Sector 49, Gurgaon', phone: '9810098100', items: [{ sku: a.sku, name: a.name, qty: 1, price: a.price_paise }, { sku: b.sku, name: b.name, qty: 2, price: b.price_paise }], fresh: true }, ...s.orders] }));
+    this.C.beep(this.state.muted);
+    if (!this.reduced()) requestAnimationFrame(() => { const el = document.querySelector(`[data-order="${id}"]`); el && el.animate([{ transform: 'translateY(-10px)', opacity: 0 }, { transform: 'none', opacity: 1, offset: 0.5 }, { transform: 'rotate(-1.5deg)', offset: 0.7 }, { transform: 'rotate(1.5deg)', offset: 0.85 }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); });
+    this.flash(`New order ${id}. WhatsApp alert sent to the store.`);
+  }
+
+  flash(m) { clearTimeout(this.toastT); this.setState({ toast: m }); this.toastT = setTimeout(() => this.setState({ toast: null }), 3200); }
+  toastCb = el => { if (el && !this.reduced()) el.animate([{ transform: 'translate(-50%,12px)', opacity: 0 }, { transform: 'translate(-50%,0)', opacity: 1 }], { duration: 200, easing: 'ease-out' }); };
+  pulse(id) { if (this.reduced()) return; requestAnimationFrame(() => { const c = document.querySelector(`[data-order="${id}"] [data-chip]`); c && c.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.18)' }, { transform: 'scale(1)' }], { duration: 220, easing: 'ease-out' }); }); }
+  setOrder(id, patch, msg) { this.setState(s => ({ orders: s.orders.map(o => o.id === id ? { ...o, ...patch } : o) })); this.pulse(id); msg && this.flash(msg); }
+
+  renderVals() {
+    const s = this.state, C = this.C; if (!s.ready || !C) return { ready: false };
+    const n = s.narrow, ses = s.session, panels = C.panelsFor(ses.roles);
+    const petKey = p => p.type === 'cat' ? 'cat' : SMALL.has(p.breed) ? 'puppy' : 'dog';
+    const av = p => { const k = petKey(p); return { vb: s.vb ? s.vb[k] : '0 0 100 100', href: s.vb ? `#dzv-${{ dog: 'lab', puppy: 'puppy', cat: 'cat' }[k]}` : '' }; };
+    const mmss = ms => { const t = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
+    const card = o => {
+      const late = o.status === 'new' && s.now > o.deadline;
+      const kind = late ? 'alert' : { new: 'new', packing: 'prog', ready: 'acc', out: 'prog', delivered: 'done' }[o.status];
+      const [bg, fg, bd] = CHIP[kind];
+      const label = late ? 'Missed · sent to OPS' : { new: 'New', packing: 'Packing', ready: 'Ready', out: 'Out for delivery', delivered: 'Delivered' }[o.status];
+      const a = av(o.pet), active = ['packing', 'ready', 'out'].includes(o.status);
+      const left = o.deadline - s.now;
+      return {
+        id: o.id, status: label, chipBg: bg, chipFg: fg, chipBorder: bd, border: late ? '#D93A2B' : '#141210', placed: C.istTime(o.placed),
+        avVB: a.vb, avHref: a.href, petName: `${o.pet.name} (${o.pet.type})`, area: o.area,
+        phone: active ? `+91 ${o.phone.slice(0, 5)} ${o.phone.slice(5)}` : C.maskPhone(o.phone), tel: `tel:+91${o.phone}`, isActive: active,
+        isNew: o.status === 'new' && !late, items: o.items.map(i => ({ qty: i.qty, name: i.name })),
+        timer: mmss(left), timerBg: left < 120000 ? '#FBE3DF' : '#F2E7CB', timerLabel: `${mmss(left)} left to accept`,
+        rejecting: !!o.rejecting, rejectLabel: o.rejecting ? 'Back' : 'Reject',
+        reject: () => this.setOrder(o.id, { rejecting: !o.rejecting }),
+        reasons: ['Out of stock', 'Shop closed', 'Too far'].map(r => ({ label: r, pick: () => { this.setState(st => ({ orders: st.orders.filter(x => x.id !== o.id) })); this.flash(`${o.id} rejected (${r.toLowerCase()}). OPS will reassign or refund.`); } })),
+        accept: () => this.setOrder(o.id, { status: 'packing', checks: o.items.map(() => false), rejecting: false }, `${o.id} accepted. The customer has been told.`),
+        isPacking: o.status === 'packing',
+        checks: o.items.map((i, k) => ({ qty: i.qty, name: i.name, done: !!(o.checks || [])[k], bg: (o.checks || [])[k] ? '#E2F4EA' : 'transparent', toggle: () => this.setOrder(o.id, { checks: (o.checks || o.items.map(() => false)).map((v, x) => x === k ? !v : v) }) })),
+        packDisabled: !(o.checks || []).every(Boolean), packOp: (o.checks || []).every(Boolean) ? 1 : 0.5,
+        packed: () => this.setOrder(o.id, { status: 'ready' }, `${o.id} packed.`),
+        isReady: o.status === 'ready' || o.status === 'out', isOut: o.status === 'out',
+        itemsLine: o.items.map(i => `${i.qty}× ${i.name}`).join(' · '),
+        dcode: o.dcode || '', onCode: e => this.setOrder(o.id, { dcode: e.target.value.replace(/\D/g, '').slice(0, 4) }),
+        advLabel: o.status === 'ready' ? 'Out for delivery' : 'Mark delivered', advBg: o.status === 'ready' ? '#F989EF' : '#09A460',
+        advance: () => o.status === 'ready' ? this.setOrder(o.id, { status: 'out' }, `${o.id} is out for delivery.`) : (this.setState(st => ({ orders: st.orders.filter(x => x.id !== o.id) })), this.flash(`${o.id} delivered. Payout released.`)),
+      };
+    };
+    const cols = [['New', ['new']], ['Packing', ['packing']], ['Ready / Out', ['ready', 'out']]].map(([t, sts]) => { const cards = s.orders.filter(o => sts.includes(o.status)).map(card); return { title: t, cards, count: cards.length, empty: !cards.length }; });
+    const newCount = s.orders.filter(o => o.status === 'new' && s.now <= o.deadline).length;
+    const low = s.listings.filter(l => l.stock < s.threshold);
+    const q = s.pq.trim().toLowerCase();
+    const rows = s.listings.filter(l => (!q || (l.name + ' ' + l.brand).toLowerCase().includes(q)) && (s.pcat === 'all' || l.category === s.pcat) && (!s.lowOnly || l.stock < s.threshold));
+    const upd = (sku, patch) => this.setState(st => ({ listings: st.listings.map(l => l.sku === sku ? { ...l, ...patch } : l) }));
+    const payData = [
+      ['SO-1171', ago(75), 45000, 'on_hold'], ['SO-1168', ago(60 * 20), 129900, 'released'], ['SO-1160', ago(60 * 26), 66000, 'released'],
+      ['SO-1152', ago(60 * 50), 87500, 'settled'], ['SO-1149', ago(60 * 52), 22500, 'settled'], ['SO-1140', ago(60 * 80), 200000, 'settled'],
+    ].map(([id, d, v, st]) => { const fee = 4900, comm = Math.round(v * COMMISSION_BPS / 10000); return { id, d, v, fee, comm, net: v - comm + fee, st }; });
+    const stChip = { on_hold: ['On hold', 'new'], released: ['Released', 'acc'], settled: ['Settled', 'done'] };
+    const sum = k => payData.filter(p => p.st === k).reduce((a, p) => a + p.net, 0);
+    const aq = s.aq.trim().toLowerCase();
+    const addResults = aq.length >= 2 ? this.M.PRODUCTS.filter(p => (p.name + ' ' + p.brand).toLowerCase().includes(aq)).slice(0, 6).map(p => ({ name: p.name, brand: p.brand, note: s.listings.find(l => l.sku === p.sku) ? 'Already listed' : 'Add' })) : [];
+    return {
+      ready: true, storeName: s.store.name, nowLabel: C.istTime(s.now), userName: ses.name,
+      multi: panels.length > 1, panelOpts: [...panels].sort((a, b) => (b.role === 'VENDOR') - (a.role === 'VENDOR')).map(p => ({ role: p.role, label: `${p.label} panel` })),
+      switchPanel: e => { const r = e.target.value, p = panels.find(x => x.role === r); if (p && r !== 'VENDOR') { C.setActiveRole(r); window.location.href = p.file; } },
+      logout: () => C.logout(),
+      toggleMute: () => this.setState({ muted: !s.muted }), mutedAttr: s.muted ? 'true' : 'false', muteLabel: s.muted ? 'Unmute alerts' : 'Mute alerts', muteIcon: s.muted ? 'M16 9l5 6M21 9l-5 6' : 'M16 8c2 2 2 6 0 8M19 5c4 4 4 10 0 14',
+      holiday: s.holiday,
+      shellCols: n ? '1fr' : '220px minmax(0,1fr)', navBorderR: n ? '0' : '1.5px solid #141210', navBorderB: n ? '1.5px solid #141210' : '0', navPad: n ? '8px 12px' : '14px 10px', navDir: n ? 'row' : 'column', navPos: n ? 'static' : 'sticky', navTop: '64px', navH: n ? 'auto' : 'calc(100vh - 64px)',
+      tabs: [['orders', 'Orders', newCount], ['products', 'Products', low.length], ['payouts', 'Payouts', 0], ['store', 'Store profile', 0], ['help', 'Help', 0]].map(([k, l, c]) => ({ label: l, icon: ICON[k], current: s.tab === k ? 'page' : 'false', bg: s.tab === k ? '#FCD3F8' : 'transparent', border: s.tab === k ? '#141210' : 'transparent', hasCount: c > 0, count: c, countBg: k === 'products' ? '#FBE3DF' : '#F65322', go: () => this.setState({ tab: k }) })),
+      tabOrders: s.tab === 'orders', tabProducts: s.tab === 'products', tabPayouts: s.tab === 'payouts', tabStore: s.tab === 'store', tabHelp: s.tab === 'help',
+      acceptMins: ACCEPT_MIN, columns: cols,
+      lowCount: low.length > 0, lowText: `${low.length} product${low.length === 1 ? ' is' : 's are'} below ${s.threshold} in stock.`, showLow: () => this.setState({ lowOnly: true }),
+      importMsg: s.importMsg,
+      pq: s.pq, onPq: e => this.setState({ pq: e.target.value }), pcat: s.pcat, onPcat: e => this.setState({ pcat: e.target.value }),
+      catOpts: [{ v: 'all', label: 'All categories' }, ...Object.entries(CATS).map(([v, label]) => ({ v, label }))],
+      lowOnly: s.lowOnly, onLowOnly: e => this.setState({ lowOnly: e.target.checked }),
+      threshold: s.threshold, onThreshold: e => this.setState({ threshold: Math.max(0, Math.min(99, +e.target.value || 0)) }),
+      rowsCount: `${rows.length} of ${s.listings.length} listings`,
+      rows: rows.map(l => { const isLow = l.stock < s.threshold; return {
+        name: l.name, brand: l.brand, cat: CATS[l.category], price: C.inr(l.price_paise), bg: isLow ? '#FBE3DF' : 'transparent', op: l.active && !s.holiday ? 1 : 0.6,
+        mrp: l.mrp, mrpLabel: `MRP for ${l.name}`, mrpBorder: l.mrp ? '#141210' : 'rgba(20,18,16,.4)', onMrp: e => upd(l.sku, { mrp: e.target.value.replace(/\D/g, '').slice(0, 6) }),
+        stock: l.stock, stockLabel: `Stock for ${l.name}`, stockBorder: isLow ? '#D93A2B' : '#141210', stockBg: isLow ? '#FFFBF2' : '#F2E7CB',
+        dec: () => upd(l.sku, { stock: Math.max(0, l.stock - 1) }), inc: () => upd(l.sku, { stock: Math.min(999, l.stock + 1) }),
+        hasPhoto: !!l.photo, noPhoto: !l.photo, photo: l.photo || '',
+        onPhoto: e => { const f = e.target.files && e.target.files[0]; if (!f) return; this.setState({ crop: { sku: l.sku, src: URL.createObjectURL(f), x: 50 } }); e.target.value = ''; },
+        activeAttr: l.active ? 'true' : 'false', activeLabel: `${l.name} active`, swBg: l.active ? '#09A460' : '#E4DDCB', knob: l.active ? '16px' : '0px', toggle: () => upd(l.sku, { active: !l.active }),
+      }; }),
+      openAdd: () => this.setState({ addOpen: true, aq: '' }), closeAdd: () => this.setState({ addOpen: false }), escAdd: e => { if (e.key === 'Escape') this.setState({ addOpen: false }); },
+      addOpen: s.addOpen, aq: s.aq, onAq: e => this.setState({ aq: e.target.value }), addResults, addNone: aq.length >= 2 && !addResults.length,
+      requestNew: () => { this.setState({ addOpen: false }); this.flash(`Requested "${s.aq}". Doggzi will review it.`); },
+      exportCsv: () => C.downloadCsv('doggzi-store-listings.csv', [['row', 'sku', 'name', 'brand_as_listed', 'brand_suggested', 'category', 'pet_type', 'price_inr', 'price_paise', 'status', 'flags'], ...s.listings.map((l, i) => [i + 1, l.sku, l.name, l.brand, l.brand, l.category, l.pet_type, (l.price_paise / 100).toFixed(2), l.price_paise, l.stock > 0 ? 'In-stock' : 'Out-of-stock', ''])]),
+      importCsv: e => { const f = e.target.files && e.target.files[0]; if (!f) return; f.text().then(t => { const lines = t.trim().split(/\r?\n/); const ok = /sku/i.test(lines[0] || ''); this.setState({ importMsg: ok ? `Read ${lines.length - 1} rows from ${f.name}. Doggzi will check them before they go live.` : `${f.name} doesn't match the template columns.` }); }); e.target.value = ''; },
+      cropOpen: !!s.crop, cropSrc: s.crop ? s.crop.src : '', cropX: s.crop ? s.crop.x : 50, cropPos: s.crop ? `${s.crop.x}% 50%` : '50% 50%',
+      onCropX: e => this.setState({ crop: { ...s.crop, x: +e.target.value } }), cancelCrop: () => this.setState({ crop: null }),
+      saveCrop: () => { const c = s.crop; const img = new Image(); img.onload = () => { const m = Math.min(img.width, img.height), cv = document.createElement('canvas'); cv.width = cv.height = 480; const sx = (img.width - m) * c.x / 100, sy = (img.height - m) / 2; cv.getContext('2d').drawImage(img, sx, sy, m, m, 0, 0, 480, 480); upd(c.sku, { photo: cv.toDataURL('image/jpeg', 0.8) }); this.setState({ crop: null }); this.flash('Photo sent to Doggzi for approval.'); }; img.src = c.src; },
+      payTotals: [{ k: 'On hold', v: C.inr(sum('on_hold')) }, { k: 'Released', v: C.inr(sum('released')) }, { k: 'Settled this month', v: C.inr(sum('settled')) }],
+      payRows: payData.map(p => { const [lab, k] = stChip[p.st], [bg, fg, bd] = CHIP[k]; return { id: p.id, date: C.istDate(p.d), value: C.inr(p.v), comm: C.inr(p.comm), fee: C.inr(p.fee), net: C.inr(p.net), status: lab, bg, fg, border: bd }; }),
+      commission: `${COMMISSION_BPS / 100}%`,
+      exportStatement: () => C.downloadCsv('doggzi-store-statement-nov.csv', [['sub_order', 'date_ist', 'order_value_inr', 'commission_inr', 'delivery_fee_inr', 'net_payout_inr', 'status'], ...payData.map(p => [p.id, C.istDateTime(p.d), p.v / 100, p.comm / 100, p.fee / 100, p.net / 100, p.st])]),
+      store: { ...s.store, photos: s.store.photos.map((src, i) => ({ has: !!src, none: !src, src: src || '', onFile: e => { const f = e.target.files && e.target.files[0]; if (f) this.setState(st => ({ store: { ...st.store, photos: st.store.photos.map((x, k) => k === i ? URL.createObjectURL(f) : x) } })); } })),
+        onName: e => this.setState({ store: { ...s.store, name: e.target.value } }), onStory: e => this.setState({ store: { ...s.store, story: e.target.value } }), onSince: e => this.setState({ store: { ...s.store, since: e.target.value.replace(/\D/g, '').slice(0, 4) } }),
+        onHours: e => this.setState({ store: { ...s.store, hours: e.target.value } }), onFee: e => this.setState({ store: { ...s.store, fee: e.target.value.replace(/\D/g, '') } }) },
+      holidayAttr: s.holiday ? 'true' : 'false', holidaySw: s.holiday ? '#D93A2B' : '#E4DDCB', holidayKnob: s.holiday ? '18px' : '0px', holidayBg: s.holiday ? '#FBE3DF' : '#F2E7CB',
+      toggleHoliday: () => { this.setState({ holiday: !s.holiday }); this.flash(!s.holiday ? 'Holiday mode on. Listings hidden.' : 'Holiday mode off. Listings are live.'); },
+      staff: s.staff, invitePhone: s.invitePhone, onInvite: e => this.setState({ invitePhone: e.target.value.replace(/\D/g, '').slice(0, 10) }),
+      invite: e => { e.preventDefault(); if (!/^[6-9]\d{9}$/.test(s.invitePhone)) { this.flash('Enter a 10-digit mobile number.'); return; } this.setState(st => ({ staff: [...st.staff, { name: 'Invited', phone: C.maskPhone(st.invitePhone), role: 'Staff (pending)' }], invitePhone: '' })); this.flash('Invite sent on WhatsApp.'); },
+      helpFaq: [
+        { q: 'How fast must I accept an order?', a: `Within ${ACCEPT_MIN} minutes (draft). Missed orders go to Doggzi OPS to reassign.` },
+        { q: 'When do I get paid?', a: 'Your share is held until the order is delivered, then released through Razorpay Route.' },
+        { q: 'Why is my photo not showing?', a: 'Doggzi approves every photo first. Until then the site shows a line-art tile.' },
+        { q: 'How do I pause my store?', a: 'Turn on Holiday mode in Store profile. Your listings hide until you turn it off.' },
+      ],
+      toast: s.toast, toastCb: this.toastCb,
+    };
+  }
+}
+</script>
+</body>
+</html>

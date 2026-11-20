@@ -2,3 +2,4 @@
 CREATE DATABASE pet_profile;
 CREATE DATABASE booking;
 CREATE DATABASE auth;
+CREATE DATABASE market;

@@ -21,6 +21,7 @@ server {
     location /api/pet-profile/ { proxy_pass http://${PET_PROFILE_UPSTREAM}; }
     location /api/booking/     { proxy_pass http://${BOOKING_UPSTREAM}; }
     location /api/auth/        { proxy_pass http://${AUTH_UPSTREAM}; }
+    location /api/market/      { proxy_pass http://${MARKET_UPSTREAM}; }
     # notification is internal only (auth → notification); never exposed publicly.
     location /api/notification/ { return 404; }
     location /api/             { return 404; }

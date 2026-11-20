@@ -295,9 +295,10 @@ class Component extends DCLogic {
   handoffCb = el => {
     if (!el) return;
     const content = el.querySelector('[data-handoff-content]');
-    if (this.state.handoff === 'fresh' || this.state.handoff === 'svc') {
-      const isSvc = this.state.handoff === 'svc';
-      const go = () => { try { sessionStorage.setItem('dz.from', isSvc ? 'choose-services' : 'choose'); } catch (e) {} window.location.href = isSvc ? 'Services.dc.html' : 'Fresh Food.dc.html'; };
+    if (this.state.handoff === 'fresh' || this.state.handoff === 'svc' || this.state.handoff === 'mkt') {
+      const hk = this.state.handoff;
+      const dest = { fresh: ['choose', 'Fresh Food.dc.html'], svc: ['choose-services', 'Services.dc.html'], mkt: ['choose-marketplace', 'Marketplace.dc.html'] }[hk];
+      const go = () => { try { sessionStorage.setItem('dz.from', dest[0]); } catch (e) {} window.location.href = dest[1]; };
       if (this.reduced() || !this.handoffFrom) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, fill: 'forwards' }).onfinish = go; return; }
       const r = this.handoffFrom, W = window.innerWidth, H = window.innerHeight;
       el.querySelector('[data-handoff-content]').style.display = 'none';

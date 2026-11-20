@@ -24,7 +24,10 @@ API = "/api/booking/v1"
 
 @pytest.fixture()
 def client():
-    engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+    # TEST_DATABASE_URL (e.g. a throwaway Postgres) runs the suite against the real dialect.
+    url = os.environ.get("TEST_DATABASE_URL")
+    engine = create_engine(url) if url else create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     S = sessionmaker(bind=engine, expire_on_commit=False)
     with S() as s:

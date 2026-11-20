@@ -1,35 +1,327 @@
-import { useEffect, useRef } from "react";
-import { Badge, ButtonLink, Header, PassportChip, SiteFooter } from "@/design-system/components";
-import { useFrom, usePet } from "@/lib/passport";
-import { isReduced } from "@/lib/reducedMotion";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { Navigate } from "react-router-dom";
+import { Badge, FAQ, Header, PassportChip, SiteFooter, Sweep, Testimonials, useSectionReveals } from "@/design-system/components";
 import { css, ms } from "@/design-system/motion";
+import { CATEGORIES, DELIVERY_COMPARE, PICK_RULES, type Category } from "@/content/marketplace";
+import { track } from "@/lib/analytics";
+import type { MListing } from "@/lib/api/market";
+import type { PetType } from "@/lib/api/petProfile";
+import { useNarrow } from "@/lib/device";
+import { inrPaise } from "@/lib/format";
+import { avatarVariant, useFrom, usePet } from "@/lib/passport";
+import { isReduced } from "@/lib/reducedMotion";
+import { CheckoutDrawer } from "./CheckoutDrawer";
+import { cartStore, notifyStore, setQty as setQtyRaw, storeLine, useMarketCatalog, usePruneCart } from "./data";
+import { ProductCard } from "./ProductCard";
+import { ProductSheet } from "./ProductSheet";
+import s from "./mk.module.css";
 
-/** /marketplace is the next page to be specced (Page 05). Until then it's a pink holding page. Also the 404. */
-export default function MarketplacePage({ notFound = false }: { notFound?: boolean }) {
-  const { pet } = usePet();
-  const cover = useRef<HTMLDivElement>(null);
-  const cameFrom = useFrom();
+const ICONS: Record<string, string> = {
+  all: "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z",
+  treats: "M7 3h10v3H7zM6 6h12v13a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z",
+  toys: "M4 13c3-5 5 5 8 0s5 5 8 0M3 13a2.5 2.5 0 1 0 0 .1M21 13a2.5 2.5 0 1 0 0 .1",
+  grooming: "M8 9h8v12H8zM9 4h6l3 3h-4v2h-4V7H9zM20 4l1-1M21 7h1.5",
+  walking: "M12 2v3M12 5a4 3.5 0 1 1 0 7a4 3.5 0 1 1 0-7M12 12v6M10 18h4v4h-4z",
+  health: "M9 2h6v3H9zM7 5h10v16H7zM12 9v8M8 13h8",
+};
+const PRICES = [
+  { k: "u250", label: "Under ₹250", lo: 0, hi: 25000 },
+  { k: "250", label: "₹250–₹500", lo: 25000, hi: 50000 },
+  { k: "500", label: "₹500–₹1,000", lo: 50000, hi: 100000 },
+  { k: "1000", label: "₹1,000+", lo: 100000, hi: Infinity },
+];
+const COMPARE = [
+  { k: "Who you support", us: "A pet store in your neighbourhood", them: "A distant warehouse" },
+  { k: "Where the money goes", us: "The store’s share goes straight to the local owner, via Razorpay Route", them: "Mostly to a large platform" },
+  { k: "Returns", us: "Handled by a store you can call", them: "A ticket in a support queue" },
+  { k: "Delivery", us: DELIVERY_COMPARE, them: "From a central warehouse" },
+];
+
+/** Hero bag: tiny items drop in with a bounce, then bob. */
+function Bag() {
+  const ref = useRef<SVGSVGElement>(null);
   useEffect(() => {
-    const el = cover.current;
+    const bag = ref.current;
+    if (!bag || isReduced()) return;
+    const anims: Animation[] = [];
+    bag.querySelectorAll<SVGGElement>("[data-bag]").forEach((g, i) => {
+      const a = g.animate([{ transform: "translateY(-170px)", opacity: 0 }, { transform: "translateY(-170px)", opacity: 1, offset: 0.01 }, { transform: "translateY(0)", offset: 0.6 }, { transform: "translateY(-16px)", offset: 0.78 }, { transform: "translateY(0)" }], { duration: 700, delay: 300 + i * 260, easing: "ease-in", fill: "backwards" });
+      a.onfinish = () => { if (!isReduced()) anims.push(g.animate([{ transform: "translateY(0)" }, { transform: "translateY(-5px)" }, { transform: "translateY(0)" }], { duration: 2400 + i * 300, iterations: Infinity, easing: "ease-in-out" })); };
+      anims.push(a);
+    });
+    return () => anims.forEach((a) => a.cancel());
+  }, []);
+  const fb = { transformBox: "fill-box", transformOrigin: "50% 100%" } as const;
+  return (
+    <svg ref={ref} viewBox="0 0 280 250" role="img" aria-label="A shopping bag filling up with treats and toys" style={{ width: "100%", maxWidth: 400, display: "block", overflow: "visible" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M96 92c0-50 88-50 88 0" fill="none" strokeWidth="6" />
+      <g data-bag="" style={fb}><g transform="translate(78 40)"><rect x="0" y="10" width="34" height="9" rx="3" fill="var(--dz-orange)" /><path d="M2 19h30v40H2z" /><path d="M10 34h14M10 42h14" fill="none" strokeWidth="3" /></g></g>
+      <g data-bag="" style={fb}><g transform="translate(118 48) rotate(-18)"><rect x="6" y="6" width="44" height="12" rx="5" /><circle cx="6" cy="6" r="7" /><circle cx="6" cy="18" r="7" /><circle cx="50" cy="6" r="7" /><circle cx="50" cy="18" r="7" /><path d="M6 8h44v8H6z" stroke="none" /></g></g>
+      <g data-bag="" style={fb}><g transform="translate(172 50)"><circle cx="16" cy="16" r="16" fill="var(--dz-green)" /><path d="M2 10c10 6 18 6 28 0M2 22c10-6 18-6 28 0" fill="none" stroke="var(--dz-paper)" strokeWidth="2.4" /></g></g>
+      <g data-bag="" style={fb}><g transform="translate(150 30)"><rect x="6" y="0" width="16" height="8" rx="2" fill="var(--dz-green)" /><path d="M2 8h24v46H2z" /><path d="M14 22v14M7 29h14" fill="none" stroke="var(--dz-green)" strokeWidth="4" /></g></g>
+      <path d="M52 92h176l-14 146H66z" />
+      <path d="M52 92h176" fill="none" strokeWidth="3" />
+      <path d="M104 150c8 10 24 10 32 0M144 150c8 10 24 10 32 0" fill="none" strokeWidth="3" />
+      <path d="M126 178c6 6 22 6 28 0" fill="none" strokeWidth="3" />
+      <path d="M58 132h-24M60 160h-18" fill="none" strokeWidth="2.4" />
+    </svg>
+  );
+}
+
+/** Page 5 (/marketplace): products from local stores, filtered to the pet; cart split per store. */
+export default function MarketplacePage() {
+  const { pet, isDemo } = usePet();
+  const narrow = useNarrow(700, 740);
+  const cameFrom = useFrom();
+  const { all, forPet, vendors, offline, loading, error, refetch } = useMarketCatalog();
+  const lines = cartStore.use();
+  const notified = notifyStore.use();
+  const [mode, setMode] = useState<PetType>(pet?.type === "cat" ? "cat" : "dog");
+  const [q, setQ] = useState("");
+  const [cat, setCat] = useState<Category | "all">("all");
+  const [price, setPrice] = useState<string | null>(null);
+  const [brand, setBrand] = useState("all");
+  const [inStockOnly, setInStockOnly] = useState(false);
+  const [sort, setSort] = useState<"popular" | "low" | "new">("popular");
+  const [sheet, setSheet] = useState<MListing | null>(null);
+  const [drawer, setDrawer] = useState(false);
+  const lastFocus = useRef<Element | null>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const overlay = useRef<HTMLDivElement>(null);
+  const pill = useRef<HTMLButtonElement>(null);
+  usePruneCart(all, !loading);
+  useSectionReveals(root, { narrow, deps: [loading] });
+  useEffect(() => setMode(pet?.type === "cat" ? "cat" : "dog"), [pet?.type]);
+
+  useEffect(() => {
+    const el = overlay.current;
     if (!el) return;
     if (cameFrom !== "choose-market") return void (el.style.display = "none");
-    el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: isReduced() ? ms.reduced : 600, delay: isReduced() ? 0 : 150, easing: css.easeOut, fill: "forwards" }).onfinish = () => (el.style.display = "none");
+    el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: isReduced() ? ms.reduced : 600, delay: isReduced() ? 0 : 120, easing: css.easeOut, fill: "forwards" }).onfinish = () => (el.style.display = "none");
   }, [cameFrom]);
+
+  const byId = useMemo(() => new Map(all.map((i) => [i.id, i])), [all]);
+  const online = !offline;
+  const setQty = useCallback((id: string, qty: number) => setQtyRaw(id, qty, online && !isDemo), [online, isDemo]);
+  const qtyOf = (id: string) => lines.find((l) => l.listing_id === id)?.qty || 0;
+
+  /** Fly-to-cart: the card's tile arcs into the cart pill (same move as Services). */
+  const addToCart = useCallback((item: MListing, qty: number, src: Element | null) => {
+    const land = () => {
+      const cur = cartStore.get().find((l) => l.listing_id === item.id)?.qty || 0;
+      setQty(item.id, Math.min(10, item.available_qty, cur + qty));
+      const p = pill.current;
+      if (p && !isReduced()) {
+        p.animate([{ scale: "1" }, { scale: "1.15", offset: 0.35 }, { scale: ".95", offset: 0.7 }, { scale: "1" }], { duration: 480, easing: css.bouncy });
+        p.querySelector("[data-count]")?.animate([{ transform: "translateY(6px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 300, easing: css.bouncy });
+      }
+      track("market_add", { sku: item.sku, qty });
+    };
+    const tile = src?.querySelector<HTMLElement>("[role=img]");
+    const p = pill.current;
+    if (isReduced() || !tile || !p) return land();
+    const a = tile.getBoundingClientRect(), b = p.getBoundingClientRect();
+    const fly = tile.cloneNode(true) as HTMLElement;
+    fly.removeAttribute("role");
+    fly.setAttribute("aria-hidden", "true");
+    fly.style.cssText += `;position:fixed;left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px;z-index:80;pointer-events:none;transform-origin:0 0;margin:0`;
+    document.body.appendChild(fly);
+    const k = 40 / a.width, dx = b.left + 10 - a.left, dy = b.top + 8 - a.top;
+    fly.animate([
+      { transform: "translate(0,0) scale(1)", opacity: 1 },
+      { transform: `translate(${dx * 0.45}px,${dy * 0.45 - 140}px) scale(${(1 + k) / 2.4}) rotate(-8deg)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${dx}px,${dy}px) scale(${k})`, opacity: 0.6 },
+    ], { duration: 720, easing: "cubic-bezier(0.5, 0, 0.3, 1)" }).onfinish = () => { fly.remove(); land(); };
+  }, [setQty]);
+
+  const onAdd = useCallback((item: MListing, e: MouseEvent<HTMLButtonElement>) => {
+    const btn = e.currentTarget;
+    if (!isReduced()) btn.animate([{ transform: "none" }, { transform: "translate(3px,3px)", offset: 0.4 }, { transform: "none" }], { duration: 260, easing: css.bouncy });
+    addToCart(item, 1, btn.closest("[data-card]"));
+  }, [addToCart]);
+  const onOpen = useCallback((item: MListing, opener: HTMLElement) => { lastFocus.current = opener; setSheet(item); }, []);
+  const onNotify = useCallback((item: MListing) => notifyStore.set((l) => (l.includes(item.sku) ? l : [...l, item.sku])), []);
+
+  if (!pet) return <Navigate to="/" replace />;
+  const petKey = avatarVariant(pet.type, pet.breed);
+  const list0 = forPet(mode);
+  const qn = q.trim().toLowerCase();
+  const pr = PRICES.find((x) => x.k === price);
+  let list = list0.filter((x) => (cat === "all" || x.category === cat) && (!qn || `${x.name} ${x.brand}`.toLowerCase().includes(qn)) && (!pr || (x.price_paise >= pr.lo && x.price_paise < pr.hi)) && (brand === "all" || x.brand === brand) && (!inStockOnly || x.in_stock));
+  list = [...list].sort(sort === "low" ? (a, b) => a.price_paise - b.price_paise : sort === "new" ? (a, b) => b.popularity_rank - a.popularity_rank : (a, b) => a.popularity_rank - b.popularity_rank);
+  const rule = mode === "cat" ? PICK_RULES.cat : petKey === "puppy" ? PICK_RULES.small : PICK_RULES.large;
+  const picked = all
+    .filter((x) => x.pet_types.some((t) => rule.pet_types.includes(t)) && (mode === "dog" ? x.pet_types.includes("dog") : x.pet_types.includes("cat")) && (!rule.categories || rule.categories.includes(x.category)) && (!rule.max_price_paise || x.price_paise <= rule.max_price_paise) && x.in_stock)
+    .sort((a, b) => a.popularity_rank - b.popularity_rank)
+    .slice(0, 8);
+  const brands = [...new Set(list0.map((x) => x.brand))].sort((a, b) => a.localeCompare(b));
+  const count = lines.reduce((t, l) => t + (byId.has(l.listing_id) ? l.qty : 0), 0);
+  const cartTotal = (() => {
+    const fees = new Map<string, number>();
+    let sub = 0;
+    lines.forEach((l) => { const i = byId.get(l.listing_id); if (i) { sub += i.price_paise * l.qty; fees.set(i.vendor.id, i.vendor.delivery_fee_paise); } });
+    return sub + [...fees.values()].reduce((a, b) => a + b, 0);
+  })();
+  const localStores = vendors.filter((v) => !v.is_doggzi);
+  const toShop = () => {
+    const sh = document.getElementById("shop");
+    if (sh) window.scrollTo({ top: sh.getBoundingClientRect().top + window.scrollY - 150, behavior: isReduced() ? "auto" : "smooth" });
+  };
+  const card = (x: MListing) => <ProductCard key={x.id} item={x} storeLine={storeLine(x.vendor)} inCart={qtyOf(x.id)} notified={notified.includes(x.sku)} onOpen={onOpen} onAdd={onAdd} onNotify={onNotify} />;
+
   return (
-    <div style={{ minHeight: "100vh", background: notFound ? undefined : "var(--section-market)" }}>
-      <Header bg={notFound ? undefined : "var(--section-market)"} right={pet && <PassportChip pet={pet} pop={false} />} />
-      <main className="dz-container" style={{ maxWidth: 760, padding: "72px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 20, textAlign: "center" }}>
-        <Badge>{notFound ? "404" : "Coming soon"}</Badge>
-        <h1 className="dz-display" style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)" }}>
-          {notFound ? "This page went for a walk" : pet ? `Shop for ${pet.name}` : "Marketplace"}
-        </h1>
-        <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6, maxWidth: "36ch" }}>
-          {notFound ? "Let's get you back to somewhere useful." : "Food, toys and gear from verified local stores near you. We're stocking the shelves."}
-        </p>
-        <ButtonLink to={pet ? "/choose" : "/"} variant="secondary">← {pet ? "Back to choices" : "Make a passport"}</ButtonLink>
+    <div ref={root} className={`${s.root} ${narrow ? s.narrow : ""}`}>
+      <div ref={overlay} aria-hidden="true" className={s.overlay} />
+      <Header right={<PassportChip pet={pet} pop={false} />} />
+      <main>
+        <section className={s.hero}>
+          <div className={`${s.wrap} ${s.heroGrid}`}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 18, alignItems: "flex-start", minWidth: 0 }}>
+              <Badge>Marketplace</Badge>
+              <h1 className={`dz-display ${s.h1}`}>Treats, toys &amp; more for <span className={s.nameTag}>{pet.name}</span></h1>
+              <form role="search" className={s.search} onSubmit={(e) => { e.preventDefault(); toShop(); }}>
+                <svg viewBox="0 0 24 24" aria-hidden="true" style={{ flex: "none", width: 22, height: 22, margin: "0 4px 0 18px" }} fill="none" stroke="var(--dz-ink)" strokeWidth="2.4" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>
+                <label htmlFor="mk-q" className="dz-sr-only">Search products</label>
+                <input id="mk-q" type="search" value={q} placeholder="Search treats, toys, brands…" autoComplete="off" onChange={(e) => setQ(e.target.value)} />
+              </form>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 14 }}>
+                <div role="radiogroup" aria-label="Shopping for" className={s.toggle}>
+                  {(["dog", "cat"] as const).map((k) => <button key={k} type="button" role="radio" aria-checked={mode === k} onClick={() => { setMode(k); setBrand("all"); }}>{k === "dog" ? "Dog" : "Cat"}</button>)}
+                </div>
+                <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 600 }}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 22, height: 22 }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round"><path d="M3 10l2-6h14l2 6" /><path d="M4 10h16v10H4z" /><path d="M10 20v-5h4v5" /></svg>
+                  Delivered by local stores near you
+                </span>
+              </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", minWidth: 0 }}><Bag /></div>
+          </div>
+        </section>
+
+        <nav aria-label="Categories" className={s.rail}>
+          <div className={`${s.wrap} ${s.railInner} dz-noscrollbar`}>
+            {[{ key: "all" as const, label: "All" }, ...CATEGORIES].map((c) => (
+              <button key={c.key} type="button" className={s.chip} aria-pressed={cat === c.key} onClick={() => { setCat(c.key); const sh = document.getElementById("shop"); if (sh && sh.getBoundingClientRect().top > 200) toShop(); }}>
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d={ICONS[c.key]} /></svg>
+                <span>{c.label}</span>
+                <span className={s.count}>{c.key === "all" ? list0.length : list0.filter((x) => x.category === c.key).length}</span>
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {loading && <p className={s.wrap} role="status" style={{ padding: "40px 20px", fontWeight: 600 }}>Stocking the shelves…</p>}
+        {error && <p className={s.wrap} role="alert" style={{ padding: "40px 20px" }}>We couldn't load the shop. <button type="button" onClick={refetch} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button></p>}
+
+        {picked.length > 0 && (
+          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(40px,6vw,72px)" }}>
+            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <h2 className={s.h2}>Picked for <Sweep>{pet.name}</Sweep></h2>
+              <p style={{ margin: 0, fontSize: 15, color: "rgba(20,18,16,.8)" }}>{mode === "cat" ? `For cats like ${pet.name}` : petKey === "puppy" ? `Small chews and treats sized for a ${pet.breed}` : `Tough toys and gear for a ${pet.breed}`}</p>
+            </div>
+            <div data-ri="" className={s.picked}>{picked.map((x) => <div key={x.id}>{card(x)}</div>)}</div>
+          </section>
+        )}
+
+        <section id="shop" data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(40px,6vw,72px)", paddingBottom: "clamp(56px,8vw,104px)", scrollMarginTop: 150 }}>
+          <div data-ri="" style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+            <h2 className={s.h2}>{cat === "all" ? "Everything" : CATEGORIES.find((c) => c.key === cat)?.label}</h2>
+            <span aria-live="polite" style={{ fontSize: 15, fontWeight: 500 }}>{list.length} product{list.length === 1 ? "" : "s"}</span>
+          </div>
+          <div data-ri="" className={s.filters}>
+            <div role="group" aria-label="Price" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {PRICES.map((x) => <button key={x.k} type="button" className={s.fchip} aria-pressed={price === x.k} onClick={() => setPrice(price === x.k ? null : x.k)}>{x.label}</button>)}
+            </div>
+            <label className={s.lbl}>Brand
+              <select className={s.select} value={brand} onChange={(e) => setBrand(e.target.value)}>
+                <option value="all">All brands</option>
+                {brands.map((b) => <option key={b} value={b}>{b}</option>)}
+              </select>
+            </label>
+            <label className={s.lbl} style={{ cursor: "pointer" }}>
+              <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} style={{ width: 20, height: 20, accentColor: "var(--dz-orange)", cursor: "pointer" }} />In stock
+            </label>
+            <label className={s.lbl} style={{ marginLeft: "auto" }}>Sort
+              <select className={s.select} value={sort} onChange={(e) => setSort(e.target.value as typeof sort)}>
+                <option value="popular">Popular</option>
+                <option value="low">Price: low to high</option>
+                <option value="new">New</option>
+              </select>
+            </label>
+          </div>
+          {mode === "cat" && <p className={s.soon}><Badge size="sm" style={{ fontSize: 13 }}>Coming soon</Badge>More for cats coming soon.</p>}
+          <div className={s.grid}>{list.map(card)}</div>
+          {!loading && !list.length && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "32px 16px", textAlign: "center" }}>
+              <p style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>Nothing matches that yet.</p>
+              <button type="button" className={s.fchip} style={{ height: 46, background: "var(--dz-paper)", boxShadow: "3px 3px 0 var(--dz-ink)" }} onClick={() => { setQ(""); setCat("all"); setPrice(null); setBrand("all"); setInStockOnly(false); }}>Clear filters</button>
+            </div>
+          )}
+        </section>
+
+        <section id="why-local" data-reveal="" className={s.band}>
+          <div className={s.wrap} style={{ maxWidth: 1000, paddingTop: "clamp(56px,8vw,104px)", paddingBottom: "clamp(56px,8vw,104px)", display: "flex", flexDirection: "column", gap: "clamp(24px,4vw,36px)" }}>
+            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+              <Badge tone="cream">Why buy local</Badge>
+              <h2 className="dz-h2">Your money stays in the neighbourhood</h2>
+            </div>
+            <div data-ri="" role="table" aria-label="Doggzi compared with a big warehouse app" className={s.cmp}>
+              <div role="row" className={`${s.cmpRow} ${s.cmpHead}`}>
+                <span role="columnheader" />
+                <span role="columnheader" style={{ background: "var(--dz-pink)", color: "var(--dz-ink)" }}>Doggzi</span>
+                <span role="columnheader">Big warehouse app</span>
+              </div>
+              {COMPARE.map((r) => (
+                <div key={r.k} role="row" className={s.cmpRow}>
+                  <span role="rowheader" className={s.cmpK}>{r.k}</span>
+                  <span role="cell" className={s.cmpUs}>{r.us}</span>
+                  <span role="cell" className={s.cmpThem}>{r.them}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Meet the stores: hidden until at least one real vendor other than Doggzi Store is live. */}
+        {localStores.length > 0 && (
+          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(56px,8vw,104px)" }}>
+            <h2 data-ri="" className="dz-h2">Meet the stores</h2>
+            <div data-ri="" className={s.stores}>
+              {localStores.map((v) => (
+                <article key={v.id} className={s.store}>
+                  <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 18, letterSpacing: ".06em", textTransform: "uppercase" }}>{v.name}</span>
+                  {v.area && <span style={{ fontSize: 14 }}>{v.area}</span>}
+                  {v.story && <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5 }}>{v.story}</p>}
+                  {v.since_year && <Badge size="sm" tone="cream" style={{ alignSelf: "flex-start" }}>Since {v.since_year}</Badge>}
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <Testimonials tag="marketplace" heading="Happy shoppers" />
+        <FAQ set="marketplace" heading="Shopping questions" />
       </main>
       <SiteFooter />
-      <div ref={cover} aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 40, background: "var(--section-market)", pointerEvents: "none" }} />
+
+      <button ref={pill} type="button" className={s.cartPill} onClick={() => { lastFocus.current = document.activeElement; setDrawer(true); }} aria-label={count ? `Open cart: ${count} items, ${inrPaise(cartTotal)}` : "Open cart (empty)"}>
+        <span className={s.cartIcon}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 22, height: 22 }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round"><path d="M5 8h14l-1.5 12h-11z" /><path d="M9 8a3 3 0 0 1 6 0" fill="none" /></svg>
+          <span data-count="" className={s.cartCount}>{count}</span>
+        </span>
+        <span>{count ? inrPaise(cartTotal) : "Cart"}</span>
+      </button>
+
+      {sheet && (
+        <ProductSheet item={sheet} narrow={narrow} notified={notified.includes(sheet.sku)}
+          onAdd={(qty, el) => addToCart(sheet, qty, el)} onNotify={() => onNotify(sheet)}
+          onClose={() => { setSheet(null); (lastFocus.current as HTMLElement | null)?.focus?.({ preventScroll: true }); }} />
+      )}
+      {drawer && (
+        <CheckoutDrawer narrow={narrow} lines={lines} byId={byId} pet={pet} isDemo={isDemo} offline={offline} setQty={setQty}
+          onPaid={() => cartStore.set([])}
+          onClose={() => { setDrawer(false); (lastFocus.current as HTMLElement | null)?.focus?.({ preventScroll: true }); }} />
+      )}
     </div>
   );
 }

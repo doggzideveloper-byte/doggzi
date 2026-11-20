@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div ref="{{ rootRef }}" role="img" aria-label="{{ label }}" style="position:relative;width:100%;aspect-ratio:6/5;background:#FCD3F8;border:2px solid #141210;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:{{ op }};filter:{{ filt }}">
+  <svg viewBox="0 0 120 90" aria-hidden="true" style="width:78%;max-height:76%;display:block;overflow:visible" fill="#FFFBF2" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <sc-if value="{{ isTreats }}" hint-placeholder-val="{{ false }}">
+      <circle data-a="crumb" cx="50" cy="12" r="3" fill="#F2E7CB" style="transform-box:fill-box;transform-origin:center;opacity:0"></circle>
+      <circle data-a="crumb" cx="70" cy="9" r="2.5" fill="#F2E7CB" style="transform-box:fill-box;transform-origin:center;opacity:0"></circle>
+      <path d="M40 28h40v4c6 4 8 10 8 18v22a8 8 0 0 1-8 8H40a8 8 0 0 1-8-8V50c0-8 2-14 8-18z"></path>
+      <g data-a="lid" style="transform-box:fill-box;transform-origin:0% 100%"><rect x="37" y="17" width="46" height="11" rx="4" fill="#F989EF"></rect></g>
+      <rect x="40" y="46" width="40" height="22" rx="5" fill="#F2E7CB"></rect>
+      <path d="M52 54h16M52 60h16" fill="none" stroke-width="5"></path>
+      <path d="M52 54h16M52 60h16" fill="none" stroke="#FFFBF2" stroke-width="1.6"></path>
+    </sc-if>
+    <sc-if value="{{ isToys }}" hint-placeholder-val="{{ false }}">
+      <g data-a="lines"><path d="M14 36l-7-4M12 46H3M14 56l-7 4M106 36l7-4M108 46h9M106 56l7 4" fill="none" stroke-width="2.2"></path></g>
+      <g data-a="toy" style="transform-box:fill-box;transform-origin:center">
+        <path d="M30 48c10-14 20 14 30 0s20 14 30 0" fill="none" stroke-width="9"></path>
+        <path d="M30 48c10-14 20 14 30 0s20 14 30 0" fill="none" stroke="#F989EF" stroke-width="4.4"></path>
+        <circle cx="25" cy="50" r="10" fill="#FFFBF2"></circle>
+        <path d="M19 46l12 8M19 54l12-8" fill="none" stroke-width="1.8"></path>
+        <circle cx="95" cy="46" r="10" fill="#FFFBF2"></circle>
+        <path d="M89 42l12 8M89 50l12-8" fill="none" stroke-width="1.8"></path>
+      </g>
+    </sc-if>
+    <sc-if value="{{ isGrooming }}" hint-placeholder-val="{{ false }}">
+      <circle data-a="mist" cx="88" cy="22" r="2.6" fill="#FFFBF2" stroke-width="1.8" style="transform-box:fill-box;transform-origin:center;opacity:0"></circle>
+      <circle data-a="mist" cx="94" cy="16" r="2" fill="#FFFBF2" stroke-width="1.8" style="transform-box:fill-box;transform-origin:center;opacity:0"></circle>
+      <circle data-a="mist" cx="95" cy="27" r="2.2" fill="#FFFBF2" stroke-width="1.8" style="transform-box:fill-box;transform-origin:center;opacity:0"></circle>
+      <path d="M50 18h24l8 8H70v6H56v-6h-6z" fill="#F989EF"></path>
+      <path d="M48 32h30v42a6 6 0 0 1-6 6H54a6 6 0 0 1-6-6z"></path>
+      <rect x="52" y="44" width="22" height="18" rx="3" fill="#F2E7CB"></rect>
+      <path d="M58 53h10M63 48v10" fill="none" stroke-width="2"></path>
+    </sc-if>
+    <sc-if value="{{ isWalking }}" hint-placeholder-val="{{ false }}">
+      <path d="M40 6h40" fill="none" stroke-width="3"></path>
+      <g data-a="leash" style="transform-box:view-box;transform-origin:60px 6px">
+        <path d="M60 6v8" fill="none"></path>
+        <ellipse cx="60" cy="24" rx="12" ry="10" fill="none" stroke-width="7"></ellipse>
+        <ellipse cx="60" cy="24" rx="12" ry="10" fill="none" stroke="#F989EF" stroke-width="3.2"></ellipse>
+        <path d="M60 34v32" fill="none" stroke-width="6"></path>
+        <path d="M60 34v32" fill="none" stroke="#F989EF" stroke-width="2.4"></path>
+        <rect x="53" y="66" width="14" height="8" rx="2"></rect>
+        <path d="M56 74v6a4 4 0 0 0 8 0" fill="none"></path>
+      </g>
+    </sc-if>
+    <sc-if value="{{ isHealth }}" hint-placeholder-val="{{ false }}">
+      <g data-a="bottle" style="transform-box:fill-box;transform-origin:50% 100%">
+        <rect x="50" y="10" width="20" height="10" rx="2" fill="#09A460"></rect>
+        <path d="M46 20h28v4c4 2 6 6 6 10v38a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V34c0-4 2-8 6-10z"></path>
+        <rect x="44" y="38" width="32" height="28" rx="4" fill="#F2E7CB"></rect>
+        <g data-a="plus" style="transform-box:fill-box;transform-origin:center"><path d="M60 44v16M52 52h16" fill="none" stroke="#09A460" stroke-width="5"></path></g>
+      </g>
+    </sc-if>
+  </svg>
+  <span style="position:absolute;left:8px;bottom:8px;max-width:calc(100% - 16px);font-family:Atma,system-ui;font-weight:700;font-size:{{ brandSize }};line-height:1.1;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;background:#FFFBF2;border:2px solid #141210;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform:rotate(-2deg)">{{ brand }}</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:240,&quot;height&quot;:200},&quot;category&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;treats&quot;,&quot;toys&quot;,&quot;grooming&quot;,&quot;walking&quot;,&quot;health&quot;],&quot;default&quot;:&quot;treats&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;brand&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Chip Chops&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;large&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;muted&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;label&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const LABELS = { treats: 'treat jar', toys: 'rope toy', grooming: 'spray bottle', walking: 'leash', health: 'supplement bottle' };
+
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() {
+    this.io = new IntersectionObserver(([e]) => { if (this.vis === e.isIntersecting) return; this.vis = e.isIntersecting; this.sync(); }, { threshold: 0.2 });
+    this.io.observe(this.rootRef.current);
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); this.stop(); }
+  componentDidUpdate(pp) { if (pp.category !== this.props.category || pp.forceReducedMotion !== this.props.forceReducedMotion || pp.muted !== this.props.muted) { this.stop(); this.sync(); } }
+
+  stop() { (this.anims || []).forEach(a => a.cancel()); this.anims = null; }
+
+  build() {
+    const r = this.rootRef.current, D = 3000, delay = Math.round(Math.random() * 1500);
+    const o = { duration: D, iterations: Infinity, delay, easing: 'ease-in-out' };
+    const all = s => [...r.querySelectorAll(`[data-a="${s}"]`)];
+    const A = [];
+    all('lid').forEach(el => A.push(el.animate([{ transform: 'none' }, { transform: 'translateY(-9px) rotate(-14deg)', offset: 0.12 }, { transform: 'none', offset: 0.26 }, { transform: 'none' }], { ...o, easing: BOUNCY })));
+    all('crumb').forEach((el, i) => A.push(el.animate([{ opacity: 0, transform: 'translateY(8px) scale(.4)' }, { opacity: 0, transform: 'translateY(8px) scale(.4)', offset: 0.08 }, { opacity: 1, transform: 'translateY(-4px) scale(1)', offset: 0.16 + i * 0.03 }, { opacity: 0, transform: 'translateY(-10px) scale(.8)', offset: 0.32 }, { opacity: 0 }], o)));
+    all('toy').forEach(el => A.push(el.animate([{ transform: 'none' }, { transform: 'scale(1.08,.86)', offset: 0.1 }, { transform: 'scale(.96,1.06)', offset: 0.18 }, { transform: 'none', offset: 0.26 }, { transform: 'none' }], o)));
+    all('lines').forEach(el => A.push(el.animate([{ opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }], o)));
+    all('mist').forEach((el, i) => A.push(el.animate([{ opacity: 0, transform: 'translate(0,0) scale(.4)' }, { opacity: 1, transform: 'translate(4px,0) scale(1)', offset: 0.1 + i * 0.04 }, { opacity: 0, transform: 'translate(16px,-4px) scale(1.3)', offset: 0.4 }, { opacity: 0 }], o)));
+    all('leash').forEach(el => A.push(el.animate([{ transform: 'rotate(-9deg)' }, { transform: 'rotate(9deg)' }, { transform: 'rotate(-9deg)' }], { ...o, duration: 2400 })));
+    all('bottle').forEach(el => A.push(el.animate([{ transform: 'none' }, { transform: 'rotate(-5deg)', offset: 0.08 }, { transform: 'rotate(4deg)', offset: 0.16 }, { transform: 'none', offset: 0.24 }, { transform: 'none' }], o)));
+    all('plus').forEach(el => A.push(el.animate([{ transform: 'none' }, { transform: 'scale(1.25)', offset: 0.3 }, { transform: 'none', offset: 0.45 }, { transform: 'none' }], { ...o, easing: BOUNCY })));
+    return A;
+  }
+
+  sync() {
+    const run = this.vis && !this.reduced() && !this.props.muted;
+    if (run && !this.anims) this.anims = this.build();
+    (this.anims || []).forEach(a => run ? a.play() : a.pause());
+  }
+
+  renderVals() {
+    const c = this.props.category || 'treats';
+    return {
+      rootRef: this.rootRef,
+      label: this.props.label || `Illustration: ${LABELS[c] || 'product'} — ${this.props.brand || ''}`,
+      brand: this.props.brand || '',
+      brandSize: this.props.large ? '16px' : '12px',
+      isTreats: c === 'treats', isToys: c === 'toys', isGrooming: c === 'grooming', isWalking: c === 'walking', isHealth: c === 'health',
+      op: this.props.muted ? 0.55 : 1, filt: this.props.muted ? 'grayscale(1)' : 'none',
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+row,sku,name,brand_as_listed,brand_suggested,category,pet_type,price_inr,price_paise,status,flags
+1,DZ-MKT-001,Twistee Fun toy (round),Superfun Twistee,Superfun Twistee,toys,dog,223.00,22300,In-stock,
+2,DZ-MKT-002,Super Fun Toy Twisted Knotted Bone Dog Toy,Super fun twistee,Super Fun,toys,dog,436.00,43600,In-stock,brand_mismatch
+3,DZ-MKT-003,Rope toy,Super Chewers,Super Chewers,toys,dog,175.00,17500,In-stock,
+4,DZ-MKT-004,Cotton slipper rope dog toy,Super fun toy,Super fun toy,toys,dog,140.00,14000,In-stock,
+5,DZ-MKT-005,cat harness Red,Doggzi Premium,Doggzi Premium,walking,cat,315.00,31500,In-stock,
+6,DZ-MKT-006,FOFOS Tough Plush Dog Toy - Elephant,Fofos,FOFOS,toys,dog,875.00,87500,In-stock,
+7,DZ-MKT-007,Fofos Ocean Whale Squeaky Chew Toy for Dogs,Doggzi Premium,FOFOS,toys,dog,660.00,66000,In-stock,brand_mismatch
+8,DZ-MKT-008,Pet Nail clipper,Doggzi Premium,Doggzi Premium,grooming,dog,1299.00,129900,In-stock,
+9,DZ-MKT-009,ZippyPaws Jigglerz Duck Dog Toy,Doggzi Premium,ZippyPaws,toys,dog,950.00,95000,In-stock,brand_mismatch
+10,DZ-MKT-010,Zippy Paws - Jigglerz banana,Doggzi Premium,ZippyPaws,toys,dog,975.00,97500,In-stock,brand_mismatch
+11,DZ-MKT-011,Super Fun Toy Twisted Knotted Bone Dog Toy,Zippy paws,Super Fun,toys,dog,975.00,97500,In-stock,brand_mismatch;duplicate_name_of_row_2
+12,DZ-MKT-012,FOFOS Tough Plush Dog Toy - Fox,FOFOS,FOFOS,toys,dog,875.00,87500,In-stock,
+13,DZ-MKT-013,Zippy Paws Carrot Jigglerz Plush Toy for Dogs,Doggzi Premium,ZippyPaws,toys,dog,975.00,97500,In-stock,brand_mismatch
+14,DZ-MKT-014,Bone Dog Toy,Doggzi Premium,Doggzi Premium,toys,dog,249.00,24900,In-stock,
+15,DZ-MKT-015,rubber triangle dog chew toy,Doggzi Premium,Doggzi Premium,toys,dog,213.00,21300,In-stock,
+16,DZ-MKT-016,super durable nylon chicken leg toy,Doggzi Premium,Doggzi Premium,toys,dog,205.00,20500,In-stock,
+17,DZ-MKT-017,Super Fun Toy Pear Fruit Dog Toy,Doggzi Premium,Super Fun,toys,dog,315.00,31500,In-stock,brand_mismatch
+18,DZ-MKT-018,super tough rope dog leash,Doggzi Premium,Doggzi Premium,walking,dog,315.00,31500,In-stock,
+19,DZ-MKT-019,Truelove Classic leash for Dogs (Red),Doggzi Premium,Truelove,walking,dog,1500.00,150000,In-stock,brand_mismatch
+20,DZ-MKT-020,Truelove Multi Handle Floral Leash – Poppy Red – Premium Control Dog Leash,Doggzi Premium,Truelove,walking,dog,2000.00,200000,In-stock,brand_mismatch
+21,DZ-MKT-021,Pedigree Dentastix Dog Treats Mono 7 Sticks,Doggzi Premium,Pedigree,treats,dog,210.00,21000,In-stock,brand_mismatch
+22,DZ-MKT-022,Lozalo Body Splash Spray for Dogs - 22ml,Doggzi Premium,Lozalo,grooming,dog,99.00,9900,In-stock,brand_mismatch
+23,DZ-MKT-023,Lozalo Dog Paw Cleanser Spray,Doggzi Premium,Lozalo,grooming,dog,99.00,9900,In-stock,brand_mismatch
+24,DZ-MKT-024,Drools Absolute Milk Bone Jar(40psc),Drools,Drools,treats,dog,450.00,45000,In-stock,
+25,DZ-MKT-025,Drools Absolute Milk Bone Jar(20psc),Drools,Drools,treats,dog,250.00,25000,In-stock,
+26,DZ-MKT-026,House fly repelent spray,Zyaxx,Zyaxx,grooming,both,599.00,59900,In-stock,
+27,DZ-MKT-027,GRIPTOL-N SYRUP,INTIAS,INTIAS,health,dog,110.00,11000,In-stock,medicine_check_rules
+28,DZ-MKT-028,For Dogs Keep off spray,Bioline,Bioline,grooming,dog,554.00,55400,In-stock,
+29,DZ-MKT-029,Dental Oral kit,Super breath,Super breath,health,dog,250.00,25000,In-stock,
+30,DZ-MKT-030,Deodrizing Spray,Bioline,Bioline,grooming,dog,416.00,41600,In-stock,
+31,DZ-MKT-031,Flea and Tick collar for cats,Bioline,Bioline,health,cat,365.00,36500,In-stock,
+32,DZ-MKT-032,Salglow (Salmon Oil) Supplement with Omega 3 & 6 Fatty Acid for Dogs and Cats 200 ML,Salglow,Salglow,health,both,977.00,97700,In-stock,
+33,DZ-MKT-033,Waggie Wag Egg & Cheese Millet Noodles for Dogs,waggie wag,Waggie Wag,treats,dog,130.00,13000,In-stock,
+34,DZ-MKT-034,Waggie Wag Fish Millet Noodles for Dogs,waggie wag,Waggie Wag,treats,dog,130.00,13000,In-stock,
+35,DZ-MKT-035,Waggie Wag Chicken Millet Noodles for Dogs,waggie wag,Waggie Wag,treats,dog,130.00,13000,In-stock,
+36,DZ-MKT-036,JerHigh Chicken Milky Dog Treats,Jerhigh,JerHigh,treats,dog,225.00,22500,In-stock,
+37,DZ-MKT-037,Jerhigh Blueberry Dog Treats,Jerhigh,JerHigh,treats,dog,295.00,29500,In-stock,
+38,DZ-MKT-038,Gnawlers Puppy Snack Stick Bacon Flavoured Dog Treats,Gnawlers,Gnawlers,treats,dog,100.00,10000,In-stock,
+39,DZ-MKT-039,JerHigh Spinach With Cheese Duo Stick Dog Treat,Jerhigh,JerHigh,treats,dog,225.00,22500,In-stock,
+40,DZ-MKT-040,JerHigh Spinach Stix Dog Treats,Jerhigh,JerHigh,treats,dog,295.00,29500,In-stock,
+41,DZ-MKT-041,Hokkaido Milk Flavor Treats,Doggzi Premium,Doggzi Premium,treats,dog,225.00,22500,In-stock,
+42,DZ-MKT-042,"Gnawlers Dog Chicken Chew Bone, 100% Rawhide Free 4.5 inch, 2 in 1, Pack of 2",Gnawlers,Gnawlers,treats,dog,110.00,11000,In-stock,
+43,DZ-MKT-043,Chip Chops Chicken Tenders Treats For Dog,Chip Chops,Chip Chops,treats,dog,225.00,22500,In-stock,
+44,DZ-MKT-044,JerHigh Stix Dog Treats,Jerhigh,JerHigh,treats,dog,295.00,29500,In-stock,
+45,DZ-MKT-045,JerHigh Milk Stix Dog Treats - 100 g,Jerhigh,JerHigh,treats,dog,295.00,29500,In-stock,
+46,DZ-MKT-046,Veg Joy Apple,Smart dog,Smart dog,treats,dog,199.00,19900,In-stock,
+47,DZ-MKT-047,Chip Chops Chicken & Codfish Sandwich Treats For Dog,Chip Chops,Chip Chops,treats,dog,225.00,22500,In-stock,
+48,DZ-MKT-048,"Chip Chops Dog Treats | Snacks & Training Rewards (70gm, Chicken Pasta)",Chip Chops,Chip Chops,treats,dog,225.00,22500,In-stock,
+49,DZ-MKT-049,Chip Chops Sushi Rolls Treats For Dog - 70 g,Chip Chops,Chip Chops,treats,dog,225.00,22500,In-stock,
+50,DZ-MKT-050,"Chip Chops Dog Treats | Snacks & Training Rewards (70gm, Diced Chicken)",Chip Chops,Chip Chops,treats,dog,225.00,22500,In-stock,
+51,DZ-MKT-051,JerHigh Collagen Stix Strawberry,Jerhigh,JerHigh,treats,dog,295.00,29500,In-stock,

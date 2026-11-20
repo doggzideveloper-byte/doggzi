@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F65322}
+a:hover{color:#D9431A}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#F2E7CB;display:flex;align-items:center;justify-content:center;padding:32px 16px">
+  <div ref="{{ cardRef }}" style="width:100%;max-width:420px;display:flex;flex-direction:column;gap:20px;padding:28px 24px 24px;background:#FFFBF2;border:1.5px solid #141210;border-radius:24px;box-shadow:2px 2px 0 #141210">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span aria-hidden="true" style="flex:none;width:56px;height:56px;border-radius:999px;background:#FFFBF2 url('assets/doggzi-mark.svg') center / contain no-repeat;border:1.5px solid #141210;box-shadow:2px 2px 0 #141210"></span>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:26px;letter-spacing:.04em;text-transform:uppercase;line-height:1">Doggzi Console</h1>
+        <span style="font-size:13px;color:rgba(20,18,16,.75)">For providers, stores and the Doggzi team</span>
+      </div>
+    </div>
+
+    <sc-if value="{{ banner }}" hint-placeholder-val="{{ false }}">
+      <p role="alert" style="margin:0;padding:10px 12px;font-size:14px;font-weight:600;background:#FBE3DF;border:1.5px solid #D93A2B;border-radius:12px;color:#141210">{{ banner }}</p>
+    </sc-if>
+
+    <sc-if value="{{ stPhone }}" hint-placeholder-val="{{ true }}">
+      <form onSubmit="{{ sendCode }}" novalidate="" style="display:flex;flex-direction:column;gap:14px">
+        <label for="cl-phone" style="font-weight:600;font-size:15px">Mobile number</label>
+        <div style="display:flex;align-items:center;height:52px;border:1.5px solid #141210;border-radius:12px;background:#FFFBF2;overflow:hidden">
+          <span aria-hidden="true" style="padding:0 6px 0 14px;font-weight:600;font-size:16px">+91</span>
+          <input id="cl-phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="11" value="{{ phone }}" onChange="{{ onPhone }}" placeholder="90000 00001" aria-invalid="{{ phoneInvalid }}" aria-describedby="cl-phone-err" style="flex:1;min-width:0;height:100%;border:0;background:transparent;font:500 17px Poppins,system-ui;color:#141210;outline:none;padding-right:14px;letter-spacing:.04em">
+        </div>
+        <sc-if value="{{ phoneErr }}" hint-placeholder-val="{{ false }}"><p id="cl-phone-err" role="alert" style="margin:0;font-size:14px;font-weight:500;color:#D93A2B">{{ phoneErr }}</p></sc-if>
+        <button type="submit" style="height:52px;font:600 16px Poppins,system-ui;color:#FFFBF2;background:#141210;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #F65322;cursor:pointer;transition:transform 150ms ease-out" style-active="transform:translate(2px,2px);box-shadow:0 0 0 #F65322" style-focus="outline:3px solid #F65322;outline-offset:3px">Send code</button>
+      </form>
+    </sc-if>
+
+    <sc-if value="{{ stOtp }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-weight:600;font-size:15px">Enter the 6-digit code</span>
+          <span style="font-size:14px">Sent to +91 {{ phonePretty }} · <button type="button" onClick="{{ changePhone }}" style="padding:0;border:0;background:none;font:600 14px Poppins,system-ui;color:#141210;text-decoration:underline;text-decoration-color:#F65322;cursor:pointer">Change</button></span>
+        </div>
+        <p role="status" style="margin:0;padding:8px 12px;border:1.5px dashed #141210;border-radius:10px;font-size:13px;background:#F2E7CB">Demo OTP: <strong style="font-family:Atma,system-ui;font-size:16px;letter-spacing:.24em">{{ devCode }}</strong></p>
+        <div role="group" aria-label="One-time code" onPaste="{{ onPaste }}" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ boxes }}" as="b" hint-placeholder-count="6">
+            <input ref="{{ b.ref }}" type="text" inputmode="numeric" autocomplete="{{ b.ac }}" maxlength="1" value="{{ b.v }}" onChange="{{ b.onChange }}" onKeyDown="{{ b.onKey }}" onFocus="{{ b.onFocus }}" disabled="{{ locked }}" aria-label="{{ b.label }}" aria-invalid="{{ otpInvalid }}" style="width:100%;height:56px;text-align:center;font:700 24px Atma,system-ui;color:#141210;background:{{ b.bg }};border:1.5px solid {{ otpBorder }};border-radius:12px;outline:none" style-focus="box-shadow:2px 2px 0 #F65322;border-color:#141210">
+          </sc-for>
+        </div>
+        <sc-if value="{{ otpErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:14px;font-weight:500;color:#D93A2B">{{ otpErr }}</p></sc-if>
+        <button type="button" onClick="{{ verify }}" disabled="{{ verifyDisabled }}" style="height:52px;font:600 16px Poppins,system-ui;color:#FFFBF2;background:#141210;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #F65322;cursor:pointer;opacity:{{ verifyOp }}" style-active="transform:translate(2px,2px);box-shadow:0 0 0 #F65322" style-focus="outline:3px solid #F65322;outline-offset:3px">{{ verifyLabel }}</button>
+        <div style="display:flex;justify-content:center">
+          <sc-if value="{{ canResend }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ resend }}" style="min-height:44px;padding:0 12px;border:0;background:none;font:600 14px Poppins,system-ui;color:#141210;text-decoration:underline;text-decoration-color:#F65322;cursor:pointer">Resend code</button></sc-if>
+          <sc-if value="{{ resendWait }}" hint-placeholder-val="{{ true }}"><span style="min-height:44px;display:flex;align-items:center;font-size:14px;color:rgba(20,18,16,.75);font-variant-numeric:tabular-nums">{{ resendText }}</span></sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stResume }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-weight:600;font-size:15px">You're signed in as {{ resumeName }}</span>
+        <button type="button" onClick="{{ resumeGo }}" style="height:52px;font:600 16px Poppins,system-ui;color:#FFFBF2;background:#141210;border:1.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #F65322;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:3px">Continue to console</button>
+        <button type="button" onClick="{{ signOut }}" style="height:48px;font:600 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:3px">Use a different number</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stChoose }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-weight:600;font-size:15px">Hi {{ userName }}, choose a panel</span>
+        <sc-for list="{{ panels }}" as="p" hint-placeholder-count="2">
+          <button type="button" onClick="{{ p.go }}" style="display:flex;align-items:center;gap:12px;min-height:60px;padding:10px 14px;text-align:left;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px;box-shadow:2px 2px 0 #141210;cursor:pointer;font:600 16px Poppins,system-ui;color:#141210;transition:transform 150ms ease-out" style-hover="transform:translateY(-1px)" style-focus="outline:3px solid #F65322;outline-offset:3px">
+            <span aria-hidden="true" style="width:14px;height:14px;border-radius:999px;background:{{ p.color }};border:1.5px solid #141210"></span>
+            <span style="flex:1">{{ p.label }} panel</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <p style="margin:0;font-size:12px;line-height:1.5;color:rgba(20,18,16,.7)">Sessions last 12 hours. Customer phone numbers stay masked inside the console.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoLogin&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;None&quot;,&quot;9000000001 · Provider&quot;,&quot;9000000002 · Vendor&quot;,&quot;9000000003 · Admin&quot;,&quot;9000000004 · Ops&quot;,&quot;9000000005 · Provider + Vendor&quot;],&quot;default&quot;:&quot;None&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo logins&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  state = { step: 'phone', phone: '', phoneErr: null, digits: ['', '', '', '', '', ''], devCode: '', otpErr: null, fails: 0, lockUntil: 0, resendAt: 0, now: Date.now(), user: null, banner: null };
+  cardRef = React.createRef();
+  boxRefs = [0, 1, 2, 3, 4, 5].map(() => React.createRef());
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() {
+    import(new URL('content/console.js', document.baseURI).href).then(m => {
+      this.C = m;
+      const reason = new URLSearchParams(location.search).get('reason');
+      const banner = reason === 'noaccess' ? "You don't have access to this panel." : reason === 'signin' ? 'Please sign in.' : null;
+      const s = m.readSession();
+      this.setState({ banner, resume: s && !reason ? s : null, step: s && !reason ? 'resume' : 'phone' });
+    });
+    this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    this.applyPrefill();
+  }
+  componentWillUnmount() { clearInterval(this.tick); }
+  componentDidUpdate(pp) { if (pp.demoLogin !== this.props.demoLogin) this.applyPrefill(); }
+
+  applyPrefill() { const d = this.props.demoLogin; if (d && d !== 'None') this.setState(st => ({ phone: d.slice(0, 10), step: st.step === 'resume' ? 'resume' : 'phone', phoneErr: null })); }
+
+  shake() { const c = this.cardRef.current; if (c && !this.reduced()) c.animate([{ transform: 'none' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(-3px)' }, { transform: 'none' }], { duration: 220, easing: 'ease-out' }); }
+
+  sendCode(e) {
+    e && e.preventDefault();
+    const d = this.state.phone.replace(/\D/g, '');
+    if (!/^[6-9]\d{9}$/.test(d)) { this.setState({ phoneErr: 'Enter a 10-digit mobile number.' }); this.shake(); return; }
+    if (!this.C) { import(new URL('content/console.js', document.baseURI).href).then(m => { this.C = m; this.sendCode(); }); return; }
+    const user = this.C.DEMO_USERS.find(u => u.phone === d);
+    if (!user) { this.setState({ phoneErr: "This number isn't on the Doggzi team. Ask an admin to invite you." }); this.shake(); return; }
+    this.setState({ step: 'otp', user, phoneErr: null, digits: ['', '', '', '', '', ''], devCode: String(Math.floor(100000 + Math.random() * 900000)), otpErr: null, resendAt: Date.now() + 30000, banner: null }, () => this.focusBox(0));
+  }
+
+  focusBox(i) { const r = this.boxRefs[Math.max(0, Math.min(5, i))].current; if (r) { r.focus(); r.select && r.select(); } }
+
+  setDigits(digits, focusNext) { this.setState({ digits, otpErr: null }, () => { if (focusNext != null) this.focusBox(focusNext); if (digits.every(x => x)) this.verify(); }); }
+
+  verify() {
+    const s = this.state;
+    if (Date.now() < s.lockUntil) return;
+    const code = s.digits.join('');
+    if (code.length !== 6) return;
+    if (code !== s.devCode) {
+      const fails = s.fails + 1;
+      const lock = fails >= 5;
+      this.setState({ fails: lock ? 0 : fails, lockUntil: lock ? Date.now() + 60000 : 0, otpErr: lock ? 'Too many wrong tries. Locked for 60 seconds.' : `That code doesn't match. ${5 - fails} ${5 - fails === 1 ? 'try' : 'tries'} left.`, digits: ['', '', '', '', '', ''] }, () => !lock && this.focusBox(0));
+      this.shake();
+      return;
+    }
+    this.route(s.user.roles, s.user);
+  }
+
+  route(roles, user, auto) {
+    const panels = this.C.panelsFor(roles);
+    if (panels.length > 1) { this.setState({ step: 'choose', user }); return; }
+    const p = panels[0]; if (!p) return;
+    if (!auto) this.C.writeSession(user, p.role);
+    window.location.href = p.file;
+  }
+
+  renderVals() {
+    const s = this.state, locked = s.now < s.lockUntil, lockLeft = Math.ceil((s.lockUntil - s.now) / 1000);
+    const resendLeft = Math.max(0, Math.ceil((s.resendAt - s.now) / 1000));
+    const d = s.phone.replace(/\D/g, '');
+    return {
+      cardRef: this.cardRef, banner: s.banner,
+      stResume: s.step === 'resume', resumeName: s.resume ? s.resume.name : '',
+      resumeGo: () => { const r = s.resume; const u = { id: r.user_id, name: r.name, roles: r.roles, phone: r.phone }; const ps = this.C.panelsFor(r.roles); if (ps.length > 1) this.setState({ step: 'choose', user: u }); else window.location.href = (ps.find(p => p.role === r.role) || ps[0]).file; },
+      signOut: () => { try { localStorage.removeItem(this.C.SESSION_KEY); } catch (e) {} this.setState({ step: 'phone', resume: null }); },
+      stPhone: s.step === 'phone', stOtp: s.step === 'otp', stChoose: s.step === 'choose',
+      phone: s.phone, phoneErr: s.phoneErr, phoneInvalid: s.phoneErr ? 'true' : 'false',
+      onPhone: e => this.setState({ phone: e.target.value.replace(/[^\d ]/g, ''), phoneErr: null }),
+      sendCode: e => this.sendCode(e),
+      phonePretty: d.length === 10 ? `${d.slice(0, 5)} ${d.slice(5)}` : d,
+      changePhone: () => this.setState({ step: 'phone' }),
+      devCode: s.devCode, locked,
+      otpErr: locked ? `Too many wrong tries. Try again in ${lockLeft}s.` : s.otpErr,
+      otpInvalid: s.otpErr ? 'true' : 'false', otpBorder: s.otpErr && !locked ? '#D93A2B' : '#141210',
+      boxes: s.digits.map((v, i) => ({
+        ref: this.boxRefs[i], v, ac: i === 0 ? 'one-time-code' : 'off', label: `Digit ${i + 1} of 6`, bg: locked ? '#E4DDCB' : '#FFFBF2',
+        onFocus: e => e.target.select(),
+        onChange: e => {
+          const val = e.target.value.replace(/\D/g, '');
+          if (val.length > 1) { const all = val.slice(0, 6).split(''); const nd = [...s.digits]; all.forEach((c, k) => { if (i + k < 6) nd[i + k] = c; }); this.setDigits(nd, Math.min(5, i + all.length)); return; }
+          const nd = [...s.digits]; nd[i] = val; this.setDigits(nd, val ? i + 1 : null);
+        },
+        onKey: e => {
+          if (e.key === 'Backspace' && !s.digits[i] && i > 0) { e.preventDefault(); const nd = [...s.digits]; nd[i - 1] = ''; this.setDigits(nd, i - 1); }
+          else if (e.key === 'ArrowLeft') { e.preventDefault(); this.focusBox(i - 1); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); this.focusBox(i + 1); }
+          else if (e.key === 'Enter') this.verify();
+        },
+      })),
+      onPaste: e => { const t = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6); if (!t) return; e.preventDefault(); const nd = ['', '', '', '', '', '']; t.split('').forEach((c, k) => { nd[k] = c; }); this.setDigits(nd, Math.min(5, t.length)); },
+      verify: () => this.verify(),
+      verifyDisabled: locked || s.digits.join('').length !== 6, verifyOp: locked || s.digits.join('').length !== 6 ? 0.5 : 1,
+      verifyLabel: locked ? `Locked · ${lockLeft}s` : 'Verify & sign in',
+      canResend: resendLeft === 0 && !locked, resendWait: resendLeft > 0, resendText: `Resend in ${resendLeft}s`,
+      resend: () => this.setState({ devCode: String(Math.floor(100000 + Math.random() * 900000)), digits: ['', '', '', '', '', ''], otpErr: null, resendAt: Date.now() + 30000 }, () => this.focusBox(0)),
+      userName: s.user ? s.user.name.split(' ')[0] : '',
+      panels: s.user && this.C ? this.C.panelsFor(s.user.roles).map(p => ({ label: p.label, color: p.color, go: () => { this.C.writeSession(s.user, p.role); window.location.href = p.file; } })) : [],
+    };
+  }
+}
+</script>
+</body>
+</html>
