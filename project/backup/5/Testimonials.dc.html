@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ show }}" hint-placeholder-val="{{ false }}">
+  <section id="testimonials" ref="{{ secRef }}" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210;scroll-margin-top:84px">
+    <svg ref="{{ spriteRef }}" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+    <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px 0;display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+      <div data-ri="" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">From Doggzi parents</span>
+        <sc-if value="{{ anyPlaceholder }}" hint-placeholder-val="{{ true }}">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;border:2px dashed #D9431A;color:#D9431A;border-radius:999px;padding:3px 12px">Placeholder — real reviews only, with permission</span>
+        </sc-if>
+      </div>
+      <h2 data-ri="" style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase">{{ heading }}</h2>
+    </div>
+    <div data-ri="" onMouseEnter="{{ pauseMarquee }}" onMouseLeave="{{ playMarquee }}" style="overflow-x:{{ tOverflow }};scroll-snap-type:x mandatory;padding:clamp(24px,4vw,40px) 0 clamp(56px,8vw,104px);scrollbar-width:none">
+      <div ref="{{ trackRef }}" style="display:flex;gap:20px;width:max-content;padding:4px 20px 8px">
+        <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="4">
+          <figure aria-hidden="{{ t.dup }}" style="margin:0;flex:none;scroll-snap-align:center;width:clamp(260px,30vw,340px);display:flex;flex-direction:column;gap:14px;padding:20px;background:#F2E7CB;border:2.5px {{ t.borderStyle }} #141210;border-radius:28px;box-shadow:4px 4px 0 #141210">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="flex:none;width:52px;height:52px;border-radius:999px;background:#FFFBF2;border:2px solid #141210;overflow:hidden;display:flex">
+                <svg viewBox="{{ t.vb }}" style="width:100%;height:100%;display:block"><use href="{{ t.href }}"></use></svg>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase;line-height:1">{{ t.pet }}</span>
+                <span style="font-size:13px;color:rgba(20,18,16,.75)">{{ t.parent }} · {{ t.area }}</span>
+              </span>
+            </div>
+            <blockquote style="margin:0;font-size:16px;line-height:1.55;flex:1;text-wrap:pretty">“{{ t.quote }}”</blockquote>
+            <figcaption style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+              <span style="font-size:13px;font-weight:600;padding:3px 10px;border:2px solid #141210;border-radius:999px;background:#FFFBF2">{{ t.service }}</span>
+              <sc-if value="{{ t.placeholder }}" hint-placeholder-val="{{ true }}"><span style="font-family:Atma,system-ui;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#D9431A">Placeholder</span></sc-if>
+            </figcaption>
+          </figure>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:620},&quot;tag&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;heading&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Happy tails&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+class Component extends DCLogic {
+  state = { list: null, narrow: window.innerWidth < 720, vb: { dog: '0 0 100 100', puppy: '0 0 100 100', cat: '0 0 100 100' } };
+  secRef = React.createRef(); spriteRef = React.createRef(); trackRef = React.createRef();
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() {
+    import(new URL('content/explore-content.js', document.baseURI).href).then(m => this.setState({ list: m.TESTIMONIALS || [] })).catch(() => this.setState({ list: [] }));
+    this.onResize = () => { const n = window.innerWidth < 720; if (n !== this.state.narrow) this.setState({ narrow: n }); };
+    window.addEventListener('resize', this.onResize);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); if (this.marquee) this.marquee.cancel(); if (this.io) this.io.disconnect(); }
+
+  componentDidUpdate(pp, ps) {
+    const sec = this.secRef.current;
+    if (sec && !this.spriteDone) { this.spriteDone = true; fetch('assets/pets-trio.svg').then(r => r.text()).then(t => this.buildSprite(t)); this.setupReveal(sec); }
+    if (ps.list !== this.state.list || ps.narrow !== this.state.narrow || pp.forceReducedMotion !== this.props.forceReducedMotion || pp.tag !== this.props.tag) this.setupMarquee();
+  }
+
+  items() { const l = this.state.list || [], tag = this.props.tag; return tag ? l.filter(t => (t.tags || []).includes(tag)) : l; }
+  marq() { return !this.state.narrow && !this.reduced() && this.items().length >= 3; }
+
+  setupReveal(sec) {
+    if (this.reduced()) return;
+    const els = sec.querySelectorAll('[data-ri]');
+    els.forEach(el => { el.style.opacity = '0'; });
+    this.io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; this.io.disconnect();
+      els.forEach((el, i) => { el.style.opacity = ''; el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 550, delay: i * 60, easing: EASE, fill: 'backwards' }); });
+    }, { threshold: 0.12 });
+    this.io.observe(sec);
+  }
+
+  setupMarquee() {
+    if (this.marquee) { this.marquee.cancel(); this.marquee = null; }
+    const tr = this.trackRef.current;
+    if (!tr || !this.marq()) return;
+    this.marquee = tr.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }], { duration: this.items().length * 9000, iterations: Infinity });
+  }
+
+  buildSprite(text) {
+    const s = this.spriteRef.current; if (!s) return;
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    [...doc.documentElement.children].forEach(c => s.appendChild(document.importNode(c, true)));
+    const sq = id => { const el = s.querySelector('#' + id); el.id = 'dzt-' + id; const b = el.getBBox(); const p = 12, w = b.width + p * 2, h = b.height + p * 2, m = Math.max(w, h); return `${b.x - p - (m - w) / 2} ${b.y - p - (m - h) / 2 + m * 0.06} ${m} ${m}`; };
+    const vb = { dog: sq('lab'), puppy: sq('puppy'), cat: sq('cat') };
+    s.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dzt-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  renderVals() {
+    const items = this.items(), marq = this.marq();
+    const list = marq ? [...items, ...items] : items;
+    return {
+      secRef: this.secRef, spriteRef: this.spriteRef, trackRef: this.trackRef,
+      show: items.length > 0,
+      heading: this.props.heading ?? 'Happy tails',
+      anyPlaceholder: items.some(t => t.placeholder),
+      testimonials: list.map((t, i) => { const v = t.type === 'cat' ? 'cat' : SMALL.has(t.breed) ? 'puppy' : 'dog'; return { ...t, placeholder: !!t.placeholder, vb: this.state.vb[v], href: `#dzt-${v === 'dog' ? 'lab' : v}`, dup: i >= items.length ? 'true' : 'false', borderStyle: t.placeholder ? 'dashed' : 'solid' }; }),
+      tOverflow: marq ? 'hidden' : 'auto',
+      pauseMarquee: () => this.marquee && this.marquee.pause(),
+      playMarquee: () => this.marquee && this.marquee.play(),
+    };
+  }
+}
+</script>
+</body>
+</html>

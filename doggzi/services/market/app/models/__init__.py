@@ -1,0 +1,130 @@
+import uuid
+from datetime import datetime
+
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, String, Text, Uuid
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from ..core.time import utcnow
+from ..db import Base
+
+StrArray = ARRAY(String).with_variant(JSON(), "sqlite")
+Json = JSONB().with_variant(JSON(), "sqlite")
+
+
+class TimestampMixin:
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
+
+
+class Vendor(TimestampMixin, Base):
+    __tablename__ = "vendors"
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
+    owner_user_id: Mapped[uuid.UUID | None] = mapped_column(Uuid)
+    phone: Mapped[str | None] = mapped_column(String(16))
+    address: Mapped[str | None] = mapped_column(String(300))
+    area: Mapped[str | None] = mapped_column(String(80))
+    lat: Mapped[float | None] = mapped_column()
+    lng: Mapped[float | None] = mapped_column()
+    serviceable_pincodes: Mapped[list[str]] = mapped_column(StrArray, nullable=False, default=list)
+    delivery_fee_paise: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    hours_json: Mapped[dict | None] = mapped_column(Json)
+    story: Mapped[str | None] = mapped_column(String(300))
+    since_year: Mapped[int | None] = mapped_column(Integer)
+    kyc_status: Mapped[str] = mapped_column(String(16), nullable=False, default="pending")
+    razorpay_linked_account_id: Mapped[str | None] = mapped_column(String(64))
+    commission_bps: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    is_doggzi: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+
+class Product(TimestampMixin, Base):
+    """Canonical product. `brand` shows on the site; `brand_as_listed` + `source_flags` keep the menu-card data for review."""
+
+    __tablename__ = "products"
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    brand: Mapped[str] = mapped_column(String(80), nullable=False)
+    brand_as_listed: Mapped[str | None] = mapped_column(String(80))
+    category: Mapped[str] = mapped_column(String(16), nullable=False)  # treats|toys|grooming|walking|health
+    pet_types: Mapped[list[str]] = mapped_column(StrArray, nullable=False, default=list)
+    description: Mapped[str | None] = mapped_column(Text)
+    pack_size: Mapped[str | None] = mapped_column(String(40))
+    popularity_rank: Mapped[int] = mapped_column(Integer, nullable=False, default=1000)
+    source_flags: Mapped[list[str]] = mapped_column(StrArray, nullable=False, default=list)
+
+
+class Listing(TimestampMixin, Base):
+    __tablename__ = "listings"
+    vendor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("vendors.id"), nullable=False)
+    product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("products.id"), nullable=False)
+    sku: Mapped[str] = mapped_column(String(40), nullable=False)
+    price_paise: Mapped[int] = mapped_column(Integer, nullable=False)
+    mrp_paise: Mapped[int | None] = mapped_column(Integer)
+    stock_qty: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    photo_url: Mapped[str | None] = mapped_column(String(500))  # Doggzi-approved vendor photo only
+    vendor: Mapped[Vendor] = relationship(lazy="joined")
+    product: Mapped[Product] = relationship(lazy="joined")
+    __table_args__ = (Index("uq_listings_vendor_sku", "vendor_id", "sku", unique=True),)
+
+
+class Cart(TimestampMixin, Base):
+    """Anonymous carts are keyed by a client-generated id (X-Cart-Id); user_id is set once they log in."""
+
+    __tablename__ = "carts"
+    cart_key: Mapped[uuid.UUID] = mapped_column(Uuid, unique=True, nullable=False)
+    user_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, index=True)
+    items: Mapped[list["CartItem"]] = relationship(lazy="selectin", cascade="all, delete-orphan", order_by="CartItem.created_at")
+
+
+class CartItem(TimestampMixin, Base):
+    __tablename__ = "cart_items"
+    cart_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("carts.id"), nullable=False, index=True)
+    listing_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("listings.id"), nullable=False)
+    qty: Mapped[int] = mapped_column(Integer, nullable=False)
+    listing: Mapped[Listing] = relationship(lazy="joined")
+    __table_args__ = (Index("uq_cart_items", "cart_id", "listing_id", unique=True),)
+
+
+class Order(TimestampMixin, Base):
+    __tablename__ = "orders"
+    user_id: Mapped[uuid.UUID] = mapped_column(Uuid, index=True, nullable=False)
+    address_json: Mapped[dict] = mapped_column(Json, nullable=False)
+    total_paise: Mapped[int] = mapped_column(Integer, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending_payment")  # pending_payment|paid|cancelled|expired
+    payment_mode: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
+    razorpay_order_id: Mapped[str | None] = mapped_column(String(64))
+    lines_json: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # priced snapshot until payment
+    sub_orders: Mapped[list["SubOrder"]] = relationship(lazy="selectin", order_by="SubOrder.created_at")
+
+
+class SubOrder(TimestampMixin, Base):
+    __tablename__ = "sub_orders"
+    order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("orders.id"), nullable=False, index=True)
+    vendor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("vendors.id"), nullable=False, index=True)
+    subtotal_paise: Mapped[int] = mapped_column(Integer, nullable=False)
+    delivery_fee_paise: Mapped[int] = mapped_column(Integer, nullable=False)
+    commission_paise: Mapped[int] = mapped_column(Integer, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="placed")
+    sla_due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    vendor: Mapped[Vendor] = relationship(lazy="joined")
+    items: Mapped[list["SubOrderItem"]] = relationship(lazy="selectin")
+
+
+class SubOrderItem(TimestampMixin, Base):
+    __tablename__ = "sub_order_items"
+    sub_order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("sub_orders.id"), nullable=False, index=True)
+    listing_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("listings.id"), nullable=False)
+    qty: Mapped[int] = mapped_column(Integer, nullable=False)
+    price_paise_at_order: Mapped[int] = mapped_column(Integer, nullable=False)
+    listing: Mapped[Listing] = relationship(lazy="joined")
+
+
+class StockReservation(TimestampMixin, Base):
+    __tablename__ = "stock_reservations"
+    listing_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("listings.id"), nullable=False, index=True)
+    order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("orders.id"), nullable=False, index=True)
+    qty: Mapped[int] = mapped_column(Integer, nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

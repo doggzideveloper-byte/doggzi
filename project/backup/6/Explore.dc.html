@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F65322}
+a:hover{color:#D9431A}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;background:#F2E7CB;overflow-x:clip">
+  <svg ref="{{ spriteRef }}" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+
+  <header style="position:sticky;top:0;z-index:30;background:#F2E7CB">
+    <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;height:clamp(72px,2vw + 56px,84px)">
+      <a href="Pet Passport.dc.html" onMouseEnter="{{ wobble }}" onFocus="{{ wobble }}" aria-label="Doggzi home" style="flex:none;display:flex;align-items:center;justify-content:center;width:clamp(56px,4vw + 26px,64px);height:clamp(56px,4vw + 26px,64px);border-radius:999px;background:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;outline:none" style-focus="outline:3px solid #F65322;outline-offset:4px">
+        <img src="assets/doggzi-mark.svg" alt="" style="width:100%;height:100%;display:block;pointer-events:none">
+      </a>
+      <div style="flex:none;display:flex;align-items:center;justify-content:flex-end;min-width:190px;height:48px">
+        <sc-if value="{{ hasPet }}" hint-placeholder-val="{{ false }}">
+          <a href="Choose.dc.html" aria-label="{{ chipLabel }}" style="display:flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 5px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210;color:#141210;text-decoration:none;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);color:#141210" style-focus="outline:3px solid #F65322;outline-offset:3px">
+            <span style="width:36px;height:36px;border-radius:999px;background:#F2E7CB;border:2px solid #141210;overflow:hidden;display:flex;align-items:center;justify-content:center;flex:none">
+              <svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg>
+            </span>
+            <span style="display:flex;flex-direction:column;line-height:1.05">
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase">{{ nameUpper }}</span>
+              <span style="font-size:12px;font-weight:500;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ breed }}</span>
+            </span>
+          </a>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section data-reveal="" style="position:relative;z-index:0;max-width:1200px;margin:0 auto;padding:clamp(28px,6vw,72px) 20px 0;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+      <span data-ri="" style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Dogs &amp; cats · Delhi NCR</span>
+      <h1 data-ri="" style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(3rem,10vw,6.5rem);line-height:.95;letter-spacing:.02em;text-transform:uppercase">Meet Doggzi</h1>
+      <p data-ri="" style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:clamp(1.1rem,2.4vw,1.5rem);letter-spacing:.12em;text-transform:uppercase;color:#D9431A">Not just food. Their food.</p>
+      <p data-ri="" style="margin:0;max-width:40ch;font-size:clamp(1rem,1.6vw,1.15rem);line-height:1.6;text-wrap:pretty">Fresh meals, at-home grooming and vet visits, and local pet stores. Everything your dog or cat needs, in one place.</p>
+      <img data-ri="" src="assets/pets-trio.svg" alt="" aria-hidden="true" style="width:clamp(220px,30vw,320px);display:block;margin:clamp(12px,3vw,28px) 0 -44px">
+    </section>
+
+    <section id="what-we-do" data-reveal="" style="position:relative;z-index:1;background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210;scroll-margin-top:84px">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(48px,7vw,88px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">What we do</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Three ways we look after {{ petRef }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:clamp(16px,2.5vw,28px)">
+          <a data-ri="" href="Choose.dc.html" style="display:flex;align-items:center;gap:16px;padding:18px 20px;background:#F65322;color:#FFFBF2;text-decoration:none;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px) rotate(-1deg);box-shadow:6px 6px 0 #141210;color:#FFFBF2" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210">
+            <svg viewBox="0 0 120 100" aria-hidden="true" style="flex:none;width:72px;height:60px;overflow:visible" fill="#F2E7CB" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M50 26c-4-5 4-8 0-14M62 24c-4-5 4-8 0-14M74 26c-4-5 4-8 0-14" fill="none"></path><path d="M30 50c4-14 18-20 30-20s26 6 30 20"></path><path d="M42 84l-2 7h40l-2-7"></path><path d="M20 52c2 20 18 32 40 32s38-12 40-32"></path><ellipse cx="60" cy="52" rx="40" ry="7"></ellipse></svg>
+            <span style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:26px;line-height:1;letter-spacing:.02em;text-transform:uppercase">Fresh Food</span>
+              <span style="font-size:15px;font-weight:500;line-height:1.4">Chef-cooked meals, delivered chilled</span>
+            </span>
+          </a>
+          <a data-ri="" href="Choose.dc.html" style="display:flex;align-items:center;gap:16px;padding:18px 20px;background:#09A460;color:#FFFBF2;text-decoration:none;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#FFFBF2" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210">
+            <svg viewBox="0 0 120 100" aria-hidden="true" style="flex:none;width:72px;height:60px;overflow:visible" fill="#F2E7CB" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M77 44l26-12c3-1.5 6.5 0 7.5 3s-.5 6-3.5 7L81 54"></path><rect x="16" y="34" width="66" height="26" rx="12" transform="rotate(-12 49 47)"></rect><path d="M24 64l-1 12M33 62l-1 13M42 60l-1 14M51 58l-1 14M60 56l-1 14M69 54l-1 13" fill="none" transform="rotate(-12 49 47)"></path><path d="M92 70c0-3 2.5-5 5-5s5 2 5 5c0 4-5 8-5 8s-5-4-5-8z"></path></svg>
+            <span style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:26px;line-height:1;letter-spacing:.02em;text-transform:uppercase">Services</span>
+              <span style="font-size:15px;font-weight:500;line-height:1.4">Grooming, walks and vets, at home</span>
+            </span>
+          </a>
+          <a data-ri="" href="Choose.dc.html" style="display:flex;align-items:center;gap:16px;padding:18px 20px;background:#F989EF;color:#141210;text-decoration:none;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px) rotate(1deg);box-shadow:6px 6px 0 #141210;color:#141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210">
+            <svg viewBox="0 0 120 100" aria-hidden="true" style="flex:none;width:72px;height:60px;overflow:visible" fill="#F2E7CB" stroke="#141210" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M47 38c0-12 6-20 13-20s13 8 13 20" fill="none"></path><path d="M30 36h60l-5 54H35z"></path><ellipse cx="60" cy="72" rx="8" ry="6.5"></ellipse><ellipse cx="49" cy="61" rx="3.6" ry="4.6"></ellipse><ellipse cx="56" cy="56" rx="3.6" ry="4.6"></ellipse><ellipse cx="64" cy="56" rx="3.6" ry="4.6"></ellipse><ellipse cx="71" cy="61" rx="3.6" ry="4.6"></ellipse></svg>
+            <span style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:26px;line-height:1;letter-spacing:.02em;text-transform:uppercase">Marketplace</span>
+              <span style="font-size:15px;font-weight:500;line-height:1.4">Food, toys and gear from stores near you</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(28px,4vw,48px);scroll-margin-top:84px">
+      <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">How it works</span>
+        <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Three steps. That's it.</h2>
+      </div>
+      <ol style="position:relative;margin:0;padding:0;list-style:none;display:grid;grid-template-columns:{{ stepCols }};gap:{{ stepGap }}">
+        <span data-line="" aria-hidden="true" style="position:absolute;z-index:0;background:#141210;left:{{ lineL }};right:{{ lineR }};top:{{ lineT }};bottom:{{ lineB }};width:{{ lineW }};height:{{ lineH }};transform-origin:{{ lineOrigin }}"></span>
+        <li data-ri="" style="position:relative;z-index:1;display:flex;flex-direction:{{ stepDir }};align-items:{{ stepAlign }};gap:16px;text-align:{{ stepText }}">
+          <span style="flex:none;width:64px;height:64px;border-radius:999px;background:#F65322;color:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;display:flex;align-items:center;justify-content:center;font-family:Atma,system-ui;font-weight:700;font-size:30px">1</span>
+          <span style="display:flex;flex-direction:column;gap:6px;padding-top:{{ stepTextPad }}">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:24px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase">Make a passport</span>
+            <span style="font-size:16px;line-height:1.55;color:rgba(20,18,16,.8);max-width:30ch">Name, dog or cat, and breed. About ten seconds.</span>
+          </span>
+        </li>
+        <li data-ri="" style="position:relative;z-index:1;display:flex;flex-direction:{{ stepDir }};align-items:{{ stepAlign }};gap:16px;text-align:{{ stepText }}">
+          <span style="flex:none;width:64px;height:64px;border-radius:999px;background:#09A460;color:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;display:flex;align-items:center;justify-content:center;font-family:Atma,system-ui;font-weight:700;font-size:30px">2</span>
+          <span style="display:flex;flex-direction:column;gap:6px;padding-top:{{ stepTextPad }}">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:24px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase">Pick what they need</span>
+            <span style="font-size:16px;line-height:1.55;color:rgba(20,18,16,.8);max-width:30ch">Fresh meals, a groomer, a vet, or something from a local store.</span>
+          </span>
+        </li>
+        <li data-ri="" style="position:relative;z-index:1;display:flex;flex-direction:{{ stepDir }};align-items:{{ stepAlign }};gap:16px;text-align:{{ stepText }}">
+          <span style="flex:none;width:64px;height:64px;border-radius:999px;background:#F989EF;color:#141210;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;display:flex;align-items:center;justify-content:center;font-family:Atma,system-ui;font-weight:700;font-size:30px">3</span>
+          <span style="display:flex;flex-direction:column;gap:6px;padding-top:{{ stepTextPad }}">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:24px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase">We deliver or come home</span>
+            <span style="font-size:16px;line-height:1.55;color:rgba(20,18,16,.8);max-width:30ch">Meals arrive chilled and on time. Groomers and vets come to you.</span>
+          </span>
+        </li>
+      </ol>
+    </section>
+
+    <section id="why-fresh" data-reveal="" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210;scroll-margin-top:84px">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">Why fresh food</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Fresh food vs kibble</h2>
+          <p style="margin:0;max-width:56ch;font-size:16px;line-height:1.6;color:rgba(20,18,16,.8);text-wrap:pretty">Recipes are formulated and reviewed by certified pet nutritionists to meet AAFCO nutrient profiles for all life stages, then tailored to age, breed, weight and activity.</p>
+        </div>
+        <div style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:4px 20px 12px;scrollbar-width:thin">
+          <sc-for list="{{ compare }}" as="c" hint-placeholder-count="5">
+            <article data-ri="" style="scroll-snap-align:start;display:flex;flex-direction:column;background:#F2E7CB;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;overflow:hidden">
+              <h3 style="margin:0;padding:12px 18px;background:#141210;color:#F2E7CB;font-family:Atma,system-ui;font-weight:700;font-size:16px;letter-spacing:.14em;text-transform:uppercase">{{ c.label }}</h3>
+              <div style="padding:16px 18px;display:flex;flex-direction:column;gap:6px;background:#FFFBF2;border-bottom:2px dashed rgba(20,18,16,.3);flex:1">
+                <span style="display:flex;align-items:center;gap:8px;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#077E4A"><span aria-hidden="true" style="width:10px;height:10px;border-radius:999px;background:#09A460;border:1.5px solid #141210"></span>Doggzi fresh</span>
+                <span style="font-size:16px;font-weight:600;line-height:1.4">{{ c.doggzi }}</span>
+              </div>
+              <div style="padding:16px 18px;display:flex;flex-direction:column;gap:6px;flex:1">
+                <span style="display:flex;align-items:center;gap:8px;font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(20,18,16,.7)"><span aria-hidden="true" style="width:10px;height:10px;border-radius:999px;background:transparent;border:1.5px solid rgba(20,18,16,.7)"></span>Commercial kibble</span>
+                <span style="font-size:15px;line-height:1.45;color:rgba(20,18,16,.8)">{{ c.kibble }}</span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ hasVideos }}" hint-placeholder-val="{{ false }}">
+      <section id="watch" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px);scroll-margin-top:84px">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Watch</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase">See it in action</h2>
+        </div>
+        <div style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:4px 20px 12px;scrollbar-width:thin">
+          <sc-for list="{{ videos }}" as="v" hint-placeholder-count="2">
+            <div data-ri="" style="flex:none;scroll-snap-align:start;width:clamp(210px,26vw,270px);aspect-ratio:9/16;position:relative;background:#141210;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210;overflow:hidden">
+              <sc-if value="{{ v.playing }}" hint-placeholder-val="{{ false }}">
+                <iframe src="{{ v.embed }}" title="{{ v.title }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+              </sc-if>
+              <sc-if value="{{ v.idle }}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{ v.play }}" aria-label="{{ v.playLabel }}" style="position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:#141210;cursor:pointer;display:block" style-focus="outline:3px solid #F65322;outline-offset:-6px">
+                  <img src="{{ v.thumb }}" alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+                  <span aria-hidden="true" style="position:absolute;left:50%;top:50%;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:999px;background:#F65322;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;display:flex;align-items:center;justify-content:center;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)">
+                    <svg viewBox="0 0 24 24" style="width:30px;height:30px;margin-left:4px"><path d="M7 4.5v15l12-7.5z" fill="#FFFBF2" stroke="#141210" stroke-width="2" stroke-linejoin="round"></path></svg>
+                  </span>
+                </button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <dc-import name="Testimonials" force-reduced-motion="{{ forceReduced }}" hint-size="100%,560px"></dc-import>
+
+    <dc-import name="FAQ" set="explore" force-reduced-motion="{{ forceReduced }}" hint-size="100%,640px"></dc-import>
+
+    <section ref="{{ finalRef }}" data-reveal="" style="background:#F65322;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 20px;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center">
+        <h2 data-ri="" style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.4rem,7vw,4.5rem);line-height:1;letter-spacing:.02em;text-transform:uppercase;color:#FFFBF2;text-wrap:balance">Ready when {{ readyName }} is</h2>
+        <a data-ri="" href="Pet Passport.dc.html" style="display:flex;align-items:center;gap:10px;height:62px;padding:0 32px;font:600 19px Poppins,system-ui;color:#141210;text-decoration:none;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Make a passport <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <dc-import name="SiteFooter" force-reduced-motion="{{ forceReduced }}" hint-size="100%,560px"></dc-import>
+
+  <div style="position:fixed;left:0;right:0;bottom:max(20px,env(safe-area-inset-bottom));z-index:25;display:flex;justify-content:center;pointer-events:none;padding:0 20px">
+    <a href="Pet Passport.dc.html" tabindex="{{ ctaTab }}" aria-hidden="{{ ctaHidden }}" style="pointer-events:{{ ctaPE }};opacity:{{ ctaOp }};transform:{{ ctaT }};transition:opacity 350ms cubic-bezier(.22,1,.36,1),transform 450ms cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;height:58px;padding:0 28px;font:600 18px Poppins,system-ui;color:#FFFBF2;text-decoration:none;background:#F65322;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210" style-hover="box-shadow:6px 6px 0 #141210;color:#FFFBF2" style-active="box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">{{ ctaLabel }}</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoPet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Saved passport&quot;,&quot;Dog&quot;,&quot;Cat&quot;,&quot;No pet&quot;],&quot;default&quot;:&quot;Saved passport&quot;,&quot;tsType&quot;:&quot;'Saved passport' | 'Dog' | 'Cat' | 'No pet'&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const DEMO = { Dog: { name: 'Bruno', type: 'dog', breed: 'Labrador Retriever' }, Cat: { name: 'Mishti', type: 'cat', breed: 'Persian' } };
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const STAGGER = 60;
+const KEY = 'dz.passport';
+// From reference/fresh-food-vs-kibble.pdf
+const COMPARE = [
+  { label: 'Ingredients', doggzi: 'Human-grade, fresh meat, veggies and oils', kibble: 'Processed meat meals, fillers, artificial flavours' },
+  { label: 'Nutrition', doggzi: 'Balanced with vitamins and minerals, no preservatives', kibble: 'Nutrient loss due to high-heat processing' },
+  { label: 'Digestibility', doggzi: 'Highly digestible, easy on the gut', kibble: 'Harder to digest, may cause bloating or gas' },
+  { label: 'Palatability', doggzi: 'Dogs love the fresh smell and taste', kibble: 'Often coated with fat spray to increase taste' },
+  { label: 'Health', doggzi: 'Shiny coat, more energy, fewer vet visits', kibble: 'Possible long-term effects: allergies, obesity, joint issues' },
+];
+
+class Component extends DCLogic {
+  state = { pet: null, vb: { dog: '0 0 100 100', puppy: '0 0 100 100', cat: '0 0 100 100' }, narrow: false, content: null, playing: {}, faqOpen: -1, scrolled: false, finalInView: false };
+  rootRef = React.createRef(); spriteRef = React.createRef(); trackRef = React.createRef(); finalRef = React.createRef();
+  seen = new WeakSet();
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  readPet() {
+    const mode = this.props.demoPet ?? 'Saved passport';
+    if (DEMO[mode]) return DEMO[mode];
+    if (mode === 'No pet') return null;
+    try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.name) return { name: s.name, type: s.type, breed: s.breed || 'Mixed / Not sure' }; } catch (e) {}
+    return null;
+  }
+
+  componentDidMount() {
+    this.setState({ pet: this.readPet() });
+    import(new URL('content/explore-content.js', document.baseURI).href).then(m => this.setState({ content: { videos: m.VIDEOS || [], testimonials: m.TESTIMONIALS || [], faqs: m.FAQS || [] } })).catch(() => this.setState({ content: { videos: [], testimonials: [], faqs: [] } }));
+    fetch('assets/pets-trio.svg').then(r => r.text()).then(t => this.buildSprite(t));
+    this.ro = new ResizeObserver(([e]) => { const n = e.contentRect.width < 720; if (n !== this.state.narrow) this.setState({ narrow: n }); });
+    this.ro.observe(this.rootRef.current);
+    this.io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { this.io.unobserve(e.target); this.reveal(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    this.setupReveal();
+    this.onScroll = () => { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; const max = document.documentElement.scrollHeight - window.innerHeight; const sc = max > 0 && window.scrollY / max > 0.4; if (sc !== this.state.scrolled) this.setState({ scrolled: sc }); }); };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.finalIO = new IntersectionObserver(([e]) => this.setState({ finalInView: e.isIntersecting }));
+    if (this.finalRef.current) this.finalIO.observe(this.finalRef.current);
+  }
+
+  componentWillUnmount() { this.ro.disconnect(); this.io.disconnect(); this.finalIO.disconnect(); window.removeEventListener('scroll', this.onScroll); if (this.marquee) this.marquee.cancel(); if (this.ld) this.ld.remove(); }
+
+  componentDidUpdate(pp, ps) {
+    if (pp.demoPet !== this.props.demoPet) this.setState({ pet: this.readPet() });
+    this.setupReveal();
+    if (ps.narrow !== this.state.narrow || ps.content !== this.state.content || pp.forceReducedMotion !== this.props.forceReducedMotion) this.setupMarquee();
+  }
+
+  setupReveal() {
+    const root = this.rootRef.current; if (!root) return;
+    root.querySelectorAll('[data-reveal]').forEach(sec => {
+      if (this.seen.has(sec)) return;
+      this.seen.add(sec);
+      if (this.reduced()) return;
+      sec.querySelectorAll('[data-ri]').forEach(el => { el.style.opacity = '0'; });
+      const line = sec.querySelector('[data-line]'); if (line) line.style.transform = this.state.narrow ? 'scaleY(0)' : 'scaleX(0)';
+      this.io.observe(sec);
+    });
+  }
+
+  reveal(sec) {
+    sec.querySelectorAll('[data-ri]').forEach((el, i) => {
+      el.style.opacity = '';
+      el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 550, delay: Math.min(i, 8) * STAGGER, easing: EASE, fill: 'backwards' });
+    });
+    const line = sec.querySelector('[data-line]');
+    if (line) { const ax = this.state.narrow ? 'scaleY' : 'scaleX'; line.style.transform = ''; line.animate([{ transform: `${ax}(0)` }, { transform: `${ax}(1)` }], { duration: 1100, delay: 200, easing: EASE, fill: 'backwards' }); }
+  }
+
+  setupMarquee() {
+    if (this.marquee) { this.marquee.cancel(); this.marquee = null; }
+    const tr = this.trackRef.current, c = this.state.content;
+    if (!tr || !c || this.state.narrow || this.reduced() || !c.testimonials.length) return;
+    this.marquee = tr.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }], { duration: c.testimonials.length * 9000, iterations: Infinity });
+  }
+
+  injectFaqLd() {
+    const faqs = this.state.content.faqs; if (!faqs.length || this.ld) return;
+    this.ld = document.createElement('script');
+    this.ld.type = 'application/ld+json';
+    this.ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+    document.head.appendChild(this.ld);
+  }
+
+  buildSprite(text) {
+    const s = this.spriteRef.current; if (!s) return;
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    [...doc.documentElement.children].forEach(c => s.appendChild(document.importNode(c, true)));
+    const sq = id => { const el = s.querySelector('#' + id); el.id = 'dze-' + id; const b = el.getBBox(); const p = 12, w = b.width + p * 2, h = b.height + p * 2, m = Math.max(w, h); return `${b.x - p - (m - w) / 2} ${b.y - p - (m - h) / 2 + m * 0.06} ${m} ${m}`; };
+    const vb = { dog: sq('lab'), puppy: sq('puppy'), cat: sq('cat') };
+    s.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dze-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  avatar(type, breed) { const v = type === 'cat' ? 'cat' : SMALL.has(breed) ? 'puppy' : 'dog'; return { vb: this.state.vb[v], href: `#dze-${v === 'dog' ? 'lab' : v}` }; }
+
+  renderVals() {
+    const s = this.state, p = s.pet, n = s.narrow, c = s.content || { videos: [], testimonials: [], faqs: [] };
+    const av = p ? this.avatar(p.type, p.breed) : { vb: '0 0 100 100', href: '' };
+    const poss = p ? p.name + (/s$/i.test(p.name) ? "'" : "'s") : '';
+    const marq = !n && !this.reduced();
+    const tList = marq ? [...c.testimonials, ...c.testimonials] : c.testimonials;
+    const showCta = s.scrolled && !s.finalInView;
+    return {
+      rootRef: this.rootRef, spriteRef: this.spriteRef, trackRef: this.trackRef, finalRef: this.finalRef,
+      forceReduced: !!this.props.forceReducedMotion,
+      wobble: e => { if (this.reduced()) return; const a = e.currentTarget; if (a._w && a._w.playState === 'running') return; a._w = a.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)', offset: 0.3 }, { transform: 'rotate(6deg)', offset: 0.65 }, { transform: 'rotate(0)' }], { duration: 480, easing: BOUNCY }); },
+      hasPet: !!p, nameUpper: p ? p.name.toUpperCase() : '', breed: p ? p.breed : '', chipLabel: p ? `${poss} passport — back to choices` : '',
+      avatarVB: av.vb, avatarHref: av.href,
+      petRef: p ? p.name : 'your pet', readyName: p ? p.name : 'your pet',
+      stepCols: n ? '1fr' : 'repeat(3, minmax(0,1fr))', stepGap: n ? '36px' : '32px',
+      stepDir: n ? 'row' : 'column', stepAlign: n ? 'flex-start' : 'center', stepText: n ? 'left' : 'center', stepTextPad: n ? '4px' : '0',
+      lineL: n ? '31px' : '16.66%', lineR: n ? 'auto' : '16.66%', lineT: '32px', lineB: n ? '40px' : 'auto',
+      lineW: n ? '2.5px' : 'auto', lineH: n ? 'auto' : '2.5px', lineOrigin: n ? 'top center' : 'left center',
+      compare: COMPARE,
+      hasVideos: c.videos.length > 0,
+      videos: c.videos.map(v => ({ title: v.title, playLabel: `Play video: ${v.title}`, thumb: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`, embed: `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&playsinline=1&rel=0`, playing: !!s.playing[v.id], idle: !s.playing[v.id], play: () => this.setState(st => ({ playing: { ...st.playing, [v.id]: true } })) })),
+      hasTestimonials: c.testimonials.length > 0,
+      anyPlaceholder: c.testimonials.some(t => t.placeholder),
+      testimonials: tList.map((t, i) => { const a = this.avatar(t.type, ''); return { ...t, placeholder: !!t.placeholder, vb: a.vb, href: a.href, dup: i >= c.testimonials.length ? 'true' : 'false', borderStyle: t.placeholder ? 'dashed' : 'solid' }; }),
+      tOverflow: marq ? 'hidden' : 'auto',
+      pauseMarquee: () => this.marquee && this.marquee.pause(),
+      playMarquee: () => this.marquee && this.marquee.play(),
+      hasFaqs: c.faqs.length > 0,
+      faqs: c.faqs.map((f, i) => { const open = s.faqOpen === i; return { q: f.q, a: f.a, btnId: `faq-b${i}`, panelId: `faq-p${i}`, expanded: open ? 'true' : 'false', rows: open ? '1fr' : '0fr', rot: open ? '45deg' : '0deg', iconBg: open ? '#F989EF' : '#F2E7CB', shadow: open ? '4px 4px 0 #141210' : '2px 2px 0 #141210', toggle: () => this.setState({ faqOpen: open ? -1 : i }) }; }),
+      ctaLabel: p ? `Make ${poss} passport →` : 'Make a passport →',
+      ctaOp: showCta ? 1 : 0, ctaT: showCta ? 'none' : 'translateY(24px)', ctaPE: showCta ? 'auto' : 'none', ctaTab: showCta ? 0 : -1, ctaHidden: showCta ? 'false' : 'true',
+    };
+  }
+}
+</script>
+</body>
+</html>

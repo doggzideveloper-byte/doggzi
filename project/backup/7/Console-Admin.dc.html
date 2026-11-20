@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#F65322}
+a:hover{color:#D9431A}
+</style>
+</helmet>
+<sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:#F2E7CB;display:flex;flex-direction:column">
+  <header style="position:sticky;top:0;z-index:30;background:#FFFBF2;border-bottom:1.5px solid #141210">
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap">
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ openMenu }}" aria-label="Open menu" style="width:42px;height:42px;border-radius:12px;border:1.5px solid #141210;background:#F2E7CB;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:22px;height:22px" fill="none" stroke="#141210" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+      </sc-if>
+      <a href="Console-Login.dc.html" aria-label="Doggzi Console" style="flex:none;width:42px;height:42px;border-radius:999px;background:#FFFBF2 url('assets/doggzi-mark.svg') center / contain no-repeat;border:1.5px solid #141210;box-shadow:2px 2px 0 #141210"></a>
+      <div style="display:flex;flex-direction:column;gap:1px;min-width:0;flex:1">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase;line-height:1">{{ moduleTitle }}</span>
+        <span style="font-size:12px;color:rgba(20,18,16,.75)">Doggzi Console · {{ nowLabel }} IST</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600">{{ userName }}<span style="font-family:Atma,system-ui;font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:1px 8px;border-radius:999px;background:#141210;color:#FFFBF2;border:1.5px solid #141210">{{ roleLabel }}</span></span>
+        <sc-if value="{{ multi }}" hint-placeholder-val="{{ false }}">
+          <label style="display:flex"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Switch panel</span>
+            <select onChange="{{ switchPanel }}" value="{{ role }}" style="height:36px;padding:0 8px;font:600 13px Poppins,system-ui;color:#141210;background:#F2E7CB;border:1.5px solid #141210;border-radius:999px;cursor:pointer">
+              <sc-for list="{{ panelOpts }}" as="o" hint-placeholder-count="2"><option value="{{ o.role }}">{{ o.label }}</option></sc-for>
+            </select>
+          </label>
+        </sc-if>
+        <button type="button" onClick="{{ toggleMute }}" aria-pressed="{{ mutedAttr }}" aria-label="{{ muteLabel }}" style="width:36px;height:36px;border-radius:999px;border:1.5px solid #141210;background:#FFFBF2;display:flex;align-items:center;justify-content:center;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:2px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px" fill="none" stroke="#141210" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#F2E7CB"></path><path d="{{ muteIcon }}"></path></svg></button>
+        <button type="button" onClick="{{ logout }}" style="height:36px;padding:0 14px;font:600 13px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:2px">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:1;display:grid;grid-template-columns:{{ shellCols }};min-height:0">
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <nav aria-label="Admin modules" style="position:sticky;top:64px;align-self:start;height:calc(100vh - 64px);overflow:auto;background:#FFFBF2;border-right:1.5px solid #141210;padding:12px 10px;display:flex;flex-direction:column;gap:4px">
+        <sc-for list="{{ modules }}" as="m" hint-placeholder-count="8">
+          <button type="button" onClick="{{ m.go }}" aria-current="{{ m.current }}" style="display:flex;align-items:center;gap:10px;height:42px;padding:0 10px;font:600 14px Poppins,system-ui;color:#141210;background:{{ m.bg }};border:1.5px solid {{ m.border }};border-radius:10px;cursor:pointer;text-align:left" style-focus="outline:3px solid #F65322;outline-offset:2px">
+            <span aria-hidden="true" style="width:10px;height:10px;border-radius:3px;background:{{ m.color }};border:1.5px solid #141210"></span>
+            <span style="flex:1">{{ m.label }}</span>
+            <sc-if value="{{ m.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#D93A2B;color:#FFFBF2;border:1.5px solid #141210;font-size:12px;display:flex;align-items:center;justify-content:center">{{ m.badge }}</span></sc-if>
+          </button>
+        </sc-for>
+        <span style="margin-top:auto;padding:10px 6px 0;font-size:11px;line-height:1.4;color:rgba(20,18,16,.65)">{{ scopeNote }}</span>
+      </nav>
+    </sc-if>
+
+    <main style="min-width:0;padding:16px;display:flex;flex-direction:column;gap:14px">
+
+      <sc-if value="{{ mToday }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Today</h1>
+          <span role="status" style="font-size:13px;font-weight:500">Live · updated {{ updatedAgo }} · refreshes every 30s</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <div style="padding:12px;background:#FFFBF2;border:1.5px solid #141210;border-left:6px solid {{ k.color }};border-radius:12px;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:13px;font-weight:500">{{ k.k }}</span>
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:26px;font-variant-numeric:tabular-nums">{{ k.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:14px;align-items:start">
+          <section style="display:flex;flex-direction:column;gap:10px;padding:14px;background:#FFFBF2;border:1.5px solid #D93A2B;border-radius:14px">
+            <h2 style="margin:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600">Overdue<span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#D93A2B;color:#FFFBF2;font-size:12px;display:flex;align-items:center;justify-content:center">{{ overdueCount }}</span></h2>
+            <sc-if value="{{ noOverdue }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:14px;color:rgba(20,18,16,.75)">Nothing overdue. Nice.</p></sc-if>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ overdue }}" as="o" hint-placeholder-count="0">
+                <li data-overdue="{{ o.id }}" style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#FBE3DF;border:1.5px solid #D93A2B;border-radius:10px;font-size:14px">
+                  <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="font-weight:600">{{ o.title }}</span><span style="font-size:12px">{{ o.sub }}</span></span>
+                  <button type="button" onClick="{{ o.open }}" style="height:34px;padding:0 12px;font:600 13px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Open</button>
+                </li>
+              </sc-for>
+            </ul>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:10px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Bookings today by status</h2>
+            <sc-for list="{{ bookingBars }}" as="b" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:110px 1fr 28px;align-items:center;gap:8px;font-size:13px">
+                <span>{{ b.label }}</span>
+                <span style="height:12px;background:#F2E7CB;border:1px solid #141210;border-radius:999px;overflow:hidden"><span style="display:block;height:100%;width:{{ b.w }};background:#09A460"></span></span>
+                <span style="font-weight:600;text-align:right;font-variant-numeric:tabular-nums">{{ b.n }}</span>
+              </div>
+            </sc-for>
+            <h2 style="margin:6px 0 0;font-size:16px;font-weight:600">Marketplace orders by status</h2>
+            <sc-for list="{{ orderBars }}" as="b" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:110px 1fr 28px;align-items:center;gap:8px;font-size:13px">
+                <span>{{ b.label }}</span>
+                <span style="height:12px;background:#F2E7CB;border:1px solid #141210;border-radius:999px;overflow:hidden"><span style="display:block;height:100%;width:{{ b.w }};background:#F989EF"></span></span>
+                <span style="font-weight:600;text-align:right;font-variant-numeric:tabular-nums">{{ b.n }}</span>
+              </div>
+            </sc-for>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:10px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Fresh Food funnel (this week)</h2>
+            <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="5">
+              <div style="display:flex;flex-direction:column;gap:3px;font-size:13px">
+                <span style="display:flex;justify-content:space-between"><span>{{ f.label }}</span><span style="font-weight:600;font-variant-numeric:tabular-nums">{{ f.n }}</span></span>
+                <span style="height:14px;background:#F2E7CB;border:1px solid #141210;border-radius:4px;overflow:hidden"><span style="display:block;height:100%;width:{{ f.w }};background:#F65322"></span></span>
+              </div>
+            </sc-for>
+            <h2 style="margin:6px 0 0;font-size:16px;font-weight:600">New partner applications</h2>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ applications }}" as="a" hint-placeholder-count="3"><li style="display:flex;justify-content:space-between;gap:8px;padding:6px 10px;background:#F2E7CB;border-radius:8px;font-size:13px"><span style="font-weight:600">{{ a.name }}</span><span>{{ a.kind }} · {{ a.when }}</span></li></sc-for>
+            </ul>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showBoard }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">{{ board.title }}</h1>
+          <span style="font-size:13px;color:rgba(20,18,16,.75)">{{ board.hint }}</span>
+        </div>
+        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-start">
+          <sc-for list="{{ board.cols }}" as="col" hint-placeholder-count="5">
+            <section aria-label="{{ col.title }}" onDragOver="{{ col.over }}" onDrop="{{ col.drop }}" style="flex:none;width:250px;display:flex;flex-direction:column;gap:8px;padding:8px;background:{{ col.bg }};border:1.5px solid #141210;border-radius:14px;min-height:240px">
+              <h2 style="margin:0;padding:2px 4px;display:flex;align-items:center;justify-content:space-between;font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase">{{ col.title }}<span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#FFFBF2;border:1.5px solid #141210;font:600 12px Poppins,system-ui;display:flex;align-items:center;justify-content:center">{{ col.count }}</span></h2>
+              <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="1">
+                <article data-card="{{ c.id }}" draggable="{{ c.draggable }}" onDragStart="{{ c.dragStart }}" style="display:flex;flex-direction:column;gap:6px;padding:10px;background:#FFFBF2;border:1.5px solid {{ c.border }};border-radius:12px;box-shadow:2px 2px 0 #141210;cursor:{{ c.cursor }}">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <sc-if value="{{ c.hasAv }}" hint-placeholder-val="{{ false }}"><span style="flex:none;width:34px;height:34px;border-radius:999px;background:#F2E7CB;border:1.5px solid #141210;overflow:hidden;display:flex"><svg viewBox="{{ c.avVB }}" style="width:100%;height:100%"><use href="{{ c.avHref }}"></use></svg></span></sc-if>
+                    <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="font-weight:600;font-size:14px;line-height:1.2">{{ c.title }}</span><span style="font-size:12px">{{ c.sub }}</span></span>
+                  </div>
+                  <sc-for list="{{ c.lines }}" as="l" hint-placeholder-count="2"><span style="font-size:12px;line-height:1.35">{{ l }}</span></sc-for>
+                  <div style="display:flex;flex-wrap:wrap;gap:4px">
+                    <sc-for list="{{ c.chips }}" as="ch" hint-placeholder-count="1"><span data-chip="" style="font-family:Atma,system-ui;font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:1px 7px;border-radius:999px;background:{{ ch.bg }};color:{{ ch.fg }};border:1.5px solid {{ ch.bd }}">{{ ch.label }}</span></sc-for>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ c.actions }}" as="a" hint-placeholder-count="1"><button type="button" onClick="{{ a.fn }}" style="height:32px;padding:0 10px;font:600 12px Poppins,system-ui;color:{{ a.fg }};background:#FFFBF2;border:1.5px solid {{ a.bd }};border-radius:999px;cursor:pointer" style-focus="outline:3px solid #F65322;outline-offset:2px">{{ a.label }}</button></sc-for>
+                  </div>
+                </article>
+              </sc-for>
+            </section>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showTable }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">{{ moduleTitle }}</h1>
+          <span style="font-size:13px;color:rgba(20,18,16,.75)">{{ tbl.note }}</span>
+        </div>
+        <sc-if value="{{ tbl.hasSubtabs }}" hint-placeholder-val="{{ false }}">
+          <div role="tablist" style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ tbl.subtabs }}" as="t" hint-placeholder-count="2"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.go }}" style="height:38px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:{{ t.bg }};border:1.5px solid #141210;border-radius:999px;cursor:pointer">{{ t.label }}</button></sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <input type="search" value="{{ tq }}" onChange="{{ onTq }}" aria-label="Search" placeholder="{{ tbl.searchPh }}" style="flex:1 1 240px;height:40px;padding:0 14px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;outline:none" style-focus="box-shadow:2px 2px 0 #F65322">
+          <select value="{{ tf }}" onChange="{{ onTf }}" aria-label="Filter" style="height:40px;padding:0 10px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px">
+            <sc-for list="{{ tbl.filters }}" as="f" hint-placeholder-count="1"><option value="{{ f.v }}">{{ f.label }}</option></sc-for>
+          </select>
+          <sc-if value="{{ canExport }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ exportTbl }}" style="height:40px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Export CSV</button></sc-if>
+          <sc-if value="{{ tbl.hasForm }}" hint-placeholder-val="{{ false }}">
+            <form onSubmit="{{ tbl.formSubmit }}" style="display:flex;gap:6px;flex-wrap:wrap">
+              <input value="{{ tbl.formVal }}" onChange="{{ tbl.formChange }}" aria-label="{{ tbl.formLabel }}" placeholder="{{ tbl.formLabel }}" style="height:40px;width:170px;padding:0 12px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px">
+              <select value="{{ tbl.formRole }}" onChange="{{ tbl.formRoleChange }}" aria-label="Role" style="height:40px;padding:0 8px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px"><option value="OPS">OPS</option><option value="ADMIN">ADMIN</option><option value="VENDOR">VENDOR</option><option value="PROVIDER">PROVIDER</option></select>
+              <button type="submit" style="height:40px;padding:0 14px;font:600 14px Poppins,system-ui;color:#FFFBF2;background:#141210;border:1.5px solid #141210;border-radius:10px;cursor:pointer">Invite</button>
+            </form>
+          </sc-if>
+        </div>
+        <div style="overflow-x:auto;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+          <table style="width:100%;min-width:{{ tbl.minW }};border-collapse:collapse;font-size:14px">
+            <thead><tr style="background:#F2E7CB;text-align:left">
+              <sc-for list="{{ tbl.cols }}" as="c" hint-placeholder-count="6"><th scope="col" style="padding:10px 12px;border-bottom:1.5px solid #141210;font-weight:600;white-space:nowrap">{{ c }}</th></sc-for>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ tbl.rows }}" as="r" hint-placeholder-count="8">
+                <tr data-row="{{ r.id }}" style="background:{{ r.bg }}">
+                  <sc-for list="{{ r.cells }}" as="x" hint-placeholder-count="6">
+                    <td style="padding:8px 12px;border-bottom:1px solid rgba(20,18,16,.15);vertical-align:middle;text-align:{{ x.align }}">
+                      <sc-if value="{{ x.isText }}" hint-placeholder-val="{{ true }}"><span style="display:block;font-weight:{{ x.w }};font-variant-numeric:tabular-nums;color:{{ x.color }}">{{ x.text }}</span><sc-if value="{{ x.sub }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:12px;color:rgba(20,18,16,.7)">{{ x.sub }}</span></sc-if></sc-if>
+                      <sc-if value="{{ x.isChip }}" hint-placeholder-val="{{ false }}"><span style="font-family:Atma,system-ui;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:1px 8px;border-radius:999px;background:{{ x.bg }};color:{{ x.fg }};border:1.5px solid {{ x.bd }};white-space:nowrap">{{ x.text }}</span></sc-if>
+                      <sc-if value="{{ x.isInput }}" hint-placeholder-val="{{ false }}"><label style="display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 8px;border:1.5px solid #141210;border-radius:8px;background:#FFFBF2"><span aria-hidden="true">{{ x.prefix }}</span><input value="{{ x.value }}" onChange="{{ x.onChange }}" aria-label="{{ x.label }}" style="width:{{ x.width }};border:0;background:transparent;font:500 14px Poppins,system-ui;color:#141210;outline:none"></label></sc-if>
+                      <sc-if value="{{ x.isCheck }}" hint-placeholder-val="{{ false }}"><input type="checkbox" checked="{{ x.checked }}" onChange="{{ x.onChange }}" aria-label="{{ x.label }}" style="width:20px;height:20px;accent-color:#09A460;cursor:pointer"></sc-if>
+                      <sc-if value="{{ x.isActions }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ x.actions }}" as="a" hint-placeholder-count="1"><button type="button" onClick="{{ a.fn }}" style="height:32px;padding:0 10px;font:600 12px Poppins,system-ui;color:{{ a.fg }};background:#FFFBF2;border:1.5px solid {{ a.bd }};border-radius:999px;cursor:pointer;white-space:nowrap" style-focus="outline:3px solid #F65322;outline-offset:2px">{{ a.label }}</button></sc-for></span></sc-if>
+                    </td>
+                  </sc-for>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <sc-if value="{{ tbl.empty }}" hint-placeholder-val="{{ false }}"><p style="margin:0;padding:20px;text-align:center;font-size:14px">No matches.</p></sc-if>
+        </div>
+        <span style="font-size:12px;color:rgba(20,18,16,.7)">{{ tbl.count }}</span>
+      </sc-if>
+
+      <sc-if value="{{ mContent }}" hint-placeholder-val="{{ false }}">
+        <h1 style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase">Content</h1>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px;align-items:start">
+          <section style="display:flex;flex-direction:column;gap:8px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Testimonials</h2>
+            <p style="margin:0;font-size:13px">A testimonial can only go live once customer consent is recorded.</p>
+            <sc-for list="{{ testis }}" as="t" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:6px;padding:10px;background:#F2E7CB;border-radius:10px">
+                <span style="font-weight:600;font-size:14px">{{ t.pet }} · {{ t.service }}</span>
+                <span style="font-size:13px;line-height:1.4">“{{ t.quote }}”</span>
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer"><input type="checkbox" checked="{{ t.consent }}" onChange="{{ t.onConsent }}" style="width:18px;height:18px;accent-color:#09A460">Customer consent recorded</label>
+                  <button type="button" role="switch" aria-checked="{{ t.liveAttr }}" onClick="{{ t.toggleLive }}" disabled="{{ t.liveDisabled }}" style="height:32px;padding:0 12px;font:600 12px Poppins,system-ui;color:#141210;background:{{ t.liveBg }};border:1.5px solid #141210;border-radius:999px;cursor:pointer;opacity:{{ t.liveOp }}">{{ t.liveLabel }}</button>
+                </div>
+              </div>
+            </sc-for>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:8px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">FAQs by page</h2>
+            <sc-for list="{{ faqSets }}" as="f" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#F2E7CB;border-radius:10px;font-size:14px">
+                <span style="flex:1;font-weight:600">{{ f.page }}</span><span>{{ f.count }} questions</span>
+                <button type="button" onClick="{{ f.toggle }}" style="height:32px;padding:0 12px;font:600 12px Poppins,system-ui;color:#141210;background:{{ f.bg }};border:1.5px solid #141210;border-radius:999px;cursor:pointer">{{ f.status }}</button>
+              </div>
+            </sc-for>
+            <h2 style="margin:8px 0 0;font-size:16px;font-weight:600">YouTube Shorts</h2>
+            <sc-for list="{{ shorts }}" as="s" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F2E7CB;border-radius:10px;font-size:14px;font-variant-numeric:tabular-nums"><span style="font-weight:600">{{ s.id }}</span><span>{{ s.where }}</span></div></sc-for>
+          </section>
+          <section style="display:flex;flex-direction:column;gap:10px;padding:14px;background:#FFFBF2;border:1.5px solid #141210;border-radius:14px">
+            <h2 style="margin:0;font-size:16px;font-weight:600">Site config</h2>
+            <sc-for list="{{ cfgFields }}" as="c" hint-placeholder-count="5">
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600">{{ c.label }}<input value="{{ c.value }}" onChange="{{ c.onChange }}" style="height:40px;padding:0 12px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none" style-focus="box-shadow:2px 2px 0 #F65322"></label>
+            </sc-for>
+            <label style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer"><input type="checkbox" checked="{{ catsSupported }}" onChange="{{ onCats }}" style="width:20px;height:20px;accent-color:#F65322">catsSupported (Fresh Food for cats)</label>
+            <span style="font-size:13px">Switching ratios (draft): 25% → 50% → 75% → 100% fresh over 7 days</span>
+            <button type="button" onClick="{{ saveCfg }}" style="align-self:flex-start;height:42px;padding:0 16px;font:600 14px Poppins,system-ui;color:#FFFBF2;background:#141210;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Save config</button>
+          </section>
+        </div>
+      </sc-if>
+    </main>
+  </div>
+
+  <sc-if value="{{ customer }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:45;display:flex;justify-content:flex-end;background:rgba(20,18,16,.35)">
+      <div role="dialog" aria-modal="true" aria-labelledby="cu-t" onKeyDown="{{ escCustomer }}" style="width:min(460px,100%);height:100%;overflow:auto;background:#FFFBF2;border-left:1.5px solid #141210;padding:16px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h2 id="cu-t" style="margin:0;font-size:18px;font-weight:600">{{ cu.name }}</h2><button type="button" data-close="" onClick="{{ closeCustomer }}" aria-label="Close" style="width:40px;height:40px;border-radius:999px;border:1.5px solid #141210;background:#F2E7CB;font:500 22px/1 Poppins,system-ui;cursor:pointer">×</button></div>
+        <span style="font-size:14px;font-variant-numeric:tabular-nums">{{ cu.phone }} · {{ cu.area }}</span>
+        <h3 style="margin:4px 0 0;font-size:15px;font-weight:600">Pets</h3>
+        <sc-for list="{{ cu.pets }}" as="p" hint-placeholder-count="1"><div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#F2E7CB;border-radius:10px"><span style="flex:none;width:36px;height:36px;border-radius:999px;background:#FFFBF2;border:1.5px solid #141210;overflow:hidden;display:flex"><svg viewBox="{{ p.vb }}" style="width:100%;height:100%"><use href="{{ p.href }}"></use></svg></span><span style="font-size:14px"><strong style="font-weight:600">{{ p.name }}</strong> · {{ p.breed }}</span></div></sc-for>
+        <h3 style="margin:4px 0 0;font-size:15px;font-weight:600">Bookings &amp; orders</h3>
+        <sc-for list="{{ cu.history }}" as="h" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-bottom:1px solid rgba(20,18,16,.2);font-size:13px"><span>{{ h.what }}</span><span>{{ h.when }}</span></div></sc-for>
+        <h3 style="margin:4px 0 0;font-size:15px;font-weight:600">Support notes</h3>
+        <sc-for list="{{ cu.notes }}" as="nt" hint-placeholder-count="0"><p style="margin:0;padding:8px 10px;background:#F2E7CB;border-radius:10px;font-size:13px">{{ nt }}</p></sc-for>
+        <form onSubmit="{{ addNote }}" style="display:flex;flex-direction:column;gap:8px">
+          <textarea value="{{ noteDraft }}" onChange="{{ onNote }}" aria-label="Add a support note" rows="3" placeholder="Add a note…" style="padding:10px 12px;font:500 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;resize:vertical;outline:none"></textarea>
+          <button type="submit" style="align-self:flex-start;height:40px;padding:0 14px;font:600 14px Poppins,system-ui;color:#FFFBF2;background:#141210;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Add note</button>
+        </form>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ picker }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(20,18,16,.45)">
+      <div role="dialog" aria-modal="true" aria-labelledby="pk-t" style="width:100%;max-width:420px;padding:16px;background:#FFFBF2;border:1.5px solid #141210;border-radius:18px;display:flex;flex-direction:column;gap:10px">
+        <h2 id="pk-t" style="margin:0;font-size:18px;font-weight:600">{{ pickerTitle }}</h2>
+        <sc-for list="{{ pickerOpts }}" as="o" hint-placeholder-count="3"><button type="button" onClick="{{ o.pick }}" style="display:flex;justify-content:space-between;align-items:center;min-height:48px;padding:0 14px;font:600 14px Poppins,system-ui;color:#141210;background:#F2E7CB;border:1.5px solid #141210;border-radius:12px;cursor:pointer;text-align:left"><span>{{ o.label }}</span><span style="font-weight:500;font-size:12px">{{ o.sub }}</span></button></sc-for>
+        <button type="button" onClick="{{ closePicker }}" style="height:44px;font:600 14px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Cancel</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ danger }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:55;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,18,16,.5)">
+      <div ref="{{ dangerCb }}" role="alertdialog" aria-modal="true" aria-labelledby="dg-t" aria-describedby="dg-b" style="width:100%;max-width:520px;padding:18px 18px calc(18px + env(safe-area-inset-bottom));background:#FFFBF2;border:1.5px solid #D93A2B;border-bottom:0;border-radius:20px 20px 0 0;display:flex;flex-direction:column;gap:12px">
+        <h2 id="dg-t" style="margin:0;font-size:18px;font-weight:600;color:#D93A2B">{{ dg.title }}</h2>
+        <p id="dg-b" style="margin:0;font-size:14px;line-height:1.5">{{ dg.body }}</p>
+        <sc-if value="{{ dg.hasPreview }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="padding:10px;background:#F2E7CB;border-radius:10px;display:flex;flex-direction:column"><span style="font-size:12px">Old price</span><s style="font-family:Atma,system-ui;font-weight:700;font-size:22px">{{ dg.oldV }}</s></div>
+            <div style="padding:10px;background:#E2F4EA;border:1.5px solid #09A460;border-radius:10px;display:flex;flex-direction:column"><span style="font-size:12px">New price</span><span style="font-family:Atma,system-ui;font-weight:700;font-size:22px">{{ dg.newV }}</span></div>
+          </div>
+        </sc-if>
+        <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600">Type <code style="font-family:Atma,system-ui;font-size:15px;letter-spacing:.06em">{{ dg.word }}</code> to confirm
+          <input ref="{{ dangerInputRef }}" value="{{ dangerText }}" onChange="{{ onDangerText }}" onKeyDown="{{ dangerKey }}" autocomplete="off" style="height:46px;padding:0 12px;font:600 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:10px;outline:none" style-focus="box-shadow:2px 2px 0 #D93A2B"></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button type="button" onClick="{{ closeDanger }}" style="height:50px;font:600 15px Poppins,system-ui;color:#141210;background:#FFFBF2;border:1.5px solid #141210;border-radius:999px;cursor:pointer">Cancel</button>
+          <button type="button" onClick="{{ confirmDanger }}" disabled="{{ dangerDisabled }}" style="height:50px;font:600 15px Poppins,system-ui;color:#FFFBF2;background:#D93A2B;border:1.5px solid #141210;border-radius:999px;cursor:pointer;opacity:{{ dangerOp }}">{{ dg.cta }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;background:rgba(20,18,16,.45)" onClick="{{ closeMenu }}">
+      <nav aria-label="Admin modules" style="width:100%;max-height:80vh;overflow:auto;padding:14px 14px calc(14px + env(safe-area-inset-bottom));background:#FFFBF2;border-top:1.5px solid #141210;border-radius:20px 20px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <sc-for list="{{ modules }}" as="m" hint-placeholder-count="8">
+          <button type="button" onClick="{{ m.go }}" aria-current="{{ m.current }}" style="display:flex;align-items:center;gap:8px;height:48px;padding:0 12px;font:600 14px Poppins,system-ui;color:#141210;background:{{ m.bg }};border:1.5px solid #141210;border-radius:12px;cursor:pointer;text-align:left"><span aria-hidden="true" style="width:10px;height:10px;border-radius:3px;background:{{ m.color }};border:1.5px solid #141210"></span>{{ m.label }}</button>
+        </sc-for>
+      </nav>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ toastCb }}" role="status" style="position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:60;max-width:calc(100% - 32px);display:flex;align-items:center;gap:14px;padding:10px 12px 10px 16px;background:#141210;color:#FFFBF2;border-radius:14px;font-size:14px;font-weight:500">
+      <span>{{ toast }}</span>
+      <sc-if value="{{ canUndo }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ undo }}" style="height:34px;padding:0 12px;font:600 13px Poppins,system-ui;color:#141210;background:#FFFBF2;border:0;border-radius:999px;cursor:pointer">Undo</button></sc-if>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;overdueBooking&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;},&quot;rejectedVendorOrder&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;},&quot;refundFlow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const CHIP = { new: ['#F65322', '#141210', '#141210'], acc: ['#FFFBF2', '#077E4A', '#09A460'], prog: ['#09A460', '#141210', '#141210'], done: ['#141210', '#FFFBF2', '#141210'], alert: ['#D93A2B', '#FFFBF2', '#141210'], muted: ['#E4DDCB', '#141210', '#141210'] };
+const MODULES = [
+  ['today', 'Today', '#F2E7CB', true], ['bookings', 'Bookings', '#09A460', true], ['orders', 'Orders', '#F989EF', true], ['catalog', 'Catalog', '#141210', false],
+  ['vendors', 'Vendors', '#F989EF', false], ['providers', 'Providers', '#09A460', false], ['customers', 'Customers', '#F2E7CB', true], ['payments', 'Payments', '#141210', false],
+  ['content', 'Content', '#F65322', false], ['team', 'Team', '#141210', false], ['audit', 'Audit log', '#141210', false],
+];
+const BCOLS = [['requested', 'Requested'], ['offered', 'Offered'], ['accepted', 'Accepted'], ['enroute', 'En route'], ['inprogress', 'In progress'], ['completed', 'Completed'], ['cancelled', 'Cancelled']];
+const BCHIP = { requested: 'new', offered: 'new', accepted: 'acc', enroute: 'prog', inprogress: 'prog', completed: 'done', cancelled: 'muted' };
+const PROVIDERS = [['p1', 'Ravi Kumar', 4.8], ['p2', 'Sana Ali', 4.9], ['p3', 'Vikram Rao', 4.6], ['p4', 'Pooja Nair', 4.7]];
+const IST = (h, m, dayOff = 0) => { const d = new Date(); const ist = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })); const off = d.getTime() - ist.getTime(); ist.setDate(ist.getDate() + dayOff); ist.setHours(h, m, 0, 0); return new Date(ist.getTime() + off); };
+const ago = m => new Date(Date.now() - m * 60000);
+const chipOf = (label, k) => { const [bg, fg, bd] = CHIP[k]; return { label, bg, fg, bd }; };
+const T = (text, o = {}) => ({ isText: true, text, sub: o.sub || '', w: o.w || 400, color: o.color || '#141210', align: o.align || 'left' });
+const CH = (text, k) => { const [bg, fg, bd] = CHIP[k]; return { isChip: true, text, bg, fg, bd, align: 'left' }; };
+const ACT = actions => ({ isActions: true, actions, align: 'left' });
+const A = (label, fn, danger) => ({ label, fn, fg: danger ? '#D93A2B' : '#141210', bd: danger ? '#D93A2B' : '#141210' });
+
+class Component extends DCLogic {
+  state = {
+    ready: false, session: null, mod: 'today', muted: false, narrow: window.innerWidth < 960, vb: null, now: Date.now(), polledAt: Date.now(), menuOpen: false,
+    bookings: [], orders: [], customers: [], services: [], products: [], vendors: [], providers: [], team: [], audit: [], testis: [], faqLive: {}, cfg: {}, cats: false,
+    tq: '', tf: 'all', sub: null, toast: null, undo: null, danger: null, dangerText: '', picker: null, customer: null, noteDraft: '', drag: null,
+  };
+  dangerInputRef = React.createRef();
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  isAdmin() { return this.state.session && this.state.session.role === 'ADMIN'; }
+  allowed() { return MODULES.filter(m => this.isAdmin() || m[3]); }
+
+  componentDidMount() {
+    const base = document.baseURI, imp = p => import(new URL(p, base).href);
+    Promise.all([imp('content/console.js'), imp('content/services.js'), imp('content/marketplace.js'), imp('content/explore-content.js'), imp('content/site-config.js'), imp('content/fresh-food.js')]).then(([C, S, M, E, SC, FF]) => {
+      this.C = C; this.E = E;
+      const s = C.guard(['ADMIN', 'OPS']); if (!s) return;
+      this.setState({ ready: true, session: s, ...this.seed(S, M, E), cfg: { WhatsApp: SC.SITE.whatsapp, Phone: SC.SITE.phone, Email: SC.SITE.email, 'FSSAI no.': SC.SITE.fssai || '', 'Delivery areas': 'Delhi NCR' }, cats: FF.FRESH_FOOD.catsSupported }, () => this.applyTweaks({}));
+    });
+    fetch('assets/pets-trio.svg').then(r => r.text()).then(t => this.buildSprite(t));
+    this.onResize = () => { const w = window.innerWidth, c = this.state.narrow, n = c ? w < 980 : w < 940; if (n !== c) this.setState({ narrow: n }); };
+    window.addEventListener('resize', this.onResize);
+    this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    this.poll = setInterval(() => this.setState({ polledAt: Date.now() }), 30000);
+    this.onKey = e => { if (e.key === 'Escape') this.setState({ danger: null, picker: null, customer: null, menuOpen: false }); };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { clearInterval(this.tick); clearInterval(this.poll); clearTimeout(this.toastT); window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); this.sprite && this.sprite.remove(); }
+  componentDidUpdate(pp) { if (this.state.ready) this.applyTweaks(pp); }
+
+  applyTweaks(pp) {
+    const p = this.props;
+    if (pp.overdueBooking !== p.overdueBooking) {
+      this.setState(s => ({ bookings: s.bookings.map(b => b.id === 'BK-2049' ? { ...b, overdue: !!p.overdueBooking, at: p.overdueBooking ? ago(25) : IST(18, 0) } : b) }));
+      if (p.overdueBooking) { this.C.beep(this.state.muted); this.redPulse('BK-2049'); }
+    }
+    if (pp.rejectedVendorOrder !== p.rejectedVendorOrder) {
+      this.setState(s => ({ orders: s.orders.map(o => o.id === 'SO-1182' ? { ...o, status: p.rejectedVendorOrder ? 'rejected' : 'new', reason: p.rejectedVendorOrder ? 'Out of stock' : null } : o) }));
+      if (p.rejectedVendorOrder) { this.setState({ mod: 'orders' }); this.redPulse('SO-1182'); }
+    }
+    if (pp.refundFlow !== p.refundFlow && p.refundFlow) {
+      if (!this.isAdmin()) { this.flash('Refunds are ADMIN only.'); return; }
+      const o = this.state.orders.find(x => x.id === 'SO-1175');
+      this.setState({ mod: 'orders' }); this.askRefund(o);
+    }
+  }
+
+  buildSprite(text) {
+    if (document.getElementById('dza-lab')) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const h = document.createElementNS(NS, 'svg'); h.setAttribute('aria-hidden', 'true'); h.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+    const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+    doc.querySelectorAll('*').forEach(n => { if (n.namespaceURI !== NS || n.tagName === 'metadata') n.remove(); });
+    [...doc.documentElement.children].forEach(c => h.appendChild(document.importNode(c, true)));
+    document.body.appendChild(h); this.sprite = h;
+    const sq = id => { const el = h.querySelector('#' + id); el.id = 'dza-' + id; const b = el.getBBox(), p = 12, w = b.width + p * 2, hh = b.height + p * 2, m = Math.max(w, hh); return `${b.x - p - (m - w) / 2} ${b.y - p - (m - hh) / 2 + m * 0.06} ${m} ${m}`; };
+    const vb = { dog: sq('lab'), puppy: sq('puppy'), cat: sq('cat') };
+    h.querySelectorAll('[id]').forEach(el => { if (!el.id.startsWith('dza-')) el.removeAttribute('id'); });
+    this.setState({ vb });
+  }
+
+  seed(S, M, E) {
+    const pets = { Bruno: ['Labrador Retriever', 'dog'], Coco: ['Shih Tzu', 'dog'], Mishti: ['Persian', 'cat'], Leo: ['Beagle', 'dog'], Simba: ['Golden Retriever', 'dog'], Kiara: ['Indie', 'dog'], Max: ['German Shepherd', 'dog'] };
+    const pet = n => ({ name: n, breed: pets[n][0], type: pets[n][1] });
+    const bookings = [
+      ['BK-2063', 'requested', 'Simba', 'Full Package', IST(19, 0), 'Sector 49', null, 'Pay after service', 'cu3'],
+      ['BK-2058', 'offered', 'Kiara', 'Bath & blow dry', IST(18, 30), 'Sector 45', 'p2', 'Pay after service', 'cu5', Date.now() + 75000],
+      ['BK-2049', 'accepted', 'Max', 'Breed based styling', IST(18, 0), 'DLF Phase 2', 'p3', 'Pay after service', 'cu6'],
+      ['BK-2047', 'enroute', 'Bruno', 'Full Package + Dental', IST(13, 0), 'Sector 56', 'p1', 'Pay after service', 'cu1'],
+      ['BK-2044', 'inprogress', 'Leo', 'Trimming Package', IST(12, 0), 'DLF Phase 3', 'p4', 'Pay after service', 'cu4'],
+      ['BK-2041', 'completed', 'Coco', 'Shower Package', IST(9, 30), 'Sector 57', 'p1', 'Collected · UPI', 'cu2'],
+      ['BK-2039', 'cancelled', 'Mishti', 'Medicated bath', IST(10, 0), 'Sector 50', null, 'Not charged', 'cu7'],
+    ].map(([id, status, pn, svc, at, area, prov, pay, cust, offerEnds]) => ({ id, status, pet: pet(pn), svc, at, area, prov, pay, cust, offerEnds, overdue: false }));
+    const orders = [
+      ['SO-1182', 'DZ-ORD-5121', 'new', 'cu1', 'Doggzi Store', 67000, 'Accept by ' , Date.now() + 8 * 60000],
+      ['SO-1179', 'DZ-ORD-5118', 'packing', 'cu2', 'Doggzi Store', 51900, 'Deliver by ', Date.now() + 70 * 60000],
+      ['SO-1175', 'DZ-ORD-5114', 'ready', 'cu7', 'Doggzi Store', 134200, 'Deliver by ', Date.now() + 40 * 60000],
+      ['SO-1171', 'DZ-ORD-5110', 'out', 'cu4', 'Doggzi Store', 45000, 'Deliver by ', Date.now() + 15 * 60000],
+      ['SO-1168', 'DZ-ORD-5107', 'delivered', 'cu3', 'Doggzi Store', 129900, '', 0],
+    ].map(([id, order, status, cust, vendor, total, slaLabel, sla]) => ({ id, order, status, cust, vendor, total, slaLabel, sla, placed: ago(10 + Math.random() * 90) }));
+    const customers = [
+      ['cu1', 'Ananya Iyer', '9876543210', 'Sector 56, Gurgaon', ['Bruno']], ['cu2', 'Karan Malhotra', '9812345609', 'Sector 57, Gurgaon', ['Coco']], ['cu3', 'Riya Kapoor', '9810098100', 'Sector 49, Gurgaon', ['Simba']],
+      ['cu4', 'Dev Sharma', '9900112233', 'DLF Phase 3, Gurgaon', ['Leo']], ['cu5', 'Ishita Bose', '9811122233', 'Sector 45, Gurgaon', ['Kiara']], ['cu6', 'Aman Verma', '9822233344', 'DLF Phase 2, Gurgaon', ['Max']], ['cu7', 'Nikita Rao', '9988776612', 'Sector 50, Gurgaon', ['Mishti']],
+    ].map(([id, name, phone, area, ps]) => ({ id, name, phone, area, pets: ps.map(pet), notes: [] }));
+    const services = S.CATALOG.map(c => ({ ...c, newPrice: c.price_paise ? String(c.price_paise / 100) : '', cat: S.SERVICES_BY_PET_TYPE.cat.includes(c.id), active: true }));
+    const products = [...M.PRODUCTS.map(p => ({ ...p, blocked: false, brandOk: !p.flags.includes('brand_mismatch') })), { sku: 'DZ-MKT-027', name: 'GRIPTOL-N SYRUP', brand: 'INTIAS', category: 'health', price_paise: 11000, flags: ['medicine_check_rules'], blocked: true, brandOk: true }];
+    const vendors = [
+      ['v1', 'Doggzi Store', 'live', 'Gurgaon', 10, '98%', '11 min', 1], ['v2', 'Paws & Claws', 'razorpay', 'Sector 29, Gurgaon', 12, '—', '—', 0],
+      ['v3', 'Happy Tails Pet Shop', 'docs', 'DLF Phase 4, Gurgaon', 12, '—', '—', 0], ['v4', 'The Pet Corner', 'applied', 'Sector 14, Gurgaon', 12, '—', '—', 0],
+    ].map(([id, name, stage, area, comm, acc, pack, canc]) => ({ id, name, stage, area, comm, acc, pack, canc, paused: false }));
+    const providers = [
+      ['p1', 'Ravi Kumar', 'live', 4.8, 126, 920000, 'Bath · Dry · Trim · Styling'], ['p2', 'Sana Ali', 'live', 4.9, 210, 640000, 'Bath · Dry · Massage'], ['p3', 'Vikram Rao', 'live', 4.6, 88, 410000, 'Trim · Styling'], ['p4', 'Pooja Nair', 'live', 4.7, 64, 380000, 'Bath · Dental'],
+      ['p5', 'Farhan Sheikh', 'training', 0, 0, 0, 'Training'], ['p6', 'Megha Joshi', 'idcheck', 0, 0, 0, 'Bath · Dry'], ['p7', 'Tarun Singh', 'applied', 0, 0, 0, 'Boarding'],
+    ].map(([id, name, stage, rating, jobs, owed, skills]) => ({ id, name, stage, rating, jobs, owed, skills, paused: false }));
+    const team = [['Abhiyash', '9000000003', 'ADMIN'], ['Neha Gupta', '9000000004', 'OPS'], ['Meera Shah', '9000000002', 'VENDOR'], ['Ravi Kumar', '9000000001', 'PROVIDER'], ['Arjun Mehta', '9000000005', 'PROVIDER + VENDOR']].map(([name, phone, role], i) => ({ id: 't' + i, name, phone, role }));
+    const audit = [
+      { who: 'Abhiyash', module: 'Catalog', what: 'Blocked GRIPTOL-N SYRUP', before: 'live', after: 'blocked', at: ago(60 * 26) },
+      { who: 'Neha Gupta', module: 'Bookings', what: 'Reassigned BK-2031 to Sana Ali', before: 'Vikram Rao', after: 'Sana Ali', at: ago(60 * 5) },
+      { who: 'Abhiyash', module: 'Content', what: 'Set catsSupported', before: 'true', after: 'false', at: ago(60 * 3) },
+    ];
+    const testis = (E.TESTIMONIALS || []).map((t, i) => ({ i, pet: t.pet, service: t.service, quote: t.quote, consent: false, live: false }));
+    return { bookings, orders, customers, services, products, vendors, providers, team, audit, testis, faqLive: { Explore: false, 'Fresh Food': false, Services: false, Marketplace: false } };
+  }
+
+  who() { return this.state.session.name; }
+  log(module, what, before, after) { this.setState(s => ({ audit: [{ who: this.who(), module, what, before: String(before ?? ''), after: String(after ?? ''), at: new Date() }, ...s.audit] })); }
+  flash(m, undo) { clearTimeout(this.toastT); this.setState({ toast: m, undo: undo || null }); this.toastT = setTimeout(() => this.setState({ toast: null, undo: null }), 5000); }
+  toastCb = el => { if (el && !this.reduced()) el.animate([{ transform: 'translate(-50%,12px)', opacity: 0 }, { transform: 'translate(-50%,0)', opacity: 1 }], { duration: 200, easing: 'ease-out' }); };
+  dangerCb = el => { if (el) { if (!this.reduced()) el.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); setTimeout(() => this.dangerInputRef.current && this.dangerInputRef.current.focus(), 60); } };
+  redPulse(id) { if (this.reduced()) return; setTimeout(() => document.querySelectorAll(`[data-card="${id}"],[data-row="${id}"],[data-overdue="${id}"]`).forEach(el => el.animate([{ transform: 'translateX(-8px)', opacity: 0 }, { transform: 'none', opacity: 1, offset: 0.5 }, { transform: 'scale(1.02)', offset: 0.75 }, { transform: 'none' }], { duration: 250, easing: 'ease-out' })), 50); }
+  chipPulse(id) { if (this.reduced()) return; setTimeout(() => { const el = document.querySelector(`[data-card="${id}"]`); if (!el) return; el.animate([{ transform: 'translateY(-6px)', opacity: 0.4 }, { transform: 'none', opacity: 1 }], { duration: 220, easing: 'ease-out' }); const c = el.querySelector('[data-chip]'); c && c.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 200 }); }, 30); }
+
+  moveBooking(id, to, why) {
+    const b = this.state.bookings.find(x => x.id === id); if (!b || b.status === to) return;
+    const before = b.status;
+    this.setState(s => ({ bookings: s.bookings.map(x => x.id === id ? { ...x, status: to, overdue: false } : x) }));
+    this.log('Bookings', `${id} ${why || 'moved'}`, before, to);
+    this.chipPulse(id);
+    this.flash(`${id} moved to ${BCOLS.find(c => c[0] === to)[1]}.`, () => { this.setState(s => ({ bookings: s.bookings.map(x => x.id === id ? { ...x, status: before } : x) })); this.log('Bookings', `Undo ${id}`, to, before); this.chipPulse(id); });
+  }
+
+  ask(cfg) { this.setState({ danger: cfg, dangerText: '' }); }
+  askRefund(o) { if (!o) return; this.ask({ title: `Refund ${o.order}?`, body: `Refunds ${this.C.inr(o.total)} to the customer through Razorpay. This can't be undone.`, word: o.order, cta: 'Refund', run: () => { this.setState(s => ({ orders: s.orders.map(x => x.id === o.id ? { ...x, status: 'refunded' } : x) })); this.log('Orders', `Refund ${o.order}`, o.status, 'refunded'); this.flash(`Refund started for ${o.order}.`); } }); }
+
+  renderVals() {
+    const s = this.state, C = this.C; if (!s.ready || !C) return { ready: false };
+    const admin = this.isAdmin(), n = s.narrow, ses = s.session, panels = C.panelsFor(ses.roles);
+    const mods = this.allowed(); const mod = mods.find(m => m[0] === s.mod) ? s.mod : 'today';
+    const petKey = p => p.type === 'cat' ? 'cat' : SMALL.has(p.breed) ? 'puppy' : 'dog';
+    const av = p => { const k = petKey(p); return { vb: s.vb ? s.vb[k] : '0 0 100 100', href: s.vb ? `#dza-${{ dog: 'lab', puppy: 'puppy', cat: 'cat' }[k]}` : '' }; };
+    const phone = p => admin ? `+91 ${p.slice(0, 5)} ${p.slice(5)}` : C.maskPhone(p);
+    const cust = id => s.customers.find(c => c.id === id) || { name: '—', phone: '0000000000' };
+    const provName = id => (PROVIDERS.find(p => p[0] === id) || [0, 'Unassigned'])[1];
+    const mmss = ms => { const t = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
+    const go = k => this.setState({ mod: k, tq: '', tf: 'all', sub: null, menuOpen: false });
+
+    const overdue = [
+      ...s.bookings.filter(b => b.overdue).map(b => ({ id: b.id, title: `${b.id} · provider hasn't started`, sub: `${b.pet.name} · slot ${C.istTime(b.at)} · ${provName(b.prov)}`, open: () => go('bookings') })),
+      ...s.orders.filter(o => o.status === 'rejected').map(o => ({ id: o.id, title: `${o.id} rejected by ${o.vendor}`, sub: `${o.reason} · needs reassign or refund`, open: () => go('orders') })),
+      ...s.orders.filter(o => o.status === 'new' && o.sla < s.now).map(o => ({ id: o.id, title: `${o.id} not accepted in time`, sub: o.vendor, open: () => go('orders') })),
+    ];
+
+    const out = {
+      ready: true, narrow: n, wide: !n, shellCols: n ? '1fr' : '232px minmax(0,1fr)',
+      userName: ses.name, role: ses.role, roleLabel: ses.role, nowLabel: C.istTime(s.now),
+      multi: panels.length > 1, panelOpts: [...panels].sort((a, b) => (b.role === ses.role) - (a.role === ses.role)).map(p => ({ role: p.role, label: `${p.label} panel` })),
+      switchPanel: e => { const r = e.target.value, p = panels.find(x => x.role === r); if (p && p.file !== 'Console-Admin.dc.html') { C.setActiveRole(r); window.location.href = p.file; } },
+      logout: () => C.logout(),
+      toggleMute: () => this.setState({ muted: !s.muted }), mutedAttr: s.muted ? 'true' : 'false', muteLabel: s.muted ? 'Unmute alerts' : 'Mute alerts', muteIcon: s.muted ? 'M16 9l5 6M21 9l-5 6' : 'M16 8c2 2 2 6 0 8M19 5c4 4 4 10 0 14',
+      modules: mods.map(([k, l, color]) => ({ label: l, color, current: mod === k ? 'page' : 'false', bg: mod === k ? '#F2E7CB' : 'transparent', border: mod === k ? '#141210' : 'transparent', hasBadge: k === 'today' && overdue.length > 0, badge: overdue.length, go: () => go(k) })),
+      scopeNote: admin ? 'ADMIN · every write is recorded in the audit log.' : 'OPS · operations modules only. Customer phones are masked.',
+      openMenu: () => this.setState({ menuOpen: true }), closeMenu: e => { if (e.target === e.currentTarget) this.setState({ menuOpen: false }); }, menuOpen: s.menuOpen,
+      moduleTitle: (mods.find(m => m[0] === mod) || [0, 'Today'])[1],
+      mToday: mod === 'today', mContent: mod === 'content',
+      toast: s.toast, canUndo: !!s.undo, undo: () => { s.undo && s.undo(); this.setState({ toast: null, undo: null }); }, toastCb: this.toastCb,
+      showBoard: false, showTable: false, board: { cols: [] }, tbl: { cols: [], rows: [], filters: [] },
+    };
+
+    if (mod === 'today') {
+      const todayB = s.bookings, todayO = s.orders;
+      const gmvT = todayO.filter(o => o.status !== 'refunded').reduce((a, o) => a + o.total, 0) + 1149000;
+      Object.assign(out, {
+        updatedAgo: s.now - s.polledAt < 5000 ? 'just now' : `${Math.round((s.now - s.polledAt) / 1000)}s ago`,
+        kpis: [{ k: 'Bookings today', v: todayB.length, color: '#09A460' }, { k: 'Orders today', v: todayO.length, color: '#F989EF' }, { k: 'GMV today', v: C.inr(gmvT), color: '#F65322' }, { k: 'GMV this week', v: C.inr(gmvT * 5.4), color: '#F65322' }, { k: 'Overdue', v: overdue.length, color: '#D93A2B' }],
+        overdue, overdueCount: overdue.length, noOverdue: !overdue.length,
+        bookingBars: BCOLS.map(([k, l]) => { const c = todayB.filter(b => b.status === k).length; return { label: l, n: c, w: `${(c / Math.max(1, todayB.length)) * 100}%` }; }),
+        orderBars: [['new', 'New'], ['packing', 'Packing'], ['ready', 'Ready'], ['out', 'Out'], ['delivered', 'Delivered'], ['rejected', 'Rejected']].map(([k, l]) => { const c = todayO.filter(o => o.status === k).length; return { label: l, n: c, w: `${(c / Math.max(1, todayO.length)) * 100}%` }; }),
+        funnel: [['Passports created', 412], ['Fresh Food views', 268], ['Plan saved', 97], ['Store clicks', 71], ['Guide downloads', 54]].map(([l, v]) => ({ label: l, n: v, w: `${v / 4.12}%` })),
+        applications: [{ name: 'The Pet Corner', kind: 'Vendor', when: C.istTime(ago(50)) }, { name: 'Tarun Singh', kind: 'Provider', when: C.istTime(ago(120)) }, { name: 'Megha Joshi', kind: 'Provider', when: 'Yesterday' }],
+      });
+    }
+
+    if (mod === 'bookings') {
+      out.showBoard = true;
+      out.board = { title: 'Bookings', hint: 'Drag a card or use its buttons. Every move can be undone for 5 seconds.', cols: BCOLS.map(([k, l]) => {
+        const cards = s.bookings.filter(b => b.status === k).map(b => {
+          const a = av(b.pet), idx = BCOLS.findIndex(c => c[0] === k), nx = BCOLS[idx + 1] && BCOLS[idx + 1][0] !== 'cancelled' ? BCOLS[idx + 1] : null;
+          const chips = [chipOf(BCOLS[idx][1], BCHIP[k]), chipOf(b.pay, b.pay.startsWith('Collected') ? 'done' : 'acc')];
+          if (b.overdue) chips.unshift(chipOf('Overdue', 'alert'));
+          const lines = [`${b.svc}`, `${C.istTime(b.at)} · ${b.area}`, `Provider: ${provName(b.prov)}`, `Customer: ${phone(cust(b.cust).phone)}`];
+          if (k === 'offered' && b.offerEnds) lines.push(`Next provider offered in ${mmss(b.offerEnds - s.now)}`);
+          const actions = [];
+          if (nx) actions.push(A(`→ ${nx[1]}`, () => this.moveBooking(b.id, nx[0])));
+          if (!['completed', 'cancelled'].includes(k)) actions.push(A('Reassign', () => this.setState({ picker: { kind: 'reassign', id: b.id } })));
+          if (!['completed', 'cancelled'].includes(k)) actions.push(A('Cancel', () => this.ask({ title: `Cancel ${b.id}?`, body: `${b.pet.name}'s ${b.svc} will be cancelled and the customer told on WhatsApp.`, word: b.id, cta: 'Cancel booking', run: () => this.moveBooking(b.id, 'cancelled', 'cancelled') }), true));
+          return { id: b.id, title: `${b.pet.name} · ${b.id}`, sub: b.pet.breed, hasAv: true, avVB: a.vb, avHref: a.href, lines, chips, actions, border: b.overdue ? '#D93A2B' : '#141210', draggable: 'true', cursor: 'grab', dragStart: e => { e.dataTransfer.setData('text/plain', b.id); e.dataTransfer.effectAllowed = 'move'; } };
+        });
+        return { title: l, count: cards.length, cards, bg: '#E7F2E9', over: e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }, drop: e => { e.preventDefault(); const id = e.dataTransfer.getData('text/plain'); if (id) k === 'cancelled' ? this.ask({ title: `Cancel ${id}?`, body: 'The customer will be told on WhatsApp.', word: id, cta: 'Cancel booking', run: () => this.moveBooking(id, 'cancelled', 'cancelled') }) : this.moveBooking(id, k, 'moved'); } };
+      }) };
+    }
+
+    if (mod === 'vendors' || mod === 'providers') {
+      out.showBoard = true;
+      const isV = mod === 'vendors';
+      const stages = isV ? [['applied', 'Applied'], ['docs', 'Docs (GST, licence, bank)'], ['razorpay', 'Razorpay linked'], ['live', 'Live']] : [['applied', 'Applied'], ['idcheck', 'ID check'], ['skills', 'Skills'], ['areas', 'Areas'], ['training', 'Training done'], ['live', 'Live']];
+      const list = isV ? s.vendors : s.providers, key = isV ? 'vendors' : 'providers';
+      const setL = (id, patch) => this.setState(st => ({ [key]: st[key].map(x => x.id === id ? { ...x, ...patch } : x) }));
+      out.board = { title: isV ? 'Vendors' : 'Providers', hint: isV ? 'Onboarding pipeline. Commission and pincodes are set per vendor.' : 'Onboarding pipeline. Dispatch only offers jobs to Live providers.', cols: stages.map(([k, l], si) => {
+        const cards = list.filter(x => x.stage === k).map(x => {
+          const nx = stages[si + 1];
+          const lines = isV ? [x.area, `Commission ${x.comm}%`, ...(k === 'live' ? [`Accept rate ${x.acc} · avg pack ${x.pack}`, `Cancellations this month: ${x.canc}`] : [])] : [x.skills, ...(k === 'live' ? [`Rating ${x.rating} · ${x.jobs} jobs`, `Earnings owed ${C.inr(x.owed)}`] : [])];
+          const chips = x.paused ? [chipOf('Paused', 'alert')] : [chipOf(l.split(' (')[0], k === 'live' ? 'prog' : 'new')];
+          const actions = [];
+          if (nx) actions.push(A(`→ ${nx[1].split(' (')[0]}`, () => { setL(x.id, { stage: nx[0] }); this.log(isV ? 'Vendors' : 'Providers', `${x.name} advanced`, l, nx[1]); this.chipPulse(x.id); }));
+          if (k === 'live') actions.push(A(x.paused ? 'Resume' : 'Pause', () => x.paused ? (setL(x.id, { paused: false }), this.log(isV ? 'Vendors' : 'Providers', `Resumed ${x.name}`, 'paused', 'live')) : this.ask({ title: `Pause ${x.name}?`, body: isV ? 'Their listings hide and new orders stop until you resume.' : 'Dispatch stops offering them jobs until you resume.', word: 'CONFIRM', cta: 'Pause', run: () => { setL(x.id, { paused: true }); this.log(isV ? 'Vendors' : 'Providers', `Paused ${x.name}`, 'live', 'paused'); this.flash(`${x.name} paused.`); } }), !x.paused));
+          return { id: x.id, title: x.name, sub: isV ? 'Store' : 'Groomer / trainer', hasAv: false, lines, chips, actions, border: x.paused ? '#D93A2B' : '#141210', draggable: 'false', cursor: 'default', dragStart: () => {} };
+        });
+        return { title: l, count: cards.length, cards, bg: isV ? '#F8E3F4' : '#E7F2E9', over: () => {}, drop: () => {} };
+      }) };
+    }
+
+    const tableOf = def => {
+      const q = s.tq.trim().toLowerCase();
+      const rows = def.rows.filter(r => (!q || r.search.toLowerCase().includes(q)) && (s.tf === 'all' || r.fk === s.tf));
+      out.showTable = true;
+      out.tbl = { ...def, rows, empty: !rows.length, count: `${rows.length} of ${def.rows.length} rows`, searchPh: def.searchPh || 'Search', minW: def.minW || '900px', hasSubtabs: !!def.subtabs, hasForm: !!def.form, ...(def.form || {}) };
+      out.exportRows = [def.cols, ...rows.map(r => r.csv)];
+    };
+
+    if (mod === 'orders') {
+      const stLabel = { new: ['New', 'new'], packing: ['Packing', 'prog'], ready: ['Ready', 'acc'], out: ['Out for delivery', 'prog'], delivered: ['Delivered', 'done'], rejected: ['Rejected', 'alert'], cancelled: ['Cancelled', 'muted'], refunded: ['Refunded', 'done'] };
+      tableOf({ note: 'Sub-orders per vendor with SLA countdowns.', searchPh: 'Search order, customer or vendor', cols: ['Sub-order', 'Customer', 'Vendor', 'Total', 'Status', 'SLA', 'Actions'],
+        filters: [{ v: 'all', label: 'All statuses' }, ...Object.entries(stLabel).map(([v, [label]]) => ({ v, label }))],
+        rows: s.orders.map(o => {
+          const c = cust(o.customer || o.cust), [lab, k] = stLabel[o.status], late = o.sla && o.sla < s.now && !['delivered', 'refunded', 'cancelled', 'rejected'].includes(o.status);
+          const acts = [A('Nudge vendor', () => { window.open(`https://wa.me/910000000000?text=${encodeURIComponent(`Doggzi OPS: please action ${o.id}`)}`, '_blank', 'noopener'); this.log('Orders', `Nudged ${o.vendor} on ${o.id}`, '', 'whatsapp'); })];
+          if (o.status === 'rejected') acts.push(A('Reassign vendor', () => this.setState({ picker: { kind: 'vendor', id: o.id } })));
+          if (!['delivered', 'refunded', 'cancelled'].includes(o.status)) acts.push(A('Cancel', () => this.ask({ title: `Cancel ${o.id}?`, body: 'The vendor and customer are told. Refund separately if paid.', word: o.order, cta: 'Cancel sub-order', run: () => { this.setState(st => ({ orders: st.orders.map(x => x.id === o.id ? { ...x, status: 'cancelled' } : x) })); this.log('Orders', `Cancelled ${o.id}`, o.status, 'cancelled'); this.flash(`${o.id} cancelled.`); } }), true));
+          if (admin && o.status !== 'refunded') acts.push(A('Refund', () => this.askRefund(o), true));
+          return { id: o.id, fk: o.status, bg: o.status === 'rejected' || late ? '#FBE3DF' : 'transparent', search: `${o.id} ${o.order} ${c.name} ${o.vendor}`,
+            cells: [T(o.id, { w: 600, sub: o.order }), T(c.name, { sub: phone(c.phone) }), T(o.vendor), T(C.inr(o.total), { w: 600, align: 'right' }), CH(o.reason ? `${lab} · ${o.reason}` : lab, k), T(o.sla && !['delivered', 'refunded', 'cancelled', 'rejected'].includes(o.status) ? `${o.slaLabel}${C.istTime(o.sla)}` : '—', { sub: o.sla && !['delivered', 'refunded', 'cancelled', 'rejected'].includes(o.status) ? (late ? 'Overdue' : `${mmss(o.sla - s.now)} left`) : '', color: late ? '#D93A2B' : '#141210', w: late ? 600 : 400 }), ACT(acts)],
+            csv: [o.id, c.name, o.vendor, o.total / 100, lab, o.sla ? C.istDateTime(o.sla) : ''] };
+        }) });
+    }
+
+    if (mod === 'customers') {
+      tableOf({ note: admin ? 'Exports are logged in the audit log.' : 'Phone numbers are masked for OPS.', searchPh: 'Search by name or phone', cols: ['Customer', 'Phone', 'Pets', 'Bookings', 'Orders', ''],
+        filters: [{ v: 'all', label: 'All customers' }, { v: 'dog', label: 'Has a dog' }, { v: 'cat', label: 'Has a cat' }],
+        rows: s.customers.map(c => ({ id: c.id, fk: c.pets.some(p => p.type === 'cat') ? 'cat' : 'dog', bg: 'transparent', search: `${c.name} ${c.phone} ${c.pets.map(p => p.name).join(' ')}`,
+          cells: [T(c.name, { w: 600, sub: c.area }), T(phone(c.phone)), T(c.pets.map(p => `${p.name} (${p.breed})`).join(', ')), T(String(s.bookings.filter(b => b.cust === c.id).length), { align: 'right' }), T(String(s.orders.filter(o => o.cust === c.id).length), { align: 'right' }), ACT([A('View', () => this.setState({ customer: c.id, noteDraft: '' }))])],
+          csv: [c.name, admin ? c.phone : C.maskPhone(c.phone), c.pets.map(p => p.name).join(' / '), s.bookings.filter(b => b.cust === c.id).length, s.orders.filter(o => o.cust === c.id).length] })) });
+    }
+
+    if (mod === 'catalog') {
+      const sub = s.sub || 'services';
+      const subtabs = [['services', 'Services'], ['products', 'Marketplace products']].map(([k, l]) => ({ label: l, sel: sub === k ? 'true' : 'false', bg: sub === k ? '#F2E7CB' : '#FFFBF2', go: () => this.setState({ sub: k, tq: '', tf: 'all' }) }));
+      if (sub === 'services') {
+        const upd = (id, patch) => this.setState(st => ({ services: st.services.map(x => x.id === id ? { ...x, ...patch } : x) }));
+        tableOf({ subtabs, note: 'Price changes need a preview and confirmation.', cols: ['Service', 'Group', 'Price', 'Cats', 'Active', ''], filters: [{ v: 'all', label: 'All groups' }, ...['package', 'spa', 'training', 'boarding', 'pickup'].map(v => ({ v, label: v[0].toUpperCase() + v.slice(1) }))],
+          rows: s.services.map(x => {
+            const changed = x.price_paise && Math.round(+x.newPrice * 100) !== x.price_paise && +x.newPrice > 0;
+            return { id: x.id, fk: x.group, bg: changed ? '#FFF4D6' : 'transparent', search: x.name,
+              cells: [T(x.name, { w: 600 }), T(x.group), x.price_paise ? { isInput: true, prefix: '₹', value: x.newPrice, width: '70px', label: `Price for ${x.name}`, onChange: e => upd(x.id, { newPrice: e.target.value.replace(/[^\d]/g, '') }), align: 'left' } : T(x.price_mode === 'on_request' ? 'On request' : 'Availability'),
+                { isCheck: true, checked: x.cat, label: `${x.name} for cats`, onChange: () => { upd(x.id, { cat: !x.cat }); this.log('Catalog', `${x.name} cats`, x.cat, !x.cat); }, align: 'left' },
+                { isCheck: true, checked: x.active, label: `${x.name} active`, onChange: () => { upd(x.id, { active: !x.active }); this.log('Catalog', `${x.name} active`, x.active, !x.active); }, align: 'left' },
+                ACT(changed ? [A('Review price', () => this.ask({ title: `Change price of ${x.name}?`, body: 'Customers see the new price straight away.', preview: [C.inr(x.price_paise), C.inr(+x.newPrice * 100)], word: 'CONFIRM', cta: 'Save price', run: () => { this.log('Catalog', `Price ${x.name}`, C.inr(x.price_paise), C.inr(+x.newPrice * 100)); upd(x.id, { price_paise: +x.newPrice * 100 }); this.flash('Price saved.'); } }), true)] : [])],
+              csv: [x.name, x.group, x.price_paise ? x.price_paise / 100 : '', x.cat, x.active] };
+          }) });
+      } else {
+        const upd = (sku, patch) => this.setState(st => ({ products: st.products.map(x => x.sku === sku ? { ...x, ...patch } : x) }));
+        tableOf({ subtabs, note: 'Approve listings and photos, fix brand names, block items such as medicines.', cols: ['Product', 'Brand', 'Category', 'Price', 'Flags', 'Status', ''], minW: '1000px',
+          filters: [{ v: 'all', label: 'All products' }, { v: 'flagged', label: 'Flagged' }, { v: 'blocked', label: 'Blocked' }],
+          rows: s.products.map(x => ({ id: x.sku, fk: x.blocked ? 'blocked' : x.flags.length && !x.brandOk ? 'flagged' : 'ok', bg: x.blocked ? '#E4DDCB' : !x.brandOk ? '#FFF4D6' : 'transparent', search: `${x.name} ${x.brand} ${x.sku}`,
+            cells: [T(x.name, { w: 600, sub: x.sku }), { isInput: true, prefix: '', value: x.brand, width: '120px', label: `Brand for ${x.name}`, onChange: e => upd(x.sku, { brand: e.target.value }), align: 'left' }, T(x.category), T(C.inr(x.price_paise), { align: 'right' }),
+              x.flags.length ? CH(x.flags.join(', ').replace(/_/g, ' '), x.flags.includes('medicine_check_rules') ? 'alert' : 'new') : T('—'),
+              CH(x.blocked ? 'Blocked' : 'Live', x.blocked ? 'alert' : 'prog'),
+              ACT([...(!x.brandOk ? [A('Confirm brand', () => { upd(x.sku, { brandOk: true }); this.log('Catalog', `Brand confirmed ${x.sku}`, 'unconfirmed', x.brand); })] : []), A(x.blocked ? 'Unblock' : 'Block', () => { upd(x.sku, { blocked: !x.blocked }); this.log('Catalog', `${x.blocked ? 'Unblocked' : 'Blocked'} ${x.name}`, x.blocked ? 'blocked' : 'live', x.blocked ? 'live' : 'blocked'); }, !x.blocked)])],
+            csv: [x.sku, x.name, x.brand, x.category, x.price_paise / 100, x.flags.join(';'), x.blocked ? 'blocked' : 'live'] })) });
+      }
+    }
+
+    if (mod === 'payments') {
+      const sub = s.sub || 'payments';
+      const subtabs = [['payments', 'Payments'], ['refunds', 'Refunds'], ['route', 'Route transfers'], ['recon', 'Reconciliation'], ['payouts', 'Provider payouts']].map(([k, l]) => ({ label: l, sel: sub === k ? 'true' : 'false', bg: sub === k ? '#F2E7CB' : '#FFFBF2', go: () => this.setState({ sub: k, tq: '', tf: 'all' }) }));
+      const base = { subtabs, filters: [{ v: 'all', label: 'All' }, { v: 'ok', label: 'OK' }, { v: 'issue', label: 'Needs attention' }] };
+      const P = [['pay_Nx81', 'DZ-ORD-5121', 67000, 'captured', 'UPI'], ['pay_Nx77', 'DZ-ORD-5118', 51900, 'captured', 'Card'], ['pay_Nx72', 'DZ-ORD-5114', 134200, 'captured', 'UPI'], ['pay_Nx70', 'DZ-ORD-5110', 45000, 'captured', 'Netbanking'], ['pay_Nx66', 'DZ-ORD-5107', 129900, 'captured', 'UPI'], ['pay_Nx61', 'DZ-ORD-5101', 22500, 'failed', 'Card']];
+      if (sub === 'payments') tableOf({ ...base, note: 'Razorpay payments.', cols: ['Payment', 'Order', 'Amount', 'Method', 'Status', 'When'], rows: P.map(([id, ord, amt, st, m], i) => ({ id, fk: st === 'failed' ? 'issue' : 'ok', bg: st === 'failed' ? '#FBE3DF' : 'transparent', search: `${id} ${ord}`, cells: [T(id, { w: 600 }), T(ord), T(C.inr(amt), { align: 'right' }), T(m), CH(st, st === 'failed' ? 'alert' : 'prog'), T(C.istDateTime(ago(20 + i * 70)))], csv: [id, ord, amt / 100, m, st] })) });
+      if (sub === 'refunds') tableOf({ ...base, note: 'Refunds issued from Orders.', cols: ['Order', 'Amount', 'By', 'Status'], rows: s.orders.filter(o => o.status === 'refunded').map(o => ({ id: o.id, fk: 'ok', bg: 'transparent', search: o.order, cells: [T(o.order, { w: 600 }), T(C.inr(o.total), { align: 'right' }), T(this.who()), CH('Processing', 'new')], csv: [o.order, o.total / 100, 'processing'] })) });
+      if (sub === 'route') tableOf({ ...base, note: 'Razorpay Route transfers per vendor sub-order.', cols: ['Sub-order', 'Vendor', 'Transfer', 'Status'], rows: s.orders.map(o => { const st = o.status === 'delivered' ? 'Released' : ['refunded', 'cancelled'].includes(o.status) ? 'Reversed' : 'On hold'; return { id: o.id, fk: 'ok', bg: 'transparent', search: `${o.id} ${o.vendor}`, cells: [T(o.id, { w: 600 }), T(o.vendor), T(C.inr(Math.round(o.total * 0.9) + 4900), { align: 'right' }), CH(st, st === 'Released' ? 'done' : st === 'Reversed' ? 'muted' : 'new')], csv: [o.id, o.vendor, st] }; }) });
+      if (sub === 'recon') tableOf({ ...base, note: 'Nightly report: payments vs bookings and orders. Mismatches in red.', cols: ['Reference', 'Expected', 'Captured', 'Difference', 'Result'], rows: [['DZ-ORD-5121', 67000, 67000], ['DZ-ORD-5118', 51900, 51900], ['DZ-ORD-5114', 134200, 129300], ['BK-2041', 114900, 114900], ['DZ-ORD-5101', 22500, 0]].map(([r, e, c]) => { const d = c - e; return { id: r, fk: d ? 'issue' : 'ok', bg: d ? '#FBE3DF' : 'transparent', search: r, cells: [T(r, { w: 600 }), T(C.inr(e), { align: 'right' }), T(C.inr(c), { align: 'right' }), T(d ? `−${C.inr(-d)}` : '—', { align: 'right', color: d ? '#D93A2B' : '#141210', w: d ? 600 : 400 }), CH(d ? 'Mismatch' : 'Matched', d ? 'alert' : 'done')], csv: [r, e / 100, c / 100, d / 100] }; }) });
+      if (sub === 'payouts') tableOf({ ...base, note: 'Provider payouts (fortnightly).', cols: ['Provider', 'Jobs', 'Owed', 'Status'], rows: s.providers.filter(p => p.stage === 'live').map(p => ({ id: p.id, fk: 'ok', bg: 'transparent', search: p.name, cells: [T(p.name, { w: 600 }), T(String(p.jobs), { align: 'right' }), T(C.inr(p.owed), { align: 'right' }), CH('Pending', 'new')], csv: [p.name, p.jobs, p.owed / 100, 'pending'] })) });
+    }
+
+    if (mod === 'team') {
+      tableOf({ note: 'Invite people by phone and assign roles.', searchPh: 'Search name or phone', cols: ['Name', 'Phone', 'Role', ''], filters: [{ v: 'all', label: 'All roles' }, ...['ADMIN', 'OPS', 'VENDOR', 'PROVIDER'].map(v => ({ v, label: v }))],
+        form: { formVal: s.invite || '', formLabel: 'Phone to invite', formRole: s.inviteRole || 'OPS', formChange: e => this.setState({ invite: e.target.value.replace(/\D/g, '').slice(0, 10) }), formRoleChange: e => this.setState({ inviteRole: e.target.value }),
+          formSubmit: e => { e.preventDefault(); if (!/^[6-9]\d{9}$/.test(s.invite || '')) { this.flash('Enter a 10-digit mobile number.'); return; } const r = s.inviteRole || 'OPS'; this.setState(st => ({ team: [...st.team, { id: 't' + Date.now(), name: 'Invited', phone: st.invite, role: r }], invite: '' })); this.log('Team', `Invited ${C.maskPhone(s.invite)}`, '', r); this.flash('Invite sent.'); } },
+        rows: s.team.map(t => ({ id: t.id, fk: t.role.split(' ')[0], bg: 'transparent', search: `${t.name} ${t.phone}`, cells: [T(t.name, { w: 600 }), T(`+91 ${t.phone.slice(0, 5)} ${t.phone.slice(5)}`), CH(t.role, t.role === 'ADMIN' ? 'done' : 'acc'), ACT(t.name === ses.name ? [] : [A('Remove access', () => this.ask({ title: `Remove ${t.name}?`, body: 'They lose console access straight away.', word: 'CONFIRM', cta: 'Remove', run: () => { this.setState(st => ({ team: st.team.filter(x => x.id !== t.id) })); this.log('Team', `Removed ${t.name}`, t.role, 'none'); } }), true)])], csv: [t.name, t.phone, t.role] })) });
+    }
+
+    if (mod === 'audit') {
+      tableOf({ note: 'Every admin write, newest first.', searchPh: 'Search person or action', cols: ['When (IST)', 'Who', 'Module', 'What', 'Before', 'After'], minW: '960px',
+        filters: [{ v: 'all', label: 'All modules' }, ...[...new Set(s.audit.map(a => a.module))].map(v => ({ v, label: v }))],
+        rows: s.audit.map((a, i) => ({ id: 'a' + i, fk: a.module, bg: 'transparent', search: `${a.who} ${a.what} ${a.module}`, cells: [T(C.istDateTime(a.at)), T(a.who, { w: 600 }), T(a.module), T(a.what), T(a.before || '—'), T(a.after || '—')], csv: [C.istDateTime(a.at), a.who, a.module, a.what, a.before, a.after] })) });
+    }
+
+    if (mod === 'content') {
+      const faqCounts = { Explore: (this.E.FAQS || []).length, 'Fresh Food': (this.E.FRESH_FOOD_FAQS || []).length, Services: (this.E.SERVICES_FAQS || []).length, Marketplace: (this.E.MARKETPLACE_FAQS || []).length };
+      Object.assign(out, {
+        testis: s.testis.map(t => ({ ...t, liveAttr: t.live ? 'true' : 'false', liveDisabled: !t.consent, liveOp: t.consent ? 1 : 0.45, liveBg: t.live ? '#09A460' : '#FFFBF2', liveLabel: t.live ? 'Live' : 'Draft · make live',
+          onConsent: () => { this.setState(st => ({ testis: st.testis.map(x => x.i === t.i ? { ...x, consent: !x.consent, live: x.consent ? false : x.live } : x) })); this.log('Content', `Consent for ${t.pet}`, t.consent, !t.consent); },
+          toggleLive: () => { if (!t.consent) return; this.setState(st => ({ testis: st.testis.map(x => x.i === t.i ? { ...x, live: !x.live } : x) })); this.log('Content', `Testimonial ${t.pet}`, t.live ? 'live' : 'draft', t.live ? 'draft' : 'live'); } })),
+        faqSets: Object.entries(faqCounts).map(([page, count]) => ({ page, count, status: s.faqLive[page] ? 'Live' : 'Draft', bg: s.faqLive[page] ? '#09A460' : '#FFFBF2', toggle: () => { this.setState(st => ({ faqLive: { ...st.faqLive, [page]: !st.faqLive[page] } })); this.log('Content', `FAQs ${page}`, s.faqLive[page] ? 'live' : 'draft', s.faqLive[page] ? 'draft' : 'live'); } })),
+        shorts: [{ id: 'meL36vGziOQ', where: 'Explore' }, { id: 'gYXjrR1LE4U', where: 'Explore' }],
+        cfgFields: Object.entries(s.cfg).map(([k, v]) => ({ label: k, value: v, onChange: e => this.setState({ cfg: { ...s.cfg, [k]: e.target.value } }) })),
+        catsSupported: s.cats, onCats: () => this.setState({ cats: !s.cats }),
+        saveCfg: () => { this.log('Content', 'Saved site config', '', `catsSupported=${s.cats}`); this.flash('Site config saved.'); },
+      });
+    }
+
+    const cu = s.customer ? s.customers.find(c => c.id === s.customer) : null;
+    Object.assign(out, {
+      tq: s.tq, onTq: e => this.setState({ tq: e.target.value }), tf: s.tf, onTf: e => this.setState({ tf: e.target.value }),
+      canExport: admin && out.showTable,
+      exportTbl: () => { C.downloadCsv(`doggzi-${mod}${s.sub ? '-' + s.sub : ''}.csv`, out.exportRows || []); this.log(out.moduleTitle, 'Exported CSV', '', `${(out.exportRows || []).length - 1} rows`); },
+      customer: !!cu, cu: cu ? { name: cu.name, phone: phone(cu.phone), area: cu.area, pets: cu.pets.map(p => ({ name: p.name, breed: p.breed, vb: av(p).vb, href: av(p).href })), notes: cu.notes,
+        history: [...s.bookings.filter(b => b.cust === cu.id).map(b => ({ what: `${b.id} · ${b.svc}`, when: C.istDateTime(b.at) })), ...s.orders.filter(o => o.cust === cu.id).map(o => ({ what: `${o.order} · ${C.inr(o.total)}`, when: C.istDateTime(o.placed) }))] } : { pets: [], notes: [], history: [] },
+      closeCustomer: () => this.setState({ customer: null }), escCustomer: e => { if (e.key === 'Escape') this.setState({ customer: null }); },
+      noteDraft: s.noteDraft, onNote: e => this.setState({ noteDraft: e.target.value }),
+      addNote: e => { e.preventDefault(); const t = s.noteDraft.trim(); if (!t) return; const line = `${C.istDateTime(new Date())} · ${this.who()}: ${t}`; this.setState(st => ({ noteDraft: '', customers: st.customers.map(c => c.id === cu.id ? { ...c, notes: [...c.notes, line] } : c) })); this.log('Customers', `Note on ${cu.name}`, '', t); },
+      picker: !!s.picker, pickerTitle: s.picker ? (s.picker.kind === 'reassign' ? `Reassign ${s.picker.id}` : `Reassign ${s.picker.id} to another store`) : '',
+      pickerOpts: !s.picker ? [] : s.picker.kind === 'reassign'
+        ? PROVIDERS.map(([id, name, r]) => ({ label: name, sub: `Rating ${r}`, pick: () => { const b = s.bookings.find(x => x.id === s.picker.id); const before = b.prov; this.setState(st => ({ picker: null, bookings: st.bookings.map(x => x.id === b.id ? { ...x, prov: id, status: x.status === 'requested' ? 'offered' : x.status, offerEnds: Date.now() + 90000 } : x) })); this.log('Bookings', `Reassigned ${b.id}`, provName(before), name); this.chipPulse(b.id); this.flash(`${b.id} reassigned to ${name}.`, () => { this.setState(st => ({ bookings: st.bookings.map(x => x.id === b.id ? { ...x, prov: before } : x) })); this.log('Bookings', `Undo reassign ${b.id}`, name, provName(before)); }); } }))
+        : s.vendors.filter(v => v.stage === 'live' || v.stage === 'razorpay').map(v => ({ label: v.name, sub: v.area, pick: () => { const id = s.picker.id; this.setState(st => ({ picker: null, orders: st.orders.map(x => x.id === id ? { ...x, vendor: v.name, status: 'new', reason: null, sla: Date.now() + 10 * 60000, slaLabel: 'Accept by ' } : x) })); this.log('Orders', `Reassigned ${id}`, 'rejected', v.name); this.flash(`${id} sent to ${v.name}.`); } })),
+      closePicker: () => this.setState({ picker: null }),
+      danger: !!s.danger, dg: s.danger ? { title: s.danger.title, body: s.danger.body, word: s.danger.word, cta: s.danger.cta, hasPreview: !!s.danger.preview, oldV: s.danger.preview ? s.danger.preview[0] : '', newV: s.danger.preview ? s.danger.preview[1] : '' } : {},
+      dangerCb: this.dangerCb, dangerInputRef: this.dangerInputRef, dangerText: s.dangerText, onDangerText: e => this.setState({ dangerText: e.target.value }),
+      dangerDisabled: !s.danger || s.dangerText.trim() !== s.danger.word, dangerOp: s.danger && s.dangerText.trim() === s.danger.word ? 1 : 0.45,
+      dangerKey: e => { if (e.key === 'Enter' && s.danger && s.dangerText.trim() === s.danger.word) { s.danger.run(); this.setState({ danger: null }); } },
+      closeDanger: () => this.setState({ danger: null }),
+      confirmDanger: () => { if (s.danger && s.dangerText.trim() === s.danger.word) { s.danger.run(); this.setState({ danger: null }); } },
+    });
+    return out;
+  }
+}
+</script>
+</body>
+</html>

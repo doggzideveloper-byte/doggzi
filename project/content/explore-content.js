@@ -12,7 +12,7 @@ export const VIDEOS = [
 export const TESTIMONIALS = [
   { placeholder: true, pet: 'Pet name', type: 'dog', parent: 'Parent', area: 'Sector —, Gurgaon', service: 'Fresh Food', tags: ['fresh-food'], quote: 'A real review from a Doggzi parent goes here, shared with their permission.' },
   { placeholder: true, pet: 'Pet name', type: 'cat', parent: 'Parent', area: 'Area —, Delhi', service: 'Grooming', tags: ['services'], quote: 'A real review from a Doggzi parent goes here, shared with their permission.' },
-  { placeholder: true, pet: 'Pet name', type: 'dog', parent: 'Parent', area: 'Sector —, Noida', service: 'Marketplace', quote: 'A real review from a Doggzi parent goes here, shared with their permission.' },
+  { placeholder: true, pet: 'Pet name', type: 'dog', parent: 'Parent', area: 'Sector —, Noida', service: 'Marketplace', tags: ['marketplace'], quote: 'A real review from a Doggzi parent goes here, shared with their permission.' },
   { placeholder: true, pet: 'Pet name', type: 'dog', parent: 'Parent', area: 'DLF Phase —, Gurgaon', service: 'Spa day', tags: ['services'], quote: 'A real review from a Doggzi parent goes here, shared with their permission.' },
 ];
 
@@ -53,4 +53,14 @@ export const SERVICES_FAQS = [
   { q: 'Which services are available for cats?', a: 'Bath & blow dry, medicated bath, light de-matting, body massage and dental cleaning (draft list, to be confirmed).' },
   { q: 'How does training work?', a: 'Training is 12 sessions a month with a Doggzi trainer.' },
   { q: 'How do I book boarding or pickup?', a: 'Boarding is priced per hour on request and pickup is subject to availability. Ask us on WhatsApp.' },
+];
+
+// Marketplace FAQ — ALL DRAFT, to be confirmed by Abhiyash before launch.
+export const MARKETPLACE_FAQS = [
+  { q: 'Who sells these products?', a: 'Local pet stores near you. Until more stores join, products are sold by Doggzi Store, Doggzi’s own shop.' },
+  { q: 'How fast is delivery?', a: 'Most orders arrive the same day from a store near you. Exact timings to be confirmed.' },
+  { q: 'Is there a delivery fee?', a: 'Each store sets its own delivery fee, shown in your cart before you pay.' },
+  { q: 'How do I pay?', a: 'Securely with Razorpay: UPI, cards, net banking and wallets.' },
+  { q: 'Can I return something?', a: 'Returns are handled by the store that sold it, and you can call them directly. Policy details to be confirmed.' },
+  { q: 'Why don’t I see a product photo?', a: 'We only show photos taken by the store itself. Until then you’ll see a Doggzi illustration of the category.' },
 ];

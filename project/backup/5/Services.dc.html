@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@500;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F2E7CB;color:#141210;font-family:"Poppins",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*{box-sizing:border-box}
+a{color:#141210;text-decoration-color:#09A460}
+a:hover{color:#077E4A}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;background:#F2E7CB;overflow-x:clip">
+  <sc-if value="{{ showOverlay }}" hint-placeholder-val="{{ false }}"><div ref="{{ overlayCb }}" aria-hidden="true" style="position:fixed;inset:0;z-index:60;background:#09A460;pointer-events:none"></div></sc-if>
+
+  <header style="position:sticky;top:0;z-index:30;background:#F2E7CB;border-bottom:2.5px solid #141210">
+    <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;height:clamp(72px,2vw + 56px,84px)">
+      <a href="Pet Passport.dc.html" onMouseEnter="{{ wobble }}" onFocus="{{ wobble }}" aria-label="Doggzi home" style="flex:none;display:flex;align-items:center;justify-content:center;width:clamp(56px,4vw + 26px,64px);height:clamp(56px,4vw + 26px,64px);border-radius:999px;background:#FFFBF2;border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;outline:none" style-focus="outline:3px solid #09A460;outline-offset:4px">
+        <span aria-hidden="true" style="width:100%;height:100%;display:block;pointer-events:none;background:url('assets/doggzi-mark.svg') center / contain no-repeat"></span>
+      </a>
+      <div style="flex:none;display:flex;align-items:center;justify-content:flex-end;min-width:190px;height:48px">
+        <a href="Choose.dc.html" aria-label="{{ chipLabel }}" style="display:flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 5px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210;color:#141210;text-decoration:none;transition:transform 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);color:#141210" style-focus="outline:3px solid #09A460;outline-offset:3px">
+          <span style="width:36px;height:36px;border-radius:999px;background:#F2E7CB;border:2px solid #141210;overflow:hidden;display:flex;flex:none">
+            <svg viewBox="{{ avatarVB }}" style="width:100%;height:100%;display:block"><use href="{{ avatarHref }}"></use></svg>
+          </span>
+          <span style="display:flex;flex-direction:column;line-height:1.05">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase">{{ nameUpper }}</span>
+            <span style="font-size:12px;font-weight:500;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ breed }}</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section style="background:#09A460;border-bottom:2.5px solid #141210">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,72px) 20px clamp(48px,7vw,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 56px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start;min-width:0">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Services</span>
+          <h1 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2.8rem,7vw,5rem);line-height:1;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Spa day for <span style="display:inline-block;background:#F989EF;border:2.5px solid #141210;border-radius:14px;padding:0 .16em;box-shadow:4px 4px 0 #141210;transform:rotate(-2deg)">{{ name }}</span></h1>
+          <p style="margin:0;max-width:36ch;font-size:clamp(1.05rem,1.8vw,1.25rem);line-height:1.55;font-weight:500">Doorstep grooming, training &amp; boarding across Delhi NCR.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <a href="{{ heroHref }}" style="display:flex;align-items:center;height:56px;padding:0 26px;font:600 17px Poppins,system-ui;color:#FFFBF2;text-decoration:none;background:#141210;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #FFFBF2;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #FFFBF2;color:#FFFBF2" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #FFFBF2" style-focus="outline:3px solid #141210;outline-offset:4px">{{ heroCta }}</a>
+            <a href="#spa" style="display:flex;align-items:center;height:56px;padding:0 24px;font:600 17px Poppins,system-ui;color:#141210;text-decoration:none;border:2.5px solid #141210;border-radius:999px;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),background 180ms" style-hover="transform:translateY(-2px);background:#FFFBF2;color:#141210" style-focus="outline:3px solid #141210;outline-offset:4px">Build your own spa</a>
+          </div>
+        </div>
+        <div style="background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:6px 6px 0 #141210;padding:clamp(12px,2vw,24px);min-width:0">
+          <dc-import name="ServiceScene" scene="bath" pet="{{ petKey }}" pet-name="{{ name }}" label="{{ heroLabel }}" force-reduced-motion="{{ forceReduced }}" hint-size="100%,320px"></dc-import>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ hasPackages }}" hint-placeholder-val="{{ true }}">
+      <section id="packages" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px);scroll-margin-top:84px">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Grooming packages</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">The full pamper, start to finish</h2>
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:2px dashed #D9431A;color:#D9431A;border-radius:999px;padding:2px 10px">Package contents: draft, to confirm</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(20px,3vw,32px)">
+          <sc-for list="{{ packages }}" as="p" hint-placeholder-count="3">
+            <article data-ri="" data-card="{{ p.id }}" style="position:relative;display:flex;flex-direction:column;gap:14px;padding:18px 18px 22px;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210">
+              <sc-if value="{{ p.best }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-16px;left:22px;z-index:2;font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;background:#F989EF;border:2.5px solid #141210;border-radius:999px;box-shadow:2px 2px 0 #141210;transform:rotate(-3deg)">Best value</span></sc-if>
+              <div style="background:#F2E7CB;border:2px solid #141210;border-radius:18px;padding:6px">
+                <dc-import name="ServiceScene" sequence="{{ p.sequence }}" pet="{{ petKey }}" pet-name="{{ name }}" label="{{ p.sceneLabel }}" force-reduced-motion="{{ forceReduced }}" hint-size="100%,240px"></dc-import>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+                <h3 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.5rem,2.4vw,1.9rem);line-height:1;letter-spacing:.02em;text-transform:uppercase">{{ p.name }}</h3>
+                <span style="font-family:Atma,system-ui;font-weight:700;font-size:22px;white-space:nowrap">{{ p.price }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(20,18,16,.7)">What's included</span>
+                <ul style="margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ p.steps }}" as="st" hint-placeholder-count="3">
+                    <li data-check="{{ st.k }}" style="display:flex;align-items:center;gap:6px;padding:4px 12px 4px 5px;border:2px solid #141210;border-radius:999px;background:{{ st.bg }};font-size:14px;font-weight:600;transition:background 350ms cubic-bezier(.22,1,.36,1)"><span data-dot="" aria-hidden="true" style="width:20px;height:20px;border-radius:999px;border:2px solid #141210;background:{{ st.dot }};color:#FFFBF2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:background 180ms">✓</span>{{ st.label }}</li>
+                  </sc-for>
+                </ul>
+              </div>
+              <button type="button" onClick="{{ p.add }}" aria-pressed="{{ p.pressed }}" style="margin-top:auto;height:52px;font:600 17px Poppins,system-ui;color:{{ p.btnFg }};background:{{ p.btnBg }};border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">{{ p.btnLabel }}</button>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <section id="spa" data-reveal="" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210;scroll-margin-top:84px">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">Build your own spa</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Pick what <span style="position:relative;display:inline-block;padding:0 .14em"><span data-sweep="" aria-hidden="true" style="position:absolute;left:0;right:0;top:.12em;bottom:.06em;background:#F989EF;border-radius:10px;transform-origin:left center;transform:rotate(-1.5deg)"></span><span style="position:relative">{{ name }}</span></span> needs</h2>
+          <p style="margin:0;font-size:14px;color:rgba(20,18,16,.75)">{{ priceNote }}</p>
+          <sc-if value="{{ isCat }}" hint-placeholder-val="{{ false }}"><span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:2px dashed #D9431A;color:#D9431A;border-radius:999px;padding:2px 10px">Cat services: draft list, to confirm</span></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:clamp(16px,2.5vw,24px)">
+          <sc-for list="{{ spa }}" as="it" hint-placeholder-count="8">
+            <article data-ri="" data-card="{{ it.id }}" style="display:flex;flex-direction:column;gap:10px;padding:12px 12px 14px;background:#F2E7CB;border:2.5px solid #141210;border-radius:22px;box-shadow:4px 4px 0 #141210">
+              <div style="background:#FFFBF2;border:2px solid #141210;border-radius:14px;padding:4px">
+                <dc-import name="ServiceScene" scene="{{ it.scene }}" pet="{{ petKey }}" pet-name="{{ name }}" force-reduced-motion="{{ forceReduced }}" hint-size="100%,180px"></dc-import>
+              </div>
+              <h3 style="margin:0;font-size:16px;font-weight:600;line-height:1.3;min-height:2.6em">{{ it.name }}</h3>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px">{{ it.price }}</span>
+                <button type="button" onClick="{{ it.add }}" aria-pressed="{{ it.pressed }}" aria-label="{{ it.addLabel }}" style="height:44px;padding:0 16px;font:600 15px Poppins,system-ui;color:{{ it.btnFg }};background:{{ it.btnBg }};border:2.5px solid #141210;border-radius:999px;box-shadow:3px 3px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:5px 5px 0 #141210" style-active="transform:translate(3px,3px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:3px">{{ it.btnLabel }}</button>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section id="training" data-reveal="" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,40px);scroll-margin-top:84px">
+      <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">Training &amp; boarding</span>
+        <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Good habits, cosy nights</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(20px,3vw,28px)">
+        <sc-for list="{{ extras }}" as="x" hint-placeholder-count="3">
+          <article data-ri="" data-card="{{ x.id }}" style="display:flex;flex-direction:column;gap:12px;padding:16px 16px 20px;background:#FFFBF2;border:2.5px solid #141210;border-radius:28px;box-shadow:4px 4px 0 #141210">
+            <div style="background:#F2E7CB;border:2px solid #141210;border-radius:18px;padding:6px">
+              <dc-import name="ServiceScene" scene="{{ x.scene }}" pet="{{ petKey }}" pet-name="{{ name }}" force-reduced-motion="{{ forceReduced }}" hint-size="100%,220px"></dc-import>
+            </div>
+            <h3 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(1.4rem,2.2vw,1.7rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase">{{ x.title }}</h3>
+            <span style="font-size:15px;line-height:1.45">{{ x.sub }}</span>
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:20px">{{ x.price }}</span>
+            <sc-if value="{{ x.bookable }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ x.add }}" aria-pressed="{{ x.pressed }}" style="margin-top:auto;height:52px;font:600 17px Poppins,system-ui;color:{{ x.btnFg }};background:{{ x.btnBg }};border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">{{ x.btnLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ x.ask }}" hint-placeholder-val="{{ true }}">
+              <a href="{{ x.waHref }}" target="_blank" rel="noopener" onClick="{{ x.onAsk }}" style="margin-top:auto;height:52px;display:flex;align-items:center;justify-content:center;gap:8px;font:600 17px Poppins,system-ui;color:#141210;text-decoration:none;background:#09A460;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210;color:#141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">Ask on WhatsApp</a>
+            </sc-if>
+          </article>
+        </sc-for>
+      </div>
+      <p data-ri="" style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:15px"><span style="font-family:Atma,system-ui;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:2px dashed #141210;border-radius:999px;padding:2px 10px">Coming soon</span>Walking and vet consults</p>
+    </section>
+
+    <section id="how-booking-works" data-reveal="" style="background:#FFFBF2;border-top:2.5px solid #141210;border-bottom:2.5px solid #141210">
+      <div style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+        <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#F2E7CB">How a booking works</span>
+          <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance">Four steps to spa-fresh</h2>
+        </div>
+        <ol style="position:relative;margin:0;padding:0;list-style:none;display:grid;grid-template-columns:{{ stepCols }};gap:{{ stepGap }}">
+          <span data-line="" aria-hidden="true" style="position:absolute;z-index:0;background:#141210;left:{{ lineL }};right:{{ lineR }};top:32px;bottom:{{ lineB }};width:{{ lineW }};height:{{ lineH }};transform-origin:{{ lineOrigin }}"></span>
+          <sc-for list="{{ howSteps }}" as="h" hint-placeholder-count="4">
+            <li data-ri="" style="position:relative;z-index:1;display:flex;flex-direction:{{ stepDir }};align-items:{{ stepAlign }};gap:14px;text-align:{{ stepText }}">
+              <span style="flex:none;width:64px;height:64px;border-radius:999px;background:{{ h.bg }};color:{{ h.fg }};border:2.5px solid #141210;box-shadow:4px 4px 0 #141210;display:flex;align-items:center;justify-content:center;font-family:Atma,system-ui;font-weight:700;font-size:30px">{{ h.n }}</span>
+              <span style="font-family:Atma,system-ui;font-weight:700;font-size:22px;line-height:1.15;letter-spacing:.04em;text-transform:uppercase;padding-top:{{ stepTextPad }}">{{ h.label }}</span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </section>
+
+    <dc-import name="Testimonials" tag="services" heading="Spa-fresh tails" force-reduced-motion="{{ forceReduced }}" hint-size="100%,560px"></dc-import>
+    <dc-import name="FAQ" set="services" heading="Service questions" force-reduced-motion="{{ forceReduced }}" hint-size="100%,640px"></dc-import>
+  </main>
+
+  <dc-import name="SiteFooter" force-reduced-motion="{{ forceReduced }}" hint-size="100%,560px"></dc-import>
+
+  <button type="button" ref="{{ cartRef }}" onClick="{{ openCart }}" aria-label="{{ cartLabel }}" style="position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;gap:10px;height:58px;padding:0 20px 0 8px;font:600 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-focus="outline:3px solid #09A460;outline-offset:4px">
+    <span style="position:relative;width:40px;height:40px;border-radius:999px;background:#09A460;border:2px solid #141210;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:22px;height:22px" fill="#FFFBF2" stroke="#141210" stroke-width="1.8" stroke-linejoin="round"><path d="M5 8h14l-1.5 12h-11z"></path><path d="M9 8a3 3 0 0 1 6 0" fill="none"></path></svg>
+      <span data-count="" style="position:absolute;top:-8px;right:-8px;min-width:22px;height:22px;padding:0 5px;border-radius:999px;background:#F989EF;border:2px solid #141210;font:700 12px/18px Poppins,system-ui;text-align:center">{{ cartCount }}</span>
+    </span>
+    <span>{{ cartText }}</span>
+  </button>
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:50">
+      <div ref="{{ backdropCb }}" onClick="{{ closeDrawer }}" aria-hidden="true" style="position:absolute;inset:0;background:rgba(20,18,16,.45)"></div>
+      <div ref="{{ panelCb }}" role="dialog" aria-modal="true" aria-labelledby="bk-title" onKeyDown="{{ drawerKey }}" style="position:absolute;display:flex;flex-direction:column;background:#FFFBF2;border:2.5px solid #141210;left:{{ pL }};right:0;top:{{ pT }};bottom:0;width:{{ pW }};max-height:{{ pMaxH }};border-radius:{{ pR }}">
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:2.5px solid #141210">
+          <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;flex:none;border-radius:999px;border:2.5px solid #141210;background:#F2E7CB;font:600 18px/1 Poppins,system-ui;color:#141210;cursor:pointer" style-focus="outline:3px solid #09A460;outline-offset:2px">←</button></sc-if>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+            <span style="font-family:Atma,system-ui;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,18,16,.7)">{{ stepKicker }}</span>
+            <h2 id="bk-title" style="margin:0;font-family:Atma,system-ui;font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase">{{ stepTitle }}</h2>
+          </div>
+          <button type="button" data-close="" onClick="{{ closeDrawer }}" aria-label="Close booking" style="width:44px;height:44px;flex:none;border-radius:999px;border:2.5px solid #141210;background:#F2E7CB;font:500 24px/1 Poppins,system-ui;color:#141210;cursor:pointer" style-focus="outline:3px solid #09A460;outline-offset:2px">×</button>
+        </div>
+        <div style="display:flex;gap:6px;padding:10px 16px 0">
+          <sc-for list="{{ stepDots }}" as="d" hint-placeholder-count="5"><span aria-hidden="true" style="flex:1;height:6px;border-radius:999px;background:{{ d.bg }};border:1.5px solid #141210"></span></sc-for>
+        </div>
+
+        <div style="flex:1;overflow:auto;padding:16px">
+          <sc-if value="{{ stCart }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:32px 8px;text-align:center">
+                <p style="margin:0;font-size:17px;font-weight:600">Nothing in the cart yet.</p>
+                <a href="#spa" onClick="{{ closeDrawer }}" style="font-weight:600">Browse spa services</a>
+              </div>
+            </sc-if>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
+                <li data-swipe="{{ c.id }}" onPointerDown="{{ c.down }}" onPointerMove="{{ c.move }}" onPointerUp="{{ c.up }}" onPointerCancel="{{ c.up }}" style="display:flex;align-items:center;gap:12px;padding:10px 10px 10px 14px;background:#F2E7CB;border:2px solid #141210;border-radius:18px;touch-action:pan-y">
+                  <span style="flex:1;min-width:0;font-weight:600;font-size:15px;line-height:1.35">{{ c.name }}</span>
+                  <span style="font-family:Atma,system-ui;font-weight:700;font-size:18px;white-space:nowrap">{{ c.price }}</span>
+                  <button type="button" onClick="{{ c.remove }}" aria-label="{{ c.removeLabel }}" style="width:40px;height:40px;flex:none;border-radius:999px;border:2px solid #141210;background:#FFFBF2;font:500 20px/1 Poppins,system-ui;color:#141210;cursor:pointer" style-focus="outline:3px solid #09A460;outline-offset:2px">×</button>
+                </li>
+              </sc-for>
+            </ul>
+            <sc-if value="{{ cartHasItems }}" hint-placeholder-val="{{ true }}"><p style="margin:12px 0 0;font-size:13px;color:rgba(20,18,16,.7)">Swipe an item left or tap × to remove.</p></sc-if>
+          </sc-if>
+
+          <sc-if value="{{ stSlot }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div role="group" aria-label="Date" style="display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:4px 16px 8px;scrollbar-width:thin">
+                <sc-for list="{{ dates }}" as="d" hint-placeholder-count="7">
+                  <button type="button" onClick="{{ d.pick }}" aria-pressed="{{ d.pressed }}" style="flex:none;width:64px;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:2.5px solid #141210;border-radius:16px;background:{{ d.bg }};box-shadow:{{ d.shadow }};color:#141210;cursor:pointer;font-family:Poppins,system-ui" style-focus="outline:3px solid #09A460;outline-offset:2px">
+                    <span style="font-size:12px;font-weight:500;text-transform:uppercase">{{ d.wd }}</span>
+                    <span style="font-family:Atma,system-ui;font-weight:700;font-size:24px;line-height:1">{{ d.day }}</span>
+                    <span style="font-size:12px;font-weight:500">{{ d.mon }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <div role="group" aria-label="Time" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px">
+                <sc-for list="{{ times }}" as="t" hint-placeholder-count="7">
+                  <button type="button" onClick="{{ t.pick }}" disabled="{{ t.disabled }}" aria-pressed="{{ t.pressed }}" style="height:48px;border:2.5px solid {{ t.border }};border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font:600 15px Poppins,system-ui;cursor:{{ t.cursor }};text-decoration:{{ t.strike }}" style-focus="outline:3px solid #09A460;outline-offset:2px">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <p style="margin:0;font-size:13px;color:rgba(20,18,16,.7)">Times in IST. Greyed-out slots are full. Availability is a demo.</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ stAddress }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ savedAddrs }}" as="a" hint-placeholder-count="0">
+                <button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.pressed }}" style="text-align:left;padding:12px 14px;border:2.5px solid #141210;border-radius:18px;background:{{ a.bg }};font:500 15px/1.45 Poppins,system-ui;color:#141210;cursor:pointer" style-focus="outline:3px solid #09A460;outline-offset:2px">{{ a.text }}</button>
+              </sc-for>
+              <form onSubmit="{{ saveAddr }}" novalidate="" style="display:flex;flex-direction:column;gap:12px;padding:14px;border:2px dashed #141210;border-radius:18px">
+                <span style="font-weight:600">{{ addrFormTitle }}</span>
+                <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500">House / flat
+                  <input value="{{ af.line1 }}" onChange="{{ af.on1 }}" autocomplete="address-line1" style="height:48px;padding:0 14px;font:500 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:14px;outline:none" style-focus="box-shadow:3px 3px 0 #09A460"></label>
+                <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500">Area / sector
+                  <input value="{{ af.area }}" onChange="{{ af.onArea }}" autocomplete="address-line2" style="height:48px;padding:0 14px;font:500 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:14px;outline:none" style-focus="box-shadow:3px 3px 0 #09A460"></label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500">Pincode
+                    <input value="{{ af.pin }}" onChange="{{ af.onPin }}" inputmode="numeric" maxlength="6" autocomplete="postal-code" aria-invalid="{{ af.pinInvalid }}" style="height:48px;padding:0 14px;font:500 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:14px;outline:none" style-focus="box-shadow:3px 3px 0 #09A460"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500">Landmark (optional)
+                    <input value="{{ af.landmark }}" onChange="{{ af.onLm }}" style="height:48px;padding:0 14px;font:500 16px Poppins,system-ui;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:14px;outline:none" style-focus="box-shadow:3px 3px 0 #09A460"></label>
+                </div>
+                <sc-if value="{{ af.err }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:14px;font-weight:500;color:#D9431A">{{ af.err }}</p></sc-if>
+                <button type="submit" style="height:48px;font:600 15px Poppins,system-ui;color:#141210;background:#F2E7CB;border:2.5px solid #141210;border-radius:999px;cursor:pointer" style-focus="outline:3px solid #09A460;outline-offset:2px">Use this address</button>
+              </form>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ stVerify }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <p style="margin:0;font-size:15px;line-height:1.5">We'll text a 6-digit code to confirm it's you. {{ poss }} passport is saved to your number.</p>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500">Mobile number
+                <span style="display:flex;align-items:center;height:52px;border:2.5px solid #141210;border-radius:999px;background:#F2E7CB;overflow:hidden"><span aria-hidden="true" style="padding:0 4px 0 16px;font-weight:600">+91</span><input type="tel" inputmode="numeric" maxlength="11" value="{{ phone }}" onChange="{{ onPhone }}" autocomplete="tel-national" placeholder="98765 43210" style="flex:1;min-width:0;height:100%;border:0;background:transparent;font:500 16px Poppins,system-ui;color:#141210;outline:none;padding-right:14px"></span></label>
+              <sc-if value="{{ otpSent }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <p role="status" style="margin:0;padding:8px 12px;border:2px dashed #141210;border-radius:12px;font-size:13px;background:#F2E7CB">Dev only: console OTP provider sent <strong style="font-family:Atma,system-ui;letter-spacing:.2em">{{ devCode }}</strong></p>
+                  <label style="display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500">6-digit code
+                    <input inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="{{ otp }}" onChange="{{ onOtp }}" style="height:56px;padding:0 16px;font:700 24px Atma,system-ui;letter-spacing:.5em;text-align:center;color:#141210;background:#FFFBF2;border:2.5px solid #141210;border-radius:16px;outline:none" style-focus="box-shadow:3px 3px 0 #09A460"></label>
+                </div>
+              </sc-if>
+              <sc-if value="{{ otpErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:14px;font-weight:500;color:#D9431A">{{ otpErr }}</p></sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ stReview }}" hint-placeholder-val="{{ false }}">
+            <dl style="margin:0;display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ summary }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:10px;border-bottom:1.5px dashed rgba(20,18,16,.3)">
+                  <dt style="font-family:Atma,system-ui;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,18,16,.7)">{{ r.k }}</dt>
+                  <dd style="margin:0;font-size:15px;font-weight:500;line-height:1.45">{{ r.v }}</dd>
+                </div>
+              </sc-for>
+            </dl>
+            <p style="margin:14px 0 0;font-size:13px;line-height:1.5;color:rgba(20,18,16,.75)">No online payment. Payment is collected after the service (to be confirmed). {{ priceNote }}</p>
+          </sc-if>
+
+          <sc-if value="{{ stDone }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 8px;text-align:center">
+              <div ref="{{ stampCb }}" style="font-family:Atma,system-ui;font-weight:700;font-size:44px;letter-spacing:.14em;text-transform:uppercase;color:#077E4A;border:4px solid #09A460;border-radius:14px;padding:4px 22px;transform:rotate(-6deg)">Booked</div>
+              <p style="margin:0;font-size:18px;font-weight:600">{{ doneLine }}</p>
+              <p style="margin:0;font-size:15px">We'll confirm on WhatsApp shortly.</p>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="border-top:2.5px solid #141210;padding:14px 16px calc(14px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:14px">
+          <sc-if value="{{ showTotal }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;line-height:1.1">
+              <span style="font-size:12px;font-weight:500">Total</span>
+              <span ref="{{ totalCb }}" aria-live="polite" style="font-family:Atma,system-ui;font-weight:700;font-size:26px;font-variant-numeric:tabular-nums"></span>
+            </div>
+          </sc-if>
+          <button type="button" onClick="{{ primary }}" disabled="{{ primaryDisabled }}" style="flex:1;height:56px;font:600 17px Poppins,system-ui;color:#141210;background:{{ primaryBg }};border:2.5px solid #141210;border-radius:999px;box-shadow:4px 4px 0 #141210;cursor:pointer;opacity:{{ primaryOp }};transition:transform 180ms cubic-bezier(.34,1.56,.64,1),box-shadow 180ms cubic-bezier(.34,1.56,.64,1)" style-hover="transform:translateY(-2px);box-shadow:6px 6px 0 #141210" style-active="transform:translate(4px,4px);box-shadow:0 0 0 #141210" style-focus="outline:3px solid #141210;outline-offset:4px">{{ primaryLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoPet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Saved passport&quot;,&quot;Dog&quot;,&quot;Cat&quot;],&quot;default&quot;:&quot;Saved passport&quot;,&quot;tsType&quot;:&quot;'Saved passport' | 'Dog' | 'Cat'&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const SMALL = new Set(['Beagle','Shih Tzu','Pug','Pomeranian','Lhasa Apso','Dachshund','French Bulldog','Maltese','Chihuahua','Cavalier King Charles Spaniel','Bichon Frise','Yorkshire Terrier','Indian Spitz','Cocker Spaniel']);
+const DEMO = { Dog: { name: 'Bruno', type: 'dog', breed: 'Labrador Retriever' }, Cat: { name: 'Mishti', type: 'cat', breed: 'Persian' } };
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const BOUNCY = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const KEY = 'dz.passport';
+const STEPS = ['cart', 'slot', 'address', 'verify', 'review', 'done'];
+const TITLES = { cart: 'Your cart', slot: 'Pick a slot', address: 'Where should we come?', verify: 'Verify your phone', review: 'Review & request', done: 'Requested!' };
+const inr = p => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p / 100);
+const istKey = d => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+const istParts = d => Object.fromEntries(new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'short', day: 'numeric', month: 'short' }).formatToParts(d).map(p => [p.type, p.value]));
+const istNowMin = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date()).map(x => [x.type, x.value])); return +p.hour * 60 + +p.minute; };
+const hash = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const ls = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'null') ?? d; } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+class Component extends DCLogic {
+  state = {
+    pet: DEMO.Dog, cfg: null, site: null, vb: null, narrow: false, cart: [], pkgStep: {},
+    drawer: false, step: 'cart', date: null, time: null, addrs: [], addr: null,
+    af: { line1: '', area: '', pin: '', landmark: '' }, afErr: null,
+    user: null, phone: '', otpSent: false, devCode: '', otp: '', otpErr: null, booked: null, showOverlay: false,
+  };
+  rootRef = React.createRef(); cartRef = React.createRef(); totalRef = React.createRef();
+  seen = new WeakSet();
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  readPet() {
+    const mode = this.props.demoPet ?? 'Saved passport';
+    if (DEMO[mode]) return DEMO[mode];
+    const s = ls(KEY, null);
+    return s && s.name ? { name: s.name, type: s.type, breed: s.breed || 'Mixed / Not sure' } : DEMO.Dog;
+  }
+
+  componentDidMount() {
+    let fromChoose = false;
+    try { fromChoose = sessionStorage.getItem('dz.from') === 'choose-services'; sessionStorage.removeItem('dz.from'); } catch (e) {}
+    this.setState({ pet: this.readPet(), addrs: ls('dz.addresses', []), user: ls('dz.user', null), cart: ls('dz.cart', []), showOverlay: fromChoose });
+    const base = document.baseURI;
+    Promise.all([import(new URL('content/services.js', base).href), import(new URL('content/site-config.js', base).href)]).then(([cfg, site]) => { this.siteMod = site; this.setState({ cfg, site: site.SITE }); });
+    const waitSprite = () => window.__dzsSprite ? window.__dzsSprite.then(vb => this.setState({ vb })) : setTimeout(waitSprite, 120);
+    waitSprite();
+    this.onResize = () => { const w = window.innerWidth, cur = this.state.narrow; const n = cur ? w < 740 : w < 700; if (n !== cur) this.setState({ narrow: n }); };
+    this.setState({ narrow: window.innerWidth < 720 });
+    window.addEventListener('resize', this.onResize);
+    this.ro = { disconnect: () => window.removeEventListener('resize', this.onResize) };
+    this.io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { this.io.unobserve(e.target); this.reveal(e.target); } }), { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+    this.wire();
+    this.onDzStep = e => {
+      const card = e.target.closest && e.target.closest('[data-card]'); if (!card) return;
+      const i = e.detail.i;
+      card.querySelectorAll('[data-check]').forEach(li => {
+        const k = +li.dataset.check, done = k <= i, dot = li.querySelector('[data-dot]');
+        li.style.background = done ? '#CDEFD9' : '#FFFBF2';
+        if (dot) { dot.style.background = done ? '#09A460' : '#FFFBF2'; if (k === i && !this.reduced()) dot.animate([{ transform: 'scale(.4)' }, { transform: 'scale(1.2)', offset: 0.6 }, { transform: 'scale(1)' }], { duration: 420, easing: BOUNCY }); }
+      });
+    };
+    this.rootRef.current.addEventListener('dzstep', this.onDzStep);
+  }
+  componentWillUnmount() { this.ro.disconnect(); this.io.disconnect(); cancelAnimationFrame(this.totRaf); this.rootRef.current && this.rootRef.current.removeEventListener('dzstep', this.onDzStep); }
+
+  componentDidUpdate(pp, ps) {
+    if (pp.demoPet !== this.props.demoPet) this.setState({ pet: this.readPet() });
+    if (ps.cart !== this.state.cart) lsSet('dz.cart', this.state.cart);
+    this.wire();
+    this.animTotal();
+  }
+
+  wire() {
+    const root = this.rootRef.current; if (!root) return;
+    root.querySelectorAll('[data-reveal]').forEach(sec => {
+      if (this.seen.has(sec)) return; this.seen.add(sec);
+      if (this.reduced()) return;
+      sec.querySelectorAll('[data-ri]').forEach(el => { el.style.opacity = '0'; });
+      const line = sec.querySelector('[data-line]'); if (line) line.style.transform = this.state.narrow ? 'scaleY(0)' : 'scaleX(0)';
+      this.io.observe(sec);
+    });
+  }
+
+  reveal(sec) {
+    sec.querySelectorAll('[data-ri]').forEach((el, i) => { el.style.opacity = ''; el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 550, delay: Math.min(i, 10) * 60, easing: EASE, fill: 'backwards' }); });
+    sec.querySelectorAll('[data-sweep]').forEach(el => el.animate([{ scale: '0 1' }, { scale: '1 1' }], { duration: 520, delay: 380, easing: EASE, fill: 'backwards' }));
+    const line = sec.querySelector('[data-line]');
+    if (line) { const ax = this.state.narrow ? 'scaleY' : 'scaleX'; line.style.transform = ''; line.animate([{ transform: `${ax}(0)` }, { transform: `${ax}(1)` }], { duration: 1100, delay: 200, easing: EASE, fill: 'backwards' }); }
+  }
+
+  total() { const c = this.state.cfg; if (!c) return 0; return this.state.cart.reduce((s, id) => s + ((c.CATALOG.find(i => i.id === id) || {}).price_paise || 0), 0); }
+
+  animTotal() {
+    const el = this.totalRef.current; if (!el) { this.shownTotal = null; return; }
+    const to = this.total();
+    if (this.shownTotal == null || this.reduced()) { this.shownTotal = to; el.textContent = inr(to); return; }
+    if (this.shownTotal === to || this.totTarget === to) return;
+    const from = this.shownTotal, t0 = performance.now(); this.totTarget = to;
+    cancelAnimationFrame(this.totRaf);
+    const step = now => { const t = Math.min(1, (now - t0) / 600), e = 1 - Math.pow(1 - t, 3), v = Math.round(from + (to - from) * e); el.textContent = inr(v); this.shownTotal = v; if (t < 1) this.totRaf = requestAnimationFrame(step); else this.totTarget = null; };
+    this.totRaf = requestAnimationFrame(step);
+  }
+
+  toggleItem(id, e) {
+    if (this.state.cart.includes(id)) { this.setState(s => ({ cart: s.cart.filter(x => x !== id) })); return; }
+    const card = e && e.currentTarget.closest('[data-card]');
+    const btn = e && e.currentTarget;
+    if (btn && !this.reduced()) btn.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(4px,4px)', offset: 0.4 }, { transform: 'translate(0,0)' }], { duration: 260, easing: BOUNCY });
+    const land = () => {
+      this.setState(s => ({ cart: s.cart.includes(id) ? s.cart : [...s.cart, id] }));
+      const pill = this.cartRef.current;
+      if (pill && !this.reduced()) { pill.animate([{ scale: '1' }, { scale: '1.15', offset: 0.35 }, { scale: '.95', offset: 0.7 }, { scale: '1' }], { duration: 480, easing: BOUNCY }); const c = pill.querySelector('[data-count]'); if (c) c.animate([{ transform: 'translateY(6px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: BOUNCY }); }
+      if (this.siteMod) this.siteMod.track('service_add', { id });
+    };
+    const scene = card && card.querySelector('[role=img]');
+    const pill = this.cartRef.current;
+    if (this.reduced() || !scene || !pill || !scene.firstChild) { land(); return; }
+    const a = scene.getBoundingClientRect(), b = pill.getBoundingClientRect();
+    const fly = document.createElement('div');
+    fly.setAttribute('aria-hidden', 'true');
+    fly.style.cssText = `position:fixed;left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px;z-index:80;pointer-events:none;background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;transform-origin:0 0;overflow:hidden`;
+    fly.appendChild(scene.firstChild.cloneNode(true));
+    document.body.appendChild(fly);
+    const s = 40 / a.width, dx = b.left + 10 - a.left, dy = b.top + 8 - a.top;
+    fly.animate([
+      { transform: 'translate(0,0) scale(1)', opacity: 1 },
+      { transform: `translate(${dx * 0.45}px,${dy * 0.45 - 140}px) scale(${(1 + s) / 2.4}) rotate(-8deg)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${dx}px,${dy}px) scale(${s}) rotate(0)`, opacity: 0.6 },
+    ], { duration: 720, easing: 'cubic-bezier(0.5, 0, 0.3, 1)' }).onfinish = () => { fly.remove(); land(); };
+  }
+
+  totalCb = el => { this.totalRef.current = el; if (el) { this.shownTotal = this.total(); el.textContent = inr(this.shownTotal); } else this.shownTotal = null; };
+
+  openDrawer = () => { this.lastFocus = document.activeElement; this.setState({ drawer: true, step: this.state.booked ? 'cart' : this.state.step === 'done' ? 'cart' : this.state.step, booked: null }); };
+  closeDrawer = () => {
+    const done = () => { this.setState({ drawer: false }); if (this.lastFocus && this.lastFocus.focus) this.lastFocus.focus({ preventScroll: true }); };
+    const p = this.panelEl;
+    if (!p || this.reduced()) return done();
+    p.animate([{ transform: 'none' }, { transform: this.state.narrow ? 'translateY(100%)' : 'translateX(100%)' }], { duration: 300, easing: EASE, fill: 'forwards' }).onfinish = done;
+  };
+  panelCb = el => { this.panelEl = el; if (!el) return; const c = el.querySelector('[data-close]'); if (c) c.focus({ preventScroll: true }); if (!this.reduced()) el.animate([{ transform: this.state.narrow ? 'translateY(100%)' : 'translateX(100%)' }, { transform: 'none' }], { duration: 450, easing: EASE }); };
+  backdropCb = el => { if (el && !this.reduced()) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: EASE }); };
+  stampCb = el => { if (el && !this.reduced()) el.animate([{ transform: 'scale(1.6) rotate(-16deg)', opacity: 0 }, { transform: 'scale(1) rotate(-6deg)', opacity: 1 }], { duration: 480, easing: BOUNCY }); };
+  overlayCb = el => { if (el) el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: this.reduced() ? 150 : 600, delay: this.reduced() ? 0 : 120, easing: EASE, fill: 'forwards' }).onfinish = () => this.setState({ showOverlay: false }); };
+
+  go(step) { this.setState({ step }); }
+  next() {
+    const s = this.state, i = STEPS.indexOf(s.step);
+    let nx = STEPS[i + 1];
+    if (nx === 'verify' && s.user) nx = 'review';
+    this.go(nx);
+  }
+  back() {
+    const s = this.state, i = STEPS.indexOf(s.step);
+    let pv = STEPS[i - 1];
+    if (pv === 'verify' && s.user) pv = 'address';
+    if (pv) this.go(pv);
+  }
+
+  request() {
+    const s = this.state, cfg = s.cfg;
+    const booking = { id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()), pet: s.pet, items: s.cart, slot: { date: s.date, time: s.time }, address: s.addr, status: 'requested', total_paise_client: this.total(), created_at: new Date().toISOString() };
+    lsSet('dz.bookings', [...ls('dz.bookings', []), booking]);
+    if (this.siteMod) this.siteMod.track('booking_requested', { items: s.cart.length });
+    this.setState({ booked: booking, cart: [], step: 'done' });
+  }
+
+  renderVals() {
+    const s = this.state, p = s.pet, cfg = s.cfg, red = this.reduced(), n = s.narrow;
+    const petKey = p.type === 'cat' ? 'cat' : SMALL.has(p.breed) ? 'puppy' : 'dog';
+    const poss = p.name + (/s$/i.test(p.name) ? "'" : "'s");
+    const allowed = cfg ? new Set(cfg.SERVICES_BY_PET_TYPE[p.type === 'cat' ? 'cat' : 'dog']) : new Set();
+    const items = cfg ? cfg.CATALOG.filter(i => allowed.has(i.id)) : [];
+    const inCart = id => s.cart.includes(id);
+    const btn = (id, label) => ({ pressed: inCart(id) ? 'true' : 'false', btnLabel: inCart(id) ? 'Added ✓' : label, btnBg: inCart(id) ? '#09A460' : '#F2E7CB', btnFg: '#141210', add: e => this.toggleItem(id, e) });
+    let avatarVB = '0 0 100 100';
+    if (s.vb) { const [x, y, w, h] = s.vb[petKey].split(' ').map(Number), m = Math.max(w, h); avatarVB = `${x - (m - w) / 2} ${y - (m - h) / 2 + m * 0.06} ${m} ${m}`; }
+    const site = s.site || {};
+    const wa = svc => `https://wa.me/${site.whatsapp || ''}?text=${encodeURIComponent(`Hi Doggzi! I'd like to ask about ${svc} for ${p.name} (${p.breed}).`)}`;
+    const extrasMeta = {
+      training: { title: 'Pet training', sub: '12 sessions a month with a Doggzi trainer' },
+      boarding: { title: 'Boarding', sub: 'Priced per hour, on request' },
+      pickup: { title: 'Pickup', sub: 'Subject to availability' },
+    };
+    const ix = STEPS.indexOf(s.step);
+    const total = this.total();
+    const cartItems = s.cart.map(id => (cfg && cfg.CATALOG.find(i => i.id === id))).filter(Boolean);
+    const dates = [...Array(14)].map((_, i) => { const d = new Date(Date.now() + i * 86400000); const k = istKey(d), pp = istParts(d); return { k, wd: i === 0 ? 'Today' : pp.weekday, day: pp.day, mon: pp.month }; });
+    const selDate = s.date || dates[0].k;
+    const nowMin = istNowMin();
+    const pinOk = pin => cfg && cfg.SERVICEABLE_PINCODES.includes(pin);
+    const addrText = a => [a.line1, a.area, a.landmark && `Near ${a.landmark}`, a.pin].filter(Boolean).join(', ');
+    const slotOk = !!(s.date && s.time);
+    const primary = {
+      cart: { label: 'Choose a slot →', dis: !s.cart.length, fn: () => this.next() },
+      slot: { label: 'Continue →', dis: !slotOk, fn: () => this.next() },
+      address: { label: 'Continue →', dis: !s.addr, fn: () => this.next() },
+      verify: s.otpSent
+        ? { label: 'Verify →', dis: s.otp.length !== 6, fn: () => {
+            if (s.otp !== s.devCode) { this.setState({ otpErr: 'That code doesn’t match. Try again.' }); return; }
+            const user = { id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()), phone: '+91' + s.phone.replace(/\D/g, '') };
+            lsSet('dz.user', user);
+            const pass = ls(KEY, null); if (pass) lsSet(KEY, { ...pass, owner_user_id: user.id, updated_at: new Date().toISOString() });
+            this.setState({ user, otpErr: null }, () => this.go('review'));
+          } }
+        : { label: 'Send code', dis: !/^[6-9]\d{9}$/.test(s.phone.replace(/\D/g, '')), fn: () => this.setState({ otpSent: true, devCode: String(Math.floor(100000 + Math.random() * 900000)), otp: '', otpErr: null }) },
+      review: { label: 'Request booking', dis: false, fn: () => this.request() },
+      done: { label: 'Done', dis: false, fn: () => this.closeDrawer() },
+    }[s.step];
+    return {
+      rootRef: this.rootRef, cartRef: this.cartRef, totalCb: this.totalCb,
+      panelCb: this.panelCb, backdropCb: this.backdropCb, stampCb: this.stampCb, overlayCb: this.overlayCb, showOverlay: s.showOverlay,
+      forceReduced: !!this.props.forceReducedMotion,
+      wobble: e => { if (red) return; const a = e.currentTarget; if (a._w && a._w.playState === 'running') return; a._w = a.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)', offset: 0.3 }, { transform: 'rotate(6deg)', offset: 0.65 }, { transform: 'rotate(0)' }], { duration: 480, easing: BOUNCY }); },
+      name: p.name, poss, nameUpper: p.name.toUpperCase(), breed: p.breed, chipLabel: `${poss} passport — back to choices`,
+      petKey, isCat: p.type === 'cat', avatarVB, avatarHref: s.vb ? `#dzs-${{ dog: 'lab', puppy: 'puppy', cat: 'cat' }[petKey]}` : '',
+      heroLabel: `Illustration: ${p.name} in a bubble bath, shaking off water`,
+      heroHref: p.type === 'cat' ? '#spa' : '#packages', heroCta: p.type === 'cat' ? 'See spa services ↓' : 'See packages ↓',
+      priceNote: cfg ? cfg.PRICE_NOTE : '',
+      hasPackages: items.some(i => i.group === 'package'),
+      packages: items.filter(i => i.group === 'package').map(i => {
+        const steps = cfg.PACKAGE_STEPS[i.id] || [];
+        return { id: i.id, name: i.name, price: inr(i.price_paise), best: i.id === 'full-package', sequence: steps.map(x => x.scene).join(','),
+          sceneLabel: `Illustration: ${p.name} going through ${steps.map(x => x.label.toLowerCase()).join(', then ')}`,
+          steps: steps.map((x, k) => ({ k, label: x.label, bg: red ? '#CDEFD9' : '#FFFBF2', dot: red ? '#09A460' : '#FFFBF2' })),
+          ...btn(i.id, `Add + · ${inr(i.price_paise)}`) };
+      }),
+      spa: items.filter(i => i.group === 'spa').map(i => ({ id: i.id, name: i.name, scene: i.scene, price: inr(i.price_paise), addLabel: inCart(i.id) ? `Remove ${i.name}` : `Add ${i.name}`, ...btn(i.id, 'Add +') })),
+      extras: items.filter(i => ['training', 'boarding', 'pickup'].includes(i.group)).map(i => ({
+        id: i.id, scene: i.scene, ...extrasMeta[i.group],
+        price: i.price_mode === 'fixed' ? `${inr(i.price_paise)} / month` : i.price_mode === 'on_request' ? 'On request' : 'Subject to availability',
+        bookable: i.price_mode === 'fixed', ask: i.price_mode !== 'fixed',
+        waHref: wa(extrasMeta[i.group].title.toLowerCase()), onAsk: () => this.siteMod && this.siteMod.track('whatsapp_ask', { service: i.id }),
+        ...btn(i.id, `Add + · ${inr(i.price_paise || 0)}`),
+      })),
+      stepCols: n ? '1fr' : 'repeat(4, minmax(0,1fr))', stepGap: n ? '32px' : '24px', stepDir: n ? 'row' : 'column', stepAlign: n ? 'center' : 'center', stepText: n ? 'left' : 'center', stepTextPad: '0',
+      lineL: n ? '31px' : '12.5%', lineR: n ? 'auto' : '12.5%', lineB: n ? '32px' : 'auto', lineW: n ? '2.5px' : 'auto', lineH: n ? 'auto' : '2.5px', lineOrigin: n ? 'top center' : 'left center',
+      howSteps: ['Pick', 'Choose a slot', 'We come home', `${p.name}'s spa-fresh`].map((label, k) => ({ n: k + 1, label, bg: ['#F2E7CB', '#F989EF', '#09A460', '#F65322'][k], fg: k >= 2 ? '#FFFBF2' : '#141210' })),
+      cartCount: s.cart.length, cartText: s.cart.length ? inr(total) : 'Cart',
+      cartLabel: s.cart.length ? `Open cart: ${s.cart.length} items, ${inr(total)}` : 'Open cart (empty)',
+      openCart: this.openDrawer, closeDrawer: this.closeDrawer,
+      drawerOpen: s.drawer,
+      drawerKey: e => { if (e.key === 'Escape') { e.preventDefault(); this.closeDrawer(); } },
+      pL: n ? '0' : 'auto', pT: n ? 'auto' : '0', pW: n ? 'auto' : 'min(460px,100vw)', pMaxH: n ? '88vh' : 'none', pR: n ? '28px 28px 0 0' : '28px 0 0 28px',
+      canBack: ix > 0 && s.step !== 'done', back: () => this.back(),
+      stepKicker: s.step === 'done' ? 'Booking' : `Step ${Math.min(ix + 1, 5)} of 5`, stepTitle: TITLES[s.step],
+      stepDots: [0, 1, 2, 3, 4].map(k => ({ bg: k <= ix ? '#09A460' : '#FFFBF2' })),
+      stCart: s.step === 'cart', stSlot: s.step === 'slot', stAddress: s.step === 'address', stVerify: s.step === 'verify', stReview: s.step === 'review', stDone: s.step === 'done',
+      cartEmpty: !s.cart.length, cartHasItems: s.cart.length > 0,
+      cartItems: cartItems.map(i => ({
+        id: i.id, name: i.name, price: inr(i.price_paise || 0), removeLabel: `Remove ${i.name}`,
+        remove: () => this.setState(st => ({ cart: st.cart.filter(x => x !== i.id) })),
+        down: e => { this.sw = { id: i.id, x: e.clientX, el: e.currentTarget }; },
+        move: e => { if (!this.sw || this.sw.id !== i.id) return; const dx = Math.min(0, e.clientX - this.sw.x); this.sw.el.style.transform = `translateX(${dx}px)`; this.sw.el.style.opacity = String(1 + dx / 240); },
+        up: e => { if (!this.sw || this.sw.id !== i.id) return; const dx = e.clientX - this.sw.x, el = this.sw.el; this.sw = null; if (dx < -90) { this.setState(st => ({ cart: st.cart.filter(x => x !== i.id) })); } el.style.transform = ''; el.style.opacity = ''; },
+      })),
+      dates: dates.map(d => ({ ...d, pressed: selDate === d.k && s.date ? 'true' : 'false', bg: s.date === d.k ? '#09A460' : '#F2E7CB', shadow: s.date === d.k ? '3px 3px 0 #141210' : 'none', pick: () => this.setState({ date: d.k, time: null }) })),
+      times: (cfg ? cfg.SLOT_TIMES : []).map(t => {
+        const [hh, mm] = t.split(':').map(Number), mins = hh * 60 + mm;
+        const off = (selDate === dates[0].k && mins < nowMin + 120) || hash(selDate + t) % 5 === 0;
+        const on = s.time === t && s.date === selDate;
+        const label = new Date(2000, 0, 1, hh, mm).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
+        return { label, disabled: off || !s.date, pressed: on ? 'true' : 'false', bg: off ? '#E4DDCB' : on ? '#09A460' : '#FFFBF2', fg: off ? 'rgba(20,18,16,.55)' : '#141210', border: off ? 'rgba(20,18,16,.35)' : '#141210', strike: off ? 'line-through' : 'none', cursor: off || !s.date ? 'not-allowed' : 'pointer', pick: () => this.setState({ time: t, date: selDate }) };
+      }),
+      savedAddrs: s.addrs.map(a => ({ text: addrText(a), pressed: s.addr === a ? 'true' : 'false', bg: s.addr === a ? '#CDEFD9' : '#F2E7CB', pick: () => this.setState({ addr: a }) })),
+      addrFormTitle: s.addrs.length ? 'Or add a new address' : 'Add your address',
+      af: {
+        ...s.af, err: s.afErr, pinInvalid: s.afErr && /pincode/i.test(s.afErr) ? 'true' : 'false',
+        on1: e => this.setState({ af: { ...s.af, line1: e.target.value }, afErr: null }),
+        onArea: e => this.setState({ af: { ...s.af, area: e.target.value }, afErr: null }),
+        onPin: e => this.setState({ af: { ...s.af, pin: e.target.value.replace(/\D/g, '').slice(0, 6) }, afErr: null }),
+        onLm: e => this.setState({ af: { ...s.af, landmark: e.target.value }, afErr: null }),
+      },
+      saveAddr: e => {
+        e.preventDefault();
+        const a = s.af;
+        if (!a.line1.trim() || !a.area.trim()) { this.setState({ afErr: 'Add your house/flat and area.' }); return; }
+        if (!/^\d{6}$/.test(a.pin)) { this.setState({ afErr: 'Enter a 6-digit pincode.' }); return; }
+        if (!pinOk(a.pin)) { this.setState({ afErr: 'We don’t come to this pincode yet. Ask us on WhatsApp.' }); return; }
+        const addr = { line1: a.line1.trim(), area: a.area.trim(), pin: a.pin, landmark: a.landmark.trim() };
+        const addrs = [...s.addrs, addr]; lsSet('dz.addresses', addrs);
+        this.setState({ addrs, addr, af: { line1: '', area: '', pin: '', landmark: '' } });
+      },
+      phone: s.phone, onPhone: e => this.setState({ phone: e.target.value.replace(/[^\d ]/g, ''), otpErr: null }),
+      otpSent: s.otpSent, devCode: s.devCode, otp: s.otp, otpErr: s.otpErr,
+      onOtp: e => this.setState({ otp: e.target.value.replace(/\D/g, '').slice(0, 6), otpErr: null }),
+      summary: [
+        { k: 'Pet', v: `${p.name} · ${p.breed}` },
+        { k: 'Services', v: cartItems.map(i => i.name).join(', ') },
+        { k: 'Slot (IST)', v: s.date && s.time ? `${(dates.find(d => d.k === s.date) || {}).wd || ''} ${(dates.find(d => d.k === s.date) || {}).day || ''} ${(dates.find(d => d.k === s.date) || {}).mon || ''}, ${new Date(2000, 0, 1, ...s.time.split(':').map(Number)).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })}` : '—' },
+        { k: 'Address', v: s.addr ? addrText(s.addr) : '—' },
+        { k: 'Phone', v: s.user ? s.user.phone : '—' },
+      ],
+      doneLine: `${poss} spa day is requested.`,
+      showTotal: s.step !== 'done' && s.step !== 'verify',
+      primaryLabel: primary.label, primaryDisabled: primary.dis, primaryOp: primary.dis ? 0.5 : 1, primaryBg: s.step === 'review' ? '#09A460' : '#F2E7CB',
+      primary: () => !primary.dis && primary.fn(),
+    };
+  }
+}
+</script>
+</body>
+</html>

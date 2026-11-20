@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ show }}" hint-placeholder-val="{{ false }}">
+  <section id="faq" ref="{{ secRef }}" style="max-width:860px;margin:0 auto;padding:clamp(56px,8vw,104px) 20px;display:flex;flex-direction:column;gap:clamp(24px,4vw,36px);scroll-margin-top:84px">
+    <div data-ri="" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;border:2px solid #141210;border-radius:999px;padding:3px 12px;background:#FFFBF2">FAQ</span>
+        <span style="font-family:Atma,system-ui;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;border:2px dashed #D9431A;color:#D9431A;border-radius:999px;padding:3px 12px">Draft answers — confirm before launch</span>
+      </div>
+      <h2 style="margin:0;font-family:'TAN Songbird',Atma,system-ui;font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:.02em;text-transform:uppercase">{{ heading }}</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+        <div data-ri="" style="background:#FFFBF2;border:2.5px solid #141210;border-radius:18px;box-shadow:{{ f.shadow }};transition:box-shadow 180ms cubic-bezier(.22,1,.36,1)">
+          <h3 style="margin:0">
+            <button type="button" id="{{ f.btnId }}" aria-expanded="{{ f.expanded }}" aria-controls="{{ f.panelId }}" onClick="{{ f.toggle }}" style="width:100%;min-height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px 12px 20px;background:transparent;border:0;border-radius:16px;cursor:pointer;text-align:left;font:600 17px/1.35 Poppins,system-ui;color:#141210" style-focus="outline:3px solid #F65322;outline-offset:2px">
+              <span>{{ f.q }}</span>
+              <span aria-hidden="true" style="flex:none;width:34px;height:34px;border-radius:999px;border:2px solid #141210;background:{{ f.iconBg }};display:flex;align-items:center;justify-content:center;font:500 24px/1 Poppins,system-ui;transform:rotate({{ f.rot }});transition:transform 450ms cubic-bezier(.22,1,.36,1),background 180ms">+</span>
+            </button>
+          </h3>
+          <div id="{{ f.panelId }}" role="region" aria-labelledby="{{ f.btnId }}" style="display:grid;grid-template-rows:{{ f.rows }};transition:grid-template-rows 450ms cubic-bezier(.22,1,.36,1)">
+            <div style="overflow:hidden">
+              <p style="margin:0;padding:0 20px 20px;font-size:16px;line-height:1.6;color:rgba(20,18,16,.85);max-width:62ch;text-wrap:pretty">{{ f.a }}</p>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:720},&quot;set&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;explore&quot;,&quot;freshFood&quot;,&quot;services&quot;,&quot;marketplace&quot;],&quot;default&quot;:&quot;explore&quot;,&quot;tsType&quot;:&quot;'explore' | 'freshFood'&quot;},&quot;heading&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Good questions&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;forceReducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const SETS = { explore: 'FAQS', freshFood: 'FRESH_FOOD_FAQS', services: 'SERVICES_FAQS', marketplace: 'MARKETPLACE_FAQS' };
+
+class Component extends DCLogic {
+  state = { list: null, open: -1 };
+  secRef = React.createRef();
+
+  reduced() { return !!this.props.forceReducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  componentDidMount() { this.load(); }
+  componentWillUnmount() { if (this.ld) this.ld.remove(); if (this.io) this.io.disconnect(); }
+  componentDidUpdate(pp) {
+    if (pp.set !== this.props.set) this.load();
+    const sec = this.secRef.current;
+    if (sec && !this.revealDone) { this.revealDone = true; this.setupReveal(sec); }
+  }
+
+  load() {
+    const key = SETS[this.props.set] || 'FAQS';
+    import(new URL('content/explore-content.js', document.baseURI).href).then(m => this.setState({ list: m[key] || [], open: -1 }, () => this.injectLd())).catch(() => this.setState({ list: [] }));
+  }
+
+  injectLd() {
+    if (this.ld) this.ld.remove();
+    const l = this.state.list; if (!l.length) return;
+    this.ld = document.createElement('script');
+    this.ld.type = 'application/ld+json';
+    this.ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: l.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+    document.head.appendChild(this.ld);
+  }
+
+  setupReveal(sec) {
+    if (this.reduced()) return;
+    const els = sec.querySelectorAll('[data-ri]');
+    els.forEach(el => { el.style.opacity = '0'; });
+    this.io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; this.io.disconnect();
+      els.forEach((el, i) => { el.style.opacity = ''; el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 550, delay: Math.min(i, 8) * 60, easing: EASE, fill: 'backwards' }); });
+    }, { threshold: 0.08 });
+    this.io.observe(sec);
+  }
+
+  renderVals() {
+    const l = this.state.list || [], s = this.state;
+    const pre = this.props.set || 'explore';
+    return {
+      secRef: this.secRef, show: l.length > 0,
+      heading: this.props.heading ?? 'Good questions',
+      faqs: l.map((f, i) => { const open = s.open === i; return { q: f.q, a: f.a, btnId: `faq-${pre}-b${i}`, panelId: `faq-${pre}-p${i}`, expanded: open ? 'true' : 'false', rows: open ? '1fr' : '0fr', rot: open ? '45deg' : '0deg', iconBg: open ? '#F989EF' : '#F2E7CB', shadow: open ? '4px 4px 0 #141210' : '2px 2px 0 #141210', toggle: () => this.setState({ open: open ? -1 : i }) }; }),
+    };
+  }
+}
+</script>
+</body>
+</html>

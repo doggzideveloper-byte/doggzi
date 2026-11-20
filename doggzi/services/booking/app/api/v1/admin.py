@@ -59,7 +59,7 @@ def create_slot(body: SlotCreate, _: AuthUser = Depends(require_admin), db: Sess
 
 @router.patch("/bookings/{booking_id}/status", response_model=BookingOut)
 def set_status(booking_id: uuid.UUID, body: StatusPatch, _: AuthUser = Depends(require_admin), db: Session = Depends(get_db)) -> BookingOut:
-    b = db.scalar(select(Booking).where(Booking.id == booking_id).with_for_update())
+    b = db.scalar(select(Booking).where(Booking.id == booking_id).with_for_update(of=Booking))
     if not b:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Booking not found")
     if body.status != b.status and body.status not in TRANSITIONS[b.status]:
