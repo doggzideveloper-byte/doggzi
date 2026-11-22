@@ -27,6 +27,15 @@ class Settings(BaseSettings):
     mock_availability: bool = True
     pet_profile_url: str = "http://pet-profile:8000"
     internal_token: str = ""
+    notification_url: str = "http://notification:8000"
+    # Console (provider panel)
+    session_redis_url: str = ""  # shared with auth: "log out of all devices"
+    offer_ttl_seconds: int = 90
+    dispatch_sweep_seconds: int = 15  # 0 = no background sweep (offers still expire lazily on read)
+    provider_share_pct: int = 60  # DRAFT: provider's share of the booking total
+    code_secret: str = ""  # HMAC key for start/end codes (falls back to AUTH_JWT_SECRET)
+    ops_whatsapp: str = ""  # OPS help line for "Need help" (digits, with country code)
+    seed_demo: bool = False
 
     @property
     def pincodes(self) -> set[str]:

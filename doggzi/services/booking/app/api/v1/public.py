@@ -1,17 +1,19 @@
 import logging
+import uuid
 from datetime import date, timedelta
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ...core import cache
+from ...core import cache, codes, dispatch
 from ...core.config import get_settings
 from ...core.pets import PetLookup, get_pet_lookup, require_own_pet
 from ...core.security import AuthUser, get_user
 from ...db import get_db
-from ...models import Booking, BookingItem, ServiceItem, Slot
+from ...models import Booking, BookingItem, Provider, ServiceItem, Slot
 from ...schemas.booking import BookingIn, BookingOut, CatalogOut, ItemOut, SlotOut
 from .logic import booking_out, ensure_slots, ist_today, item_outs, slot_available, slot_out
 
@@ -41,7 +43,7 @@ def slots(date_: date = Query(alias="date"), db: Session = Depends(get_db)) -> l
 
 @router.post("/bookings", response_model=BookingOut, status_code=status.HTTP_201_CREATED, summary="Request a booking (login required)")
 def create_booking(body: BookingIn, user: AuthUser = Depends(get_user), db: Session = Depends(get_db), pets: PetLookup = Depends(get_pet_lookup)) -> BookingOut:
-    require_own_pet(pets, body.pet_id, user.id)
+    pet = require_own_pet(pets, body.pet_id, user.id)
     slugs = list(dict.fromkeys(body.item_slugs))
     items = {i.slug: i for i in db.scalars(select(ServiceItem).where(ServiceItem.slug.in_(slugs), ServiceItem.is_active.is_(True)))}
     missing = [s for s in slugs if s not in items]
@@ -65,13 +67,16 @@ def create_booking(body: BookingIn, user: AuthUser = Depends(get_user), db: Sess
     total = sum(items[s].price_paise or 0 for s in slugs)  # never trust the client total
     if body.client_total_paise is not None and body.client_total_paise != total:
         log.warning("client total %s differs from server total %s", body.client_total_paise, total)
-    b = Booking(user_id=user.id, pet_id=body.pet_id, slot_id=slot.id, address_json=body.address.model_dump(), status="requested", total_paise=total, notes=body.notes)
+    b = Booking(user_id=user.id, pet_id=body.pet_id, slot_id=slot.id, address_json=body.address.model_dump(), status="requested", total_paise=total, notes=body.notes,
+                customer_phone=user.phone or None, pet_snapshot=pet, pay_after_service=True)
     db.add(b)
     db.flush()
     for s in slugs:
         db.add(BookingItem(booking_id=b.id, item_id=items[s].id, price_paise_at_booking=items[s].price_paise or 0))
-    db.commit()
+    db.flush()
     db.refresh(b)
+    dispatch.offer_next(db, b)  # first offer goes out right away; OPS queue if nobody fits
+    db.commit()
     return booking_out(b)
 
 
@@ -82,3 +87,20 @@ def my_bookings(user: AuthUser = Depends(get_user), db: Session = Depends(get_db
 
 
 
+
+
+class CodesOut(BaseModel):
+    start: str | None
+    end: str | None
+    provider_name: str | None
+
+
+@router.get("/bookings/{booking_id}/codes", response_model=CodesOut, summary="Start/end codes for the customer who owns the booking")
+def booking_codes(booking_id: uuid.UUID, user: AuthUser = Depends(get_user), db: Session = Depends(get_db)) -> CodesOut:
+    b = db.get(Booking, booking_id)
+    if not b or b.user_id != user.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Booking not found")
+    if not b.provider_id:
+        return CodesOut(start=None, end=None, provider_name=None)
+    p = db.get(Provider, b.provider_id)
+    return CodesOut(start=codes.code_for(b.id, "start"), end=codes.code_for(b.id, "end"), provider_name=p.name.split(" ")[0] if p else None)

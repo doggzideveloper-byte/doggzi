@@ -5,6 +5,9 @@ from datetime import datetime, timedelta, timezone
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("AUTH_JWT_SECRET", "test-auth-secret")
 os.environ["MOCK_AVAILABILITY"] = "false"
+os.environ["DISPATCH_SWEEP_SECONDS"] = "0"
+os.environ["NOTIFICATION_URL"] = ""
+os.environ["SESSION_REDIS_URL"] = ""
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402
@@ -29,8 +32,10 @@ class FakePets:
     def __init__(self):
         self.owners: dict = {}
 
-    def owner_of(self, pet_id):
-        return self.owners.get(pet_id, "missing")
+    def get(self, pet_id):
+        if pet_id not in self.owners:
+            return None
+        return {"owner_user_id": self.owners[pet_id], "name": "Bruno", "type": "dog", "breed": "Labrador Retriever"}
 
     def own(self, user_id, pet_id=None):
         pid = pet_id or uuid.uuid4()
@@ -39,6 +44,7 @@ class FakePets:
 
 
 PETS = FakePets()
+SESSION: dict = {}  # the current test's sessionmaker (for tests that set up rows directly)
 
 
 @pytest.fixture()
@@ -63,6 +69,7 @@ def client():
         finally:
             db.close()
 
+    SESSION["S"] = S
     app.dependency_overrides[get_db] = _db
     app.dependency_overrides[get_pet_lookup] = lambda: PETS
     PETS.owners.clear()
@@ -80,3 +87,9 @@ def token(role: str = "USER", user_id: uuid.UUID | None = None) -> str:
 
 def auth(t: str) -> dict:
     return {"Authorization": f"Bearer {t}"}
+
+
+def console_token(user_id: uuid.UUID, roles=("PROVIDER",), tv: int = 0) -> str:
+    now = datetime.now(timezone.utc)
+    return jwt.encode({"typ": "console", "sub": str(user_id), "user_id": str(user_id), "phone": "+919000000001", "name": "Test", "roles": list(roles), "tv": tv,
+                       "iat": now, "exp": now + timedelta(hours=12)}, "test-auth-secret", algorithm="HS256")

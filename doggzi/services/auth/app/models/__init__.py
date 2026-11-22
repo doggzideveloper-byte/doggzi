@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, String, Uuid
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ..core.time import utcnow
@@ -18,6 +18,21 @@ class User(TimestampMixin, Base):
     __tablename__ = "users"
     phone: Mapped[str] = mapped_column(String(16), unique=True, nullable=False)
     role: Mapped[str] = mapped_column(String(16), nullable=False, default="USER")
+    name: Mapped[str | None] = mapped_column(String(80))
+    # Bumped by "Log out of all devices": console tokens carrying an older version stop working.
+    token_version: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+
+CONSOLE_ROLES = ("ADMIN", "OPS", "PROVIDER", "VENDOR")
+
+
+class Membership(TimestampMixin, Base):
+    """A console role held by a user (a user can hold several, e.g. PROVIDER + VENDOR)."""
+
+    __tablename__ = "memberships"
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    role: Mapped[str] = mapped_column(String(16), nullable=False)
+    __table_args__ = (Index("uq_memberships_user_role", "user_id", "role", unique=True),)
 
 
 class OtpCode(TimestampMixin, Base):

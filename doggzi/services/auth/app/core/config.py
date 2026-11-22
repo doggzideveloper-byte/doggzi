@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     internal_token: str = ""
     # Comma-separated phone numbers that get the ADMIN role on first login.
     admin_phones: str = ""
+    # Console (Admin / Vendor / Provider panels): 12-hour sessions.
+    console_token_ttl_minutes: int = 12 * 60
+    # Shared Redis where "log out of all devices" publishes each user's token version (read by every service).
+    session_redis_url: str = ""
+    # Local/demo only: create the five demo console logins on start.
+    seed_demo: bool = False
 
 
 @lru_cache
