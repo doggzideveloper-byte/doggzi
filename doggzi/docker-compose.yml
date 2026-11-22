@@ -84,6 +84,13 @@ services:
       REDIS_URL: redis://redis:6379/3
       AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
       PAYMENTS_MODE: ${PAYMENTS_MODE:-mock}
+      SESSION_REDIS_URL: redis://redis:6379/5
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN}
+      AUTH_URL: http://auth:8000
+      NOTIFICATION_URL: http://notification:8000
+      CODE_SECRET: ${CODE_SECRET:-}
+      OPS_WHATSAPP: ${OPS_WHATSAPP:-}
+      SEED_DEMO: ${SEED_DEMO:-false}
     depends_on: { postgres: { condition: service_healthy } }
 
   web:

@@ -5,6 +5,8 @@ from datetime import datetime, timedelta, timezone
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("AUTH_JWT_SECRET", "test-auth-secret")
 os.environ.setdefault("PAYMENTS_MODE", "mock")
+os.environ["NOTIFICATION_URL"] = ""
+os.environ["SESSION_REDIS_URL"] = ""
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402
@@ -63,3 +65,9 @@ def token(user_id: uuid.UUID | None = None) -> str:
 
 def auth(t: str) -> dict:
     return {"Authorization": f"Bearer {t}"}
+
+
+def console_token(user_id: uuid.UUID, roles=("VENDOR",)) -> str:
+    now = datetime.now(timezone.utc)
+    return jwt.encode({"typ": "console", "sub": str(user_id), "user_id": str(user_id), "phone": "+919000000002", "name": "Test", "roles": list(roles), "tv": 0,
+                       "iat": now, "exp": now + timedelta(hours=12)}, "test-auth-secret", algorithm="HS256")

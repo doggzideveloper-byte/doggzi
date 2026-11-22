@@ -47,7 +47,7 @@ def get_cart(x_cart_id: uuid.UUID = Header(..., alias="X-Cart-Id"), db: Session 
 @router.post("/items", response_model=CartOut, summary="Set a line's quantity (0 removes it)")
 def set_item(body: CartItemIn, x_cart_id: uuid.UUID = Header(..., alias="X-Cart-Id"), db: Session = Depends(get_db)) -> CartOut:
     listing = db.get(Listing, body.listing_id)
-    if not listing or not listing.is_active:
+    if not listing or not listing.is_active or not listing.vendor.is_active or listing.vendor.holiday_mode:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Product not found")
     cart = _cart(db, x_cart_id, create=True)
     line = next((i for i in cart.items if i.listing_id == listing.id), None)

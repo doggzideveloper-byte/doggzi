@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
+from ...core import notify
 from ...core.config import get_settings
 from ...core.security import AuthUser, get_user
 from ...core.time import utcnow
@@ -25,7 +26,7 @@ def create_order(body: OrderIn, user: AuthUser = Depends(get_user), db: Session 
         qty[line.listing_id] += line.qty
     # Lock the listing rows so two checkouts can't reserve the same last units.
     listings = {x.id: x for x in db.scalars(select(Listing).where(Listing.id.in_(list(qty))).with_for_update(of=Listing))}
-    missing = [str(i) for i in qty if i not in listings or not listings[i].is_active or not listings[i].vendor.is_active]
+    missing = [str(i) for i in qty if i not in listings or not listings[i].is_active or not listings[i].vendor.is_active or listings[i].vendor.holiday_mode]
     if missing:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Some items are no longer sold")
     for lid, q in qty.items():
@@ -48,7 +49,8 @@ def create_order(body: OrderIn, user: AuthUser = Depends(get_user), db: Session 
     fees = {vid: next(x.vendor.delivery_fee_paise for x in listings.values() if x.vendor_id == vid) for vid in by_vendor}
     total = sum(by_vendor.values()) + sum(fees.values())  # never trust client_total_paise
 
-    order = Order(user_id=user.id, address_json=body.address.model_dump(), total_paise=total, status="pending_payment", payment_mode=s.payments_mode, lines_json=lines)
+    order = Order(user_id=user.id, address_json=body.address.model_dump(), total_paise=total, status="pending_payment", payment_mode=s.payments_mode, lines_json=lines,
+                  customer_phone=user.phone or None, pet_snapshot=body.pet.model_dump() if body.pet else None)
     db.add(order)
     db.flush()
     exp = utcnow() + timedelta(minutes=s.reservation_minutes)
@@ -117,7 +119,11 @@ def finalize_paid(db: Session, o: Order) -> None:
             db.add(SubOrderItem(sub_order_id=so.id, listing_id=lid, qty=line["qty"], price_paise_at_order=line["price_paise"]))
     db.execute(delete(StockReservation).where(StockReservation.order_id == o.id))
     o.status = "paid"
-    # TODO(payments): notify each vendor (WhatsApp + Vendor panel) and create a Razorpay Route transfer per sub-order, on hold.
+    # Each store hears about its sub-order (WhatsApp + the Vendor panel rings on its next poll).
+    for vid in groups:
+        v = next(x.vendor for x in listings.values() if x.vendor_id == vid)
+        notify.send("whatsapp", v.phone, "vendor_new_order", {"store": v.name})
+    # TODO(payments): create a Razorpay Route transfer per sub-order, on hold until delivered.
 
 
 @router.get("/me", response_model=list[OrderOut])

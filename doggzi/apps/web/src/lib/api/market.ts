@@ -26,7 +26,7 @@ export const market = {
   browse: (query: string) => api<MBrowse>(S, `/browse?${query}`),
   cart: (cartId: string) => api<MCart>(S, "/cart", { headers: cartHdr(cartId) }),
   setItem: (cartId: string, listing_id: string, qty: number) => api<MCart>(S, "/cart/items", { body: { listing_id, qty }, headers: cartHdr(cartId) }),
-  createOrder: (token: string, body: { address: MAddress; lines: { listing_id: string; qty: number }[]; client_total_paise?: number }) =>
+  createOrder: (token: string, body: { address: MAddress; lines: { listing_id: string; qty: number }[]; client_total_paise?: number; pet?: { name: string; type: PetType; breed?: string | null } }) =>
     api<{ order: MOrder; payment: { mode: "mock" | "razorpay"; amount_paise: number; currency: string; razorpay_order_id: string | null } }>(S, "/orders", { body, token }),
   payMock: (token: string, orderId: string, cartId: string) => api<MOrder>(S, `/orders/${orderId}/pay/mock`, { method: "POST", token, headers: cartHdr(cartId) }),
   order: (token: string, id: string) => api<MOrder>(S, `/orders/${id}`, { token }),

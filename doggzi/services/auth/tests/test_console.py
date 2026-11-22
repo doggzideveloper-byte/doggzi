@@ -81,3 +81,18 @@ def test_wrong_console_code_counts_down(team):
     c.post(f"{API}/console/otp/request", json={"phone": "9000000001"})
     r = c.post(f"{API}/console/otp/verify", json={"phone": "9000000001", "code": "000000" if sender.sent[-1][1] != "000000" else "111111"})
     assert r.status_code == 400 and "4 tries left" in r.json()["detail"]
+
+
+def test_internal_grant_creates_a_vendor_login(team, monkeypatch):
+    c, sender, _ = team
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "internal_token", "t0k")
+    body = {"phone": "9811100011", "role": "VENDOR", "name": "Rohit"}
+    assert c.post(f"{API}/internal/memberships", json=body).status_code == 403
+    r = c.post(f"{API}/internal/memberships", json=body, headers={"X-Internal-Token": "t0k"})
+    assert r.status_code == 200 and r.json()["created_user"] is True
+    again = c.post(f"{API}/internal/memberships", json=body, headers={"X-Internal-Token": "t0k"}).json()
+    assert again["user_id"] == r.json()["user_id"] and again["created_user"] is False
+    assert _login(c, sender, "9811100011").json()["user"]["roles"] == ["VENDOR"]
+    assert c.post(f"{API}/internal/memberships", json={**body, "role": "GOD"}, headers={"X-Internal-Token": "t0k"}).status_code == 422

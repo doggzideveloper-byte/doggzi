@@ -111,8 +111,17 @@ class OrderLineIn(BaseModel):
     qty: int = Field(ge=1, le=10)
 
 
+class PetIn(BaseModel):
+    """Shown on the store's order card ("for Bruno"); display only."""
+
+    name: str = Field(min_length=1, max_length=40)
+    type: PetType
+    breed: str | None = Field(default=None, max_length=60)
+
+
 class OrderIn(BaseModel):
     address: AddressIn
+    pet: PetIn | None = None
     lines: list[OrderLineIn] = Field(min_length=1, max_length=50)
     client_total_paise: int | None = None  # ignored for pricing
 

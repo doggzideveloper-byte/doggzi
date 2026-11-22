@@ -29,7 +29,7 @@ def catalog(
     hit = cache.get(key)
     if hit is not None:
         return CatalogOut(**hit)
-    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True))
+    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True), Vendor.holiday_mode.is_(False))
     if category:
         stmt = stmt.where(Product.category == category)
     if q.strip():
@@ -75,7 +75,7 @@ def browse(
     hit = cache.get(key)
     if hit is not None:
         return BrowseOut(**hit)
-    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True))
+    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True), Vendor.holiday_mode.is_(False))
     listings = [r for r in db.scalars(stmt) if set(r.product.pet_types or []) & {"dog", "cat"}]
     res = reserved_qty(db, [r.id for r in listings])
     outs = [listing_out(r, res.get(r.id, 0)) for r in listings]

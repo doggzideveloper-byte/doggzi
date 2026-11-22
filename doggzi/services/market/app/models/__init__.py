@@ -38,6 +38,34 @@ class Vendor(TimestampMixin, Base):
     commission_bps: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     is_doggzi: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    # Vendor panel
+    holiday_mode: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)  # hides all listings
+    hours_text: Mapped[str | None] = mapped_column(String(80))
+    photos: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # [{name, size, status}] (upload stubbed)
+    low_stock_threshold: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
+
+
+class VendorMember(TimestampMixin, Base):
+    """Who may use a store's Vendor panel. The store is always resolved from the signed-in user on the server."""
+
+    __tablename__ = "vendor_members"
+    vendor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("vendors.id"), nullable=False, index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(Uuid, nullable=False, unique=True)  # one store per login
+    phone: Mapped[str | None] = mapped_column(String(16))
+    name: Mapped[str | None] = mapped_column(String(80))
+    role: Mapped[str] = mapped_column(String(8), nullable=False, default="staff")  # owner|staff
+
+
+class ProductRequest(TimestampMixin, Base):
+    """A vendor asks Doggzi to add a product to the catalog (Admin approves)."""
+
+    __tablename__ = "product_requests"
+    vendor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("vendors.id"), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    brand: Mapped[str | None] = mapped_column(String(80))
+    category: Mapped[str | None] = mapped_column(String(16))
+    price_paise: Mapped[int | None] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(10), nullable=False, default="pending")  # pending|approved|rejected
 
 
 class Product(TimestampMixin, Base):
@@ -65,6 +93,8 @@ class Listing(TimestampMixin, Base):
     stock_qty: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     photo_url: Mapped[str | None] = mapped_column(String(500))  # Doggzi-approved vendor photo only
+    photo_status: Mapped[str] = mapped_column(String(10), nullable=False, default="none")  # none|pending|approved|rejected
+    photo_meta: Mapped[dict | None] = mapped_column(Json)  # pending upload {name, size, at}
     vendor: Mapped[Vendor] = relationship(lazy="joined")
     product: Mapped[Product] = relationship(lazy="joined")
     __table_args__ = (Index("uq_listings_vendor_sku", "vendor_id", "sku", unique=True),)
@@ -96,6 +126,8 @@ class Order(TimestampMixin, Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending_payment")  # pending_payment|paid|cancelled|expired
     payment_mode: Mapped[str] = mapped_column(String(16), nullable=False, default="mock")
     razorpay_order_id: Mapped[str | None] = mapped_column(String(64))
+    customer_phone: Mapped[str | None] = mapped_column(String(16))
+    pet_snapshot: Mapped[dict | None] = mapped_column(Json)  # {name, type, breed} shown on the vendor's card
     lines_json: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # priced snapshot until payment
     sub_orders: Mapped[list["SubOrder"]] = relationship(lazy="selectin", order_by="SubOrder.created_at")
 
@@ -107,8 +139,18 @@ class SubOrder(TimestampMixin, Base):
     subtotal_paise: Mapped[int] = mapped_column(Integer, nullable=False)
     delivery_fee_paise: Mapped[int] = mapped_column(Integer, nullable=False)
     commission_paise: Mapped[int] = mapped_column(Integer, nullable=False)
-    status: Mapped[str] = mapped_column(String(20), nullable=False, default="placed")
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="placed")  # placed|accepted|packed|out_for_delivery|delivered|rejected|missed|cancelled
     sla_due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    reject_reason: Mapped[str | None] = mapped_column(String(40))
+    pack_checks: Mapped[list | None] = mapped_column(Json)  # [bool] per item
+    delivery_code_attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    packed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    out_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    payout_status: Mapped[str] = mapped_column(String(10), nullable=False, default="on_hold")  # on_hold|released|settled
+    settled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    order: Mapped["Order"] = relationship(lazy="select", viewonly=True)
     vendor: Mapped[Vendor] = relationship(lazy="joined")
     items: Mapped[list["SubOrderItem"]] = relationship(lazy="selectin")
 

@@ -197,7 +197,7 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
     }
     try {
       const token = sessionStore.get()!.token;
-      const created = await market.createOrder(token, { address: addr!, lines: lines.map((l) => ({ listing_id: l.listing_id, qty: l.qty })), client_total_paise: total });
+      const created = await market.createOrder(token, { address: addr!, lines: lines.map((l) => ({ listing_id: l.listing_id, qty: l.qty })), client_total_paise: total, pet: { name: pet.name, type: pet.type, breed: pet.breed || null } });
       // Mock mode: confirm the payment ourselves. With Razorpay keys this becomes Checkout + webhook.
       const paid = created.payment.mode === "mock" ? await market.payMock(token, created.order.id, cartId()) : created.order;
       track("market_order_paid", { stores: paid.sub_orders.length, order_id: paid.id });
