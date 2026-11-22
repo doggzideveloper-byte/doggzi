@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { Loading, Skeleton } from "@/design-system/components";
 import { css } from "@/design-system/motion";
 import { PRICE_NOTE, SERVICEABLE_PINCODES } from "@/content/services";
 import { track } from "@/lib/analytics";
@@ -313,7 +314,7 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
                 ))}
               </div>
               {!date && <p className={s.hint} style={{ margin: 0 }}>Pick a date to see times.</p>}
-              {date && slots.isLoading && <p className={s.hint} style={{ margin: 0 }}>Checking availability…</p>}
+              {date && slots.isLoading && <Loading label="Checking availability…" className={s.times}>{Array.from({ length: 8 }, (_, k) => <Skeleton key={k} h="3rem" r="var(--r-pill)" />)}</Loading>}
               {date && slots.isError && <p role="alert" className={s.err}>Couldn't load times. <button type="button" onClick={() => slots.refetch()} style={{ font: "inherit", textDecoration: "underline", background: "none", border: 0, cursor: "pointer", color: "inherit" }}>Try again</button></p>}
               {slots.data && (
                 <div role="group" aria-label="Time" className={s.times}>

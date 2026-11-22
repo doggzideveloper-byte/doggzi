@@ -98,7 +98,7 @@ export function InsideApp({ onOpen }: { onOpen: (i: number) => void }) {
           {APP_SCREENS.map((c, i) => (
             <figure key={c.src} style={{ margin: 0, display: "flex", flexDirection: "column", gap: "0.625rem" }}>
               <button type="button" className={s.gridShot} onClick={() => onOpen(i)} aria-label={`Enlarge screen ${i + 1}: ${c.title}`}>
-                <img src={c.src} alt={`Doggzi app: ${c.title}`} loading="lazy" />
+                <img src={c.src} alt={`Doggzi app: ${c.title}`} loading="lazy" width={300} height={649} decoding="async" />
               </button>
               <figcaption style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                 <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.0625rem", letterSpacing: ".04em", textTransform: "uppercase" }}>{i + 1}. {c.title}</span>
@@ -126,7 +126,7 @@ export function InsideApp({ onOpen }: { onOpen: (i: number) => void }) {
                   return (
                     <button key={c.src} type="button" tabIndex={-1} className={s.cover} aria-label={`Go to screen ${i + 1}: ${c.title}`} onClick={() => (d === 0 ? onOpen(i) : go(i))}
                       style={{ transform: t, opacity: d === 0 ? 1 : ad === 1 ? 0.6 : 0, zIndex: 3 - Math.min(ad, 2), pointerEvents: ad <= 1 ? "auto" : "none" }}>
-                      <img src={c.src} alt={`Doggzi app: ${c.title}`} />
+                      <img src={c.src} alt={`Doggzi app: ${c.title}`} loading="lazy" width={300} height={649} decoding="async" />
                     </button>
                   );
                 })}
@@ -167,7 +167,7 @@ export function AppWall({ onOpen }: { onOpen: (i: number) => void }) {
       return (
         <button key={k} type="button" className={s.wallShot} style={{ boxShadow: `5px 5px 0 ${shadow}` }} tabIndex={dup ? -1 : 0} aria-hidden={dup || undefined}
           aria-label={dup ? undefined : `Enlarge screen ${i + 1}: ${sc.title}`} onClick={() => onOpen(i)}>
-          <img src={sc.src} alt="" loading="lazy" />
+          <img src={sc.src} alt="" loading="lazy" width={300} height={649} decoding="async" />
         </button>
       );
     });
@@ -232,7 +232,7 @@ export function Lightbox({ index, onNav, onClose }: { index: number; onNav: (d: 
       <div style={{ display: "flex", alignItems: "center", gap: "clamp(0.5rem,3vw,2rem)" }}>
         <button type="button" className={s.lbBtn} onClick={() => nav(-1)} aria-label="Previous screen">←</button>
         <figure style={{ margin: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.875rem" }}>
-          <img ref={img} src={sc.src} alt={`Doggzi app: ${sc.title}`} draggable={false} className={s.lbImg} />
+          <img ref={img} src={sc.src} alt={`Doggzi app: ${sc.title}`} width={300} height={649} decoding="async" draggable={false} className={s.lbImg} />
           <figcaption className={s.lbCap}>{index + 1} / 6 · {sc.title}</figcaption>
         </figure>
         <button type="button" className={s.lbBtn} onClick={() => nav(1)} aria-label="Next screen">→</button>

@@ -87,11 +87,11 @@ function PhoneFan({ artRef, visible }: { artRef: React.RefObject<HTMLDivElement>
   }, [artRef]);
   return (
     <div aria-hidden="true" className={s.fanAnchor}>
-      <div data-fan="-1" className={s.phone}><img src="/brand/app/screen-1.webp" alt="" /></div>
-      <div data-fan="1" className={s.phone}><img src="/brand/app/screen-4.webp" alt="" /></div>
+      <div data-fan="-1" className={s.phone}><img src="/brand/app/screen-1.webp" alt="" width={300} height={649} decoding="async" /></div>
+      <div data-fan="1" className={s.phone}><img src="/brand/app/screen-4.webp" alt="" width={300} height={649} decoding="async" /></div>
       <div data-fan="0" className={s.phone} style={{ zIndex: 1 }}>
         {HERO_SCREENS.map((src, i) => (
-          <img key={src} src={src} alt="" className={s.slide}
+          <img key={src} src={src} alt="" className={s.slide} width={300} height={649} decoding="async" fetchPriority={i === 0 ? "high" : "low"}
             style={{ transform: i === idx ? "translateX(0)" : i === prev ? "translateX(-100%)" : "translateX(100%)", transition: i === idx || i === prev ? `transform 600ms ${css.easeOut}` : "none" }} />
         ))}
       </div>

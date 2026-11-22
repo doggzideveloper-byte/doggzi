@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, LazyMotion, m } from "motion/react";
 import { PetSprite, ToastProvider } from "@/design-system/components";
 import { page } from "@/design-system/motion";
 import { useReduced } from "@/lib/reducedMotion";
@@ -17,13 +17,16 @@ const NotFound = lazy(() => import("./NotFound"));
 const OrderPage = lazy(() => import("@/features/marketplace/OrderPage"));
 const AppRedirect = lazy(() => import("./AppRedirect"));
 
+/** Animation features load in their own chunk (keeps ~100 KB gzip of motion out of the first paint). */
+const motionFeatures = () => import("./motionFeatures").then((x) => x.default);
+
 /** Signature move 6: old page fades out lifting 12px, new page slides up on a soft spring. */
 function Page({ children }: { children: React.ReactNode }) {
   const reduced = useReduced();
   return reduced ? (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 0.15 } }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>{children}</motion.div>
+    <m.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 0.15 } }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>{children}</m.div>
   ) : (
-    <motion.div variants={page} initial="initial" animate="animate" exit="exit">{children}</motion.div>
+    <m.div variants={page} initial="initial" animate="animate" exit="exit">{children}</m.div>
   );
 }
 
@@ -47,6 +50,7 @@ export function App() {
       <PetSprite />
       <ScrollManager />
       <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
+        <LazyMotion features={motionFeatures} strict>
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={loc} key={loc.pathname}>
             <Route path="/" element={<Page><PassportPage /></Page>} />
@@ -60,6 +64,7 @@ export function App() {
             <Route path="*" element={<Page><NotFound /></Page>} />
           </Routes>
         </AnimatePresence>
+        </LazyMotion>
       </Suspense>
       {tweaksEnabled() && <Tweaks />}
     </ToastProvider>

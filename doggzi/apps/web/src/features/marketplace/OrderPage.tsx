@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Badge, ButtonLink, Header, PassportChip, SiteFooter } from "@/design-system/components";
+import { Badge, ButtonLink, Header, Loading, PassportChip, Skeleton, SiteFooter } from "@/design-system/components";
 import { ApiError } from "@/lib/api/client";
 import { market } from "@/lib/api/market";
 import { inrPaise, istDate } from "@/lib/format";
@@ -23,7 +23,9 @@ export default function OrderPage() {
         {!session || session.token === "demo" ? (
           <p>Log in at checkout to track orders. <Link to="/marketplace">Back to the shop</Link></p>
         ) : q.isLoading ? (
-          <p role="status">Finding your order…</p>
+          <Loading label="Finding your order…" style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+            <Skeleton w="60%" h="2.75rem" /><Skeleton w="80%" /><Skeleton h="9rem" r="var(--r-lg)" /><Skeleton h="9rem" r="var(--r-lg)" />
+          </Loading>
         ) : q.isError ? (
           <p role="alert">{q.error instanceof ApiError && q.error.status === 404 ? "We couldn't find that order on your account." : "We couldn't load this order. Try again in a moment."}</p>
         ) : o ? (

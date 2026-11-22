@@ -1,3 +1,4 @@
+@import "./fonts.css";
 @import "./tokens.css";
 
 html, body { margin: 0; background: var(--dz-cream); color: var(--dz-ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }

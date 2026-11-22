@@ -144,7 +144,7 @@ export default function ExplorePage() {
                     <iframe src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&playsinline=1&rel=0`} title={v.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                   ) : (
                     <button type="button" className={s.play} aria-label={`Play video: ${v.title}`} onClick={() => setPlaying((p) => ({ ...p, [v.id]: true }))}>
-                      <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" />
+                      <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" width={480} height={360} />
                       <span aria-hidden="true" className={s.playBtn}>
                         <svg viewBox="0 0 24 24" style={{ width: "1.875rem", height: "1.875rem", marginLeft: "0.25rem" }}><path d="M7 4.5v15l12-7.5z" fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round" /></svg>
                       </span>

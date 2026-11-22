@@ -12,7 +12,8 @@
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./components/petArt": "./src/components/petArt.ts",
-    "./components": "./src/components/index.ts"
+    "./components": "./src/components/index.ts",
+    "./fonts.css": "./src/fonts.css"
   },
   "peerDependencies": {
     "react": "^18.3.1",

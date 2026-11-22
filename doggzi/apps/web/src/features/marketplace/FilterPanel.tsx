@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { Skeleton } from "@/design-system/components";
 import { css, ms } from "@/design-system/motion";
 import type { Category } from "@/content/marketplace";
 import type { MBrowse } from "@/lib/api/market";
@@ -33,7 +34,13 @@ export function FilterPanel({ f, set, facets }: { f: Filters; set: (p: Partial<F
   const name = useId();
   const [bq, setBq] = useState("");
   const [allBrands, setAllBrands] = useState(false);
-  if (!facets) return <div className={s.fpanel} aria-busy="true" />;
+  if (!facets) return (
+    <div className={s.fpanel} aria-busy="true">
+      {[6, 4, 6].map((n, k) => (
+        <div key={k} className={s.fsec}><Skeleton w="45%" h="0.875rem" style={{ marginBottom: "0.75rem" }} />{Array.from({ length: n }, (_, i) => <Skeleton key={i} w={`${60 + ((i * 17) % 30)}%`} h="0.875rem" style={{ margin: "0.5rem 0" }} />)}</div>
+      ))}
+    </div>
+  );
   const toggle = (arr: string[], k: string) => (arr.includes(k) ? arr.filter((x) => x !== k) : [...arr, k]);
   const bqn = bq.trim().toLowerCase();
   const brands = facets.brand.filter((b) => !bqn || b.label.toLowerCase().includes(bqn));

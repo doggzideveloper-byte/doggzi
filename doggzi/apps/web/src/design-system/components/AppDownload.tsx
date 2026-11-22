@@ -1,5 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import qrcode from "qrcode-generator";
+import { useEffect, useId, useRef, useState } from "react";
 import { SITE } from "@/content/site-config";
 import { track } from "@/lib/analytics";
 import { useDevice } from "@/lib/device";
@@ -8,16 +7,23 @@ import s from "./AppDownload.module.css";
 
 export const appRedirectUrl = () => new URL(SITE.appRedirectPath, window.location.origin).href;
 
+/** The QR encoder is only needed on desktop, so it loads in its own chunk when a QR is first drawn. */
 function Qr({ url }: { url: string }) {
-  const d = useMemo(() => {
-    const qr = qrcode(0, "M");
-    qr.addData(url);
-    qr.make();
-    const n = qr.getModuleCount();
-    let path = "";
-    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) path += `M${c + 2} ${r + 2}h1v1h-1z`;
-    return { n, path };
+  const [d, setD] = useState<{ n: number; path: string } | null>(null);
+  useEffect(() => {
+    let live = true;
+    import("qrcode-generator").then(({ default: qrcode }) => {
+      const qr = qrcode(0, "M");
+      qr.addData(url);
+      qr.make();
+      const n = qr.getModuleCount();
+      let path = "";
+      for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) path += `M${c + 2} ${r + 2}h1v1h-1z`;
+      if (live) setD({ n, path });
+    });
+    return () => { live = false; };
   }, [url]);
+  if (!d) return <span style={{ display: "block", width: "100%", height: "100%" }} aria-hidden="true" />;
   return (
     <svg viewBox={`0 0 ${d.n + 4} ${d.n + 4}`} width="100%" height="100%" shapeRendering="crispEdges" style={{ display: "block" }}>
       <path d={d.path} fill="var(--dz-ink)" />
@@ -54,16 +60,16 @@ export function AppDownload({ layout = "compact", align = "start", source = "fre
     <div className={s.root} style={{ alignItems: align === "center" ? "center" : "flex-start" }}>
       {mobile ? (
         <a className={s.badgeLink} href={dev === "iOS" ? SITE.appStoreUrl : SITE.playStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => t(dev === "iOS" ? "app_store" : "play_store")} aria-label={dev === "iOS" ? "Download Doggzi on the App Store" : "Get Doggzi on Google Play"}>
-          <img src={dev === "iOS" ? SITE.appStoreBadge : SITE.playStoreBadge} alt="" style={{ height: "3.25rem" }} />
+          <img src={dev === "iOS" ? SITE.appStoreBadge : SITE.playStoreBadge} alt="" width={dev === "iOS" ? 135 : 180} height={dev === "iOS" ? 40 : 53} loading="lazy" style={{ height: "3.25rem", width: "auto" }} />
         </a>
       ) : (
         <div className={s.desk}>
           <div className={s.badges} style={{ flexDirection: layout === "badge" ? "row" : "column" }}>
             <a className={s.badgeLink} href={SITE.appStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => t("app_store")}>
-              <img src={SITE.appStoreBadge} alt="Download on the App Store" style={{ height: "3rem" }} />
+              <img src={SITE.appStoreBadge} alt="Download on the App Store" width={135} height={40} loading="lazy" style={{ height: "3rem", width: "auto" }} />
             </a>
             <a className={s.badgeLink} href={SITE.playStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => t("play_store")}>
-              <img src={SITE.playStoreBadge} alt="Get it on Google Play" style={{ height: "3rem" }} />
+              <img src={SITE.playStoreBadge} alt="Get it on Google Play" width={180} height={53} loading="lazy" style={{ height: "3rem", width: "auto" }} />
             </a>
           </div>
           {layout !== "badge" && redirect && (

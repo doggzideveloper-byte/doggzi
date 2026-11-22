@@ -25,7 +25,7 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header({ right,
     <header className={s.header} style={bg ? ({ ["--hdr-bg" as string]: bg } as React.CSSProperties) : undefined}>
       <div className={s.inner}>
         <Link to="/" aria-label="Doggzi home" className={s.logo} onMouseEnter={wobble} onFocus={wobble} onClick={onLogoClick}>
-          <img src="/brand/logo/doggzi-mark.svg" alt="" />
+          <img src="/brand/logo/doggzi-mark.svg" alt="" width={64} height={64} />
         </Link>
         <div ref={slotRef} className={s.right}>
           {right}

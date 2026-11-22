@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { Navigate } from "react-router-dom";
-import { Badge, ButtonA, FAQ, Header, PassportChip, SiteFooter, Sweep, Testimonials, useSectionReveals } from "@/design-system/components";
+import { Badge, ButtonA, FAQ, Header, Loading, SkeletonCard, PassportChip, SiteFooter, Sweep, Testimonials, useSectionReveals } from "@/design-system/components";
 import { css, ms } from "@/design-system/motion";
 import { PACKAGE_STEPS, PRICE_NOTE } from "@/content/services";
 import { waLink } from "@/content/site-config";
@@ -146,7 +146,11 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {loading && <p className={s.wrap} style={{ padding: "3rem 1.25rem", fontWeight: 600 }} role="status">Fetching {possessive(pet.name)} services…</p>}
+        {loading && (
+          <Loading label={`Fetching ${possessive(pet.name)} services…`} className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(3.5rem,8vw,6.5rem)" }}>
+            <div className={s.pkgGrid}>{[0, 1, 2].map((k) => <SkeletonCard key={k} tile="4 / 3" />)}</div>
+          </Loading>
+        )}
         {error && (
           <p className={s.wrap} style={{ padding: "3rem 1.25rem" }} role="alert">
             We couldn't load services right now. <button type="button" onClick={() => refetch()} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button>

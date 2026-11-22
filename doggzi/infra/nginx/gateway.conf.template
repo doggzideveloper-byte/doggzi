@@ -20,6 +20,14 @@ server {
     set $web         http://${WEB_UPSTREAM};
     client_max_body_size 1m;
 
+    # Compress API JSON and anything upstream sent uncompressed (the web container gzips its own assets).
+    gzip on;
+    gzip_comp_level 6;
+    gzip_min_length 1024;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_types text/plain text/css text/javascript application/javascript application/json image/svg+xml;
+
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $remote_addr;

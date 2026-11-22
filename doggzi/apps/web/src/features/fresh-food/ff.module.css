@@ -111,7 +111,7 @@
 .orbitPill { display: block; white-space: nowrap; font-family: var(--font-accent); font-weight: 700; font-size: clamp(0.75rem, 1.3vw, 0.9375rem); letter-spacing: .08em; text-transform: uppercase; padding: 0.3125rem 0.75rem; border: var(--stroke); border-radius: var(--r-pill); box-shadow: 3px 3px 0 var(--dz-ink); }
 .grid6 { padding-top: 1.5rem; padding-bottom: clamp(3.5rem, 8vw, 6.5rem); display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 1.5rem; }
 .gridShot { padding: 0; border: var(--stroke); border-radius: 1.375rem; background: var(--screen-bg); overflow: hidden; box-shadow: var(--shadow-sticker); cursor: zoom-in; display: block; width: 100%; }
-.gridShot img { width: 100%; aspect-ratio: 300 / 650; object-fit: cover; display: block; }
+.gridShot img { width: 100%; height: auto; aspect-ratio: 300 / 650; object-fit: cover; display: block; }
 
 /* App wall */
 .wall { background: var(--dz-ink); color: var(--dz-cream); overflow: hidden; border-bottom: var(--stroke); }
@@ -127,7 +127,7 @@
 .lb { position: fixed; inset: 0; z-index: 70; background: rgba(20, 18, 16, .94); display: flex; align-items: center; justify-content: center; padding: 1.25rem; touch-action: pan-y; }
 .lbBtn { flex: none; width: 3.25rem; height: 3.25rem; border-radius: var(--r-pill); background: var(--dz-paper); border: var(--stroke); box-shadow: 3px 3px 0 var(--dz-orange); font: 600 1.375rem/1 var(--font-body); color: var(--dz-ink); cursor: pointer; }
 .lbBtn:focus-visible { outline: 3px solid var(--dz-pink); outline-offset: 3px; }
-.lbImg { height: min(76vh, 40.625rem); max-width: 62vw; aspect-ratio: 300 / 650; object-fit: cover; display: block; background: var(--screen-bg); border: 2.5px solid var(--dz-cream); border-radius: var(--r-lg); }
+.lbImg { height: min(76vh, 40.625rem); width: auto; max-width: 62vw; aspect-ratio: 300 / 650; object-fit: cover; display: block; background: var(--screen-bg); border: 2.5px solid var(--dz-cream); border-radius: var(--r-lg); }
 .lbCap { font-family: var(--font-accent); font-weight: 700; font-size: 1rem; letter-spacing: .1em; text-transform: uppercase; color: var(--dz-cream); text-align: center; }
 
 /* Route */

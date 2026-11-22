@@ -1,7 +1,7 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
-import { Badge, FAQ, Header, PassportChip, SiteFooter, Sweep, Testimonials, useSectionReveals } from "@/design-system/components";
+import { Badge, FAQ, Header, Loading, Skeleton, SkeletonCard, PassportChip, SiteFooter, Sweep, Testimonials, useSectionReveals } from "@/design-system/components";
 import { css, ms } from "@/design-system/motion";
 import { CATEGORIES, DELIVERY_COMPARE, PICK_RULES } from "@/content/marketplace";
 import { track } from "@/lib/analytics";
@@ -225,9 +225,15 @@ export default function MarketplacePage() {
           </div>
         </nav>
 
-        {loading && <p className={s.wrap} role="status" style={{ padding: "2.5rem 1.25rem", fontWeight: 600 }}>Stocking the shelves…</p>}
         {error && <p className={s.wrap} role="alert" style={{ padding: "2.5rem 1.25rem" }}>We couldn't load the shop. <button type="button" onClick={refetch} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button></p>}
 
+        {loading && (
+          <Loading label="Picking favourites…" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(2.5rem,6vw,4.5rem)" }}>
+            <h2 className={s.h2}>Picked for <Sweep>{pet.name}</Sweep></h2>
+            <Skeleton w="min(22rem, 70%)" h="0.9375rem" />
+            <div className={s.picked}>{Array.from({ length: 6 }, (_, k) => <div key={k}><SkeletonCard /></div>)}</div>
+          </Loading>
+        )}
         {picked.length > 0 && (
           <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(2.5rem,6vw,4.5rem)" }}>
             <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
@@ -262,7 +268,13 @@ export default function MarketplacePage() {
                 </div>
               )}
               {f.pet === "cat" && <p className={s.soon}><Badge size="sm" style={{ fontSize: "0.8125rem" }}>Coming soon</Badge>More for cats coming soon.</p>}
-              <div className={`${s.grid} ${shop.isPlaceholderData ? s.gridBusy : ""}`} aria-busy={shop.isFetching || undefined}>{list.map(card)}</div>
+              {view ? (
+                <div className={`${s.grid} ${shop.isPlaceholderData ? s.gridBusy : ""}`} aria-busy={shop.isFetching || undefined}>{list.map(card)}</div>
+              ) : shop.isError && !offline ? (
+                <p role="alert" style={{ margin: 0, padding: "1rem 0" }}>We couldn't load these products. <button type="button" onClick={() => shop.refetch()} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button></p>
+              ) : !error && (
+                <Loading label="Stocking the shelves…" className={s.grid}>{Array.from({ length: 8 }, (_, k) => <SkeletonCard key={k} />)}</Loading>
+              )}
               {!loading && view && !list.length && (
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem", padding: "2rem 1rem", textAlign: "center" }}>
                   <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>Nothing matches that yet.</p>
