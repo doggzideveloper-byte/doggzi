@@ -24,6 +24,7 @@
   --dz-disabled: #E4DDCB;    /* full slots, disabled chips */
   --dz-kibble: #CBC4B6;      /* the dull "kibble" side of comparisons */
   --screen-bg: #FFFFFF;      /* behind app screenshots */
+  --dz-alert: #D93A2B;       /* problem / overdue (console status chips, errors) */
 
   /* Section colours */
   --section-food: var(--dz-orange);

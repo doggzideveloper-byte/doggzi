@@ -41,6 +41,7 @@ class ProfileOut(BaseModel):
     areas: list[str]
     docs: list[dict]
     help_whatsapp: str | None
+    demo: bool = False
 
 
 class ProfilePatch(BaseModel):
@@ -174,8 +175,15 @@ def _services(b: Booking) -> list[ServiceOut]:
     return [ServiceOut(name=bi.item.name, scene=bi.item.scene_key) for bi in b.items]
 
 
+def _next_job_id(db: Session, provider_id) -> uuid.UUID | None:
+    """The provider's current job: the earliest one not yet done."""
+    rows = [b for b in db.scalars(select(Booking).where(Booking.provider_id == provider_id, Booking.job_step.is_not(None), Booking.job_step != "done")).unique().all()]
+    return min(rows, key=lambda b: _aware(b.slot.starts_at)).id if rows else None
+
+
 def _job(b: Booking, db: Session) -> JobOut:
-    visible = b.job_step in ACTIVE
+    # Customer's number: only for the job that is under way, or the provider's next job once accepted.
+    visible = b.job_step in ACTIVE and (b.job_step != "accepted" or _next_job_id(db, b.provider_id) == b.id)
     locked = {k: bool(r.locked_at) for k, r in ((c.kind, c) for c in db.scalars(select(BookingCode).where(BookingCode.booking_id == b.id)))}
     return JobOut(
         id=b.id, ref="BK-" + str(b.id)[:4].upper(), step=b.job_step or "accepted", slot_start=_aware(b.slot.starts_at), slot_end=_aware(b.slot.ends_at),
@@ -218,7 +226,7 @@ def _profile(p: Provider) -> ProfileOut:
 
     return ProfileOut(id=p.id, name=p.name, rating=round(p.rating, 1), jobs_done=p.jobs_done, is_online=p.is_online, skills=list(p.skills or []),
                       skill_options=[{"key": k, "label": label} for k, label in dispatch.SKILLS], areas=list(p.areas or []), docs=list(p.docs or []),
-                      help_whatsapp=get_settings().ops_whatsapp or None)
+                      help_whatsapp=get_settings().ops_whatsapp or None, demo=get_settings().seed_demo)
 
 
 @router.get("/me", response_model=ProfileOut)

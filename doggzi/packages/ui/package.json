@@ -10,6 +10,7 @@
     "./console.css": "./src/console.css",
     "./motion": "./src/motion.ts",
     "./lib/*": "./src/lib/*.ts",
+    "./components/sceneLib": "./src/components/sceneLib.ts",
     "./components/*": "./src/components/*.tsx",
     "./components/petArt": "./src/components/petArt.ts",
     "./components": "./src/components/index.ts",

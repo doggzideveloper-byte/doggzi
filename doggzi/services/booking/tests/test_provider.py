@@ -235,3 +235,15 @@ def test_demo_seed_runs_twice_without_duplicates(client, monkeypatch):
     jobs = client.get(f"{P}/jobs", params={"date": today}, headers=h).json()
     assert [j["step"] for j in jobs] == ["done", "accepted", "accepted"]
     assert client.get(f"{P}/earnings", headers=h).json()["payouts"][0]["status"] == "pending"
+
+
+def test_customer_number_only_for_the_job_under_way_or_next(client):
+    _, h = _provider()
+    early, _ = _book(client, slot_i=0)
+    _accept(client, h)
+    late, _ = _book(client, slot_i=3)
+    _accept(client, h)
+    d = (datetime.now(IST).date() + timedelta(days=1)).isoformat()
+    jobs = {j["id"]: j for j in client.get(f"{P}/jobs", params={"date": d}, headers=h).json()}
+    assert jobs[early]["phone_visible"] and jobs[early]["customer_phone"] == "+919876543210" and jobs[early]["address"]["line1"] == "Flat 12B"
+    assert not jobs[late]["phone_visible"] and jobs[late]["customer_phone"] == "98xxxxxx10" and jobs[late]["address"] is None

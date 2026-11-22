@@ -1,0 +1,35 @@
+.page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; background: var(--dz-cream); }
+.card { width: 100%; max-width: 26.25rem; display: flex; flex-direction: column; gap: 1.25rem; padding: 1.75rem 1.5rem 1.5rem; background: var(--dz-paper); border: var(--wm-line); border-radius: 1.5rem; box-shadow: var(--wm-shadow); }
+.brand { display: flex; align-items: center; gap: 0.875rem; }
+.mark { flex: none; width: 3.5rem; height: 3.5rem; border-radius: var(--r-pill); background: var(--dz-paper) url("/brand/logo/doggzi-mark.svg") center / contain no-repeat; border: var(--wm-line); box-shadow: var(--wm-shadow); }
+.title { margin: 0; font-family: var(--font-accent); font-weight: 700; font-size: 1.625rem; letter-spacing: .04em; text-transform: uppercase; line-height: 1; }
+.sub { font-size: 0.8125rem; color: var(--wm-muted); }
+.banner { margin: 0; padding: 0.625rem 0.75rem; font-size: 0.875rem; font-weight: 600; background: var(--wm-alert-bg); border: 1.5px solid var(--dz-alert); border-radius: 0.75rem; }
+.col { display: flex; flex-direction: column; gap: 0.875rem; }
+.label { font-weight: 600; font-size: 0.9375rem; }
+.phoneBox { display: flex; align-items: center; height: 3.25rem; border: var(--wm-line); border-radius: 0.75rem; background: var(--dz-paper); overflow: hidden; }
+.phoneBox:focus-within { box-shadow: 2px 2px 0 var(--dz-orange); }
+.cc { padding: 0 0.375rem 0 0.875rem; font-weight: 600; font-size: 1rem; }
+.phoneBox input { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; font: 500 1.0625rem var(--font-body); color: var(--dz-ink); outline: none; padding-right: 0.875rem; letter-spacing: .04em; }
+.err { margin: 0; font-size: 0.875rem; font-weight: 500; color: var(--dz-alert); }
+.primary { height: 3.25rem; font: 600 1rem var(--font-body); color: var(--dz-paper); background: var(--dz-ink); border: var(--wm-line); border-radius: var(--r-pill); box-shadow: 2px 2px 0 var(--dz-orange); cursor: pointer; transition: transform 150ms ease-out, box-shadow 150ms ease-out; }
+.primary:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--dz-orange); }
+.primary:disabled { opacity: .5; cursor: default; }
+.primary:focus-visible, .secondary:focus-visible, .panelBtn:focus-visible { outline: 3px solid var(--dz-orange); outline-offset: 3px; }
+.secondary { height: 3rem; font: 600 0.9375rem var(--font-body); color: var(--dz-ink); background: var(--dz-paper); border: var(--wm-line); border-radius: var(--r-pill); cursor: pointer; }
+.link { padding: 0; border: 0; background: none; font: 600 0.875rem var(--font-body); color: var(--dz-ink); text-decoration: underline; text-decoration-color: var(--dz-orange); cursor: pointer; }
+.demo { margin: 0; padding: 0.5rem 0.75rem; border: 1.5px dashed var(--dz-ink); border-radius: 0.625rem; font-size: 0.8125rem; background: var(--dz-cream); }
+.demo strong { font-family: var(--font-accent); font-size: 1rem; letter-spacing: .24em; }
+.boxes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.5rem; }
+.boxes input { width: 100%; height: 3.5rem; text-align: center; font: 700 1.5rem var(--font-accent); color: var(--dz-ink); background: var(--dz-paper); border: var(--wm-line); border-radius: 0.75rem; outline: none; }
+.boxes input:focus { box-shadow: 2px 2px 0 var(--dz-orange); border-color: var(--dz-ink); }
+.boxes input[aria-invalid="true"] { border-color: var(--dz-alert); }
+.boxes input:disabled { background: var(--dz-disabled); }
+.resend { display: flex; justify-content: center; min-height: 2.75rem; align-items: center; font-size: 0.875rem; color: var(--wm-muted); font-variant-numeric: tabular-nums; }
+.panelBtn { display: flex; align-items: center; gap: 0.75rem; min-height: 3.75rem; padding: 0.625rem 0.875rem; text-align: left; background: var(--dz-paper); border: var(--wm-line); border-radius: 0.875rem; box-shadow: var(--wm-shadow); cursor: pointer; font: 600 1rem var(--font-body); color: var(--dz-ink); transition: transform 150ms ease-out; }
+.panelBtn:hover { transform: translateY(-1px); }
+.dot { width: 0.875rem; height: 0.875rem; border-radius: var(--r-pill); border: var(--wm-line); }
+.foot { margin: 0; font-size: 0.75rem; line-height: 1.5; color: rgba(20, 18, 16, .7); }
+/* Login uses the orange focus of the Console-Login design (the panels use green). */
+.page :is(button, input, a):focus-visible { outline: 3px solid var(--dz-orange); outline-offset: 3px; }
+.boxes input:focus-visible, .phoneBox input:focus-visible { outline: none; }

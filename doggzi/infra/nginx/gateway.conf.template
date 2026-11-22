@@ -18,6 +18,7 @@ server {
     set $auth        http://${AUTH_UPSTREAM};
     set $market      http://${MARKET_UPSTREAM};
     set $web         http://${WEB_UPSTREAM};
+    set $console     http://${CONSOLE_UPSTREAM};
     client_max_body_size 1m;
 
     # Compress API JSON and anything upstream sent uncompressed (the web container gzips its own assets).
@@ -50,6 +51,9 @@ server {
         if ($dz_app_store = android) { return 302 https://play.google.com/store/apps/details?id=com.doggzi.doggzi&hl=en_IN&referrer=utm_source%3Dweb%26utm_medium%3Dqr; }
         return 302 /fresh-food#download;
     }
+
+    # Doggzi Console (Admin / Vendor / Provider panels)
+    location /console { proxy_pass $console; }
 
     location / { proxy_pass $web; }
 }

@@ -1,0 +1,22 @@
+/* Doggzi Console "work mode": same brand, calmer (PANELS_00_SHARED.md).
+   1.5px outlines, 2px shadows, micro-motion only (150-250ms). Loaded after global.css by apps/console only. */
+:root {
+  --root-scale: 100%;          /* the console is laid out at 100% (no website desktop scaling) */
+  --wm-line: 1.5px solid var(--dz-ink);
+  --wm-shadow: 2px 2px 0 var(--dz-ink);
+  --wm-alert-bg: #FBE3DF;
+  --wm-green-bg: #E2F4EA;
+  --wm-muted: rgba(20, 18, 16, 0.72);
+  --wm-dur: 200ms;
+}
+body { background: var(--dz-cream); }
+.wm-chip { display: inline-block; font-family: var(--font-accent); font-weight: 700; font-size: 0.6875rem; letter-spacing: .12em; text-transform: uppercase; padding: 0.0625rem 0.5rem; border-radius: var(--r-pill); border: var(--wm-line); white-space: nowrap; }
+.wm-chip[data-kind="new"] { background: var(--dz-orange); color: var(--dz-ink); }
+.wm-chip[data-kind="acc"] { background: var(--dz-paper); color: var(--dz-green-700); border-color: var(--dz-green); }
+.wm-chip[data-kind="prog"] { background: var(--dz-green); color: var(--dz-ink); }
+.wm-chip[data-kind="done"] { background: var(--dz-ink); color: var(--dz-paper); }
+.wm-chip[data-kind="alert"] { background: var(--dz-alert); color: var(--dz-paper); }
+.wm-h1 { margin: 0; font-family: var(--font-accent); font-weight: 700; font-size: 1.375rem; letter-spacing: .06em; text-transform: uppercase; }
+.wm-card { background: var(--dz-paper); border: var(--wm-line); border-radius: 1rem; }
+.wm-focus:focus-visible, .wm-root button:focus-visible, .wm-root a:focus-visible, .wm-root input:focus-visible, .wm-root select:focus-visible { outline: 3px solid var(--dz-green); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .wm-root * { transition: none !important; } }

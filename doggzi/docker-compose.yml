@@ -93,6 +93,12 @@ services:
       dockerfile: apps/web/Dockerfile
     environment: {}
 
+  console:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/console/Dockerfile
+
   gateway:
     image: nginx:1.27-alpine
     restart: unless-stopped
@@ -103,10 +109,11 @@ services:
       AUTH_UPSTREAM: auth:8000
       MARKET_UPSTREAM: market:8000
       WEB_UPSTREAM: web:80
+      CONSOLE_UPSTREAM: console:80
       DNS_RESOLVER: 127.0.0.11
     volumes:
       - ./infra/nginx/gateway.conf.template:/etc/nginx/templates/default.conf.template:ro
-    depends_on: [web, pet-profile, booking, auth, market]
+    depends_on: [web, console, pet-profile, booking, auth, market]
 
 volumes:
   pgdata:
