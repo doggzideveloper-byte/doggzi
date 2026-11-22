@@ -3,7 +3,7 @@ from datetime import datetime
 
 from datetime import date
 
-from sqlalchemy import JSON, Boolean, Date, DateTime, Float, ForeignKey, Index, Integer, String, Uuid
+from sqlalchemy import JSON, Boolean, CheckConstraint, Date, DateTime, Float, ForeignKey, Index, Integer, String, Uuid
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -48,6 +48,11 @@ class Slot(TimestampMixin, Base):
     ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     booked_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    # Mirrors migration 0001 so tests built from the models enforce the same rules as the real database.
+    __table_args__ = (CheckConstraint("booked_count >= 0 and booked_count <= capacity", name="ck_slots_capacity"),)
+
+
+BOOKING_STATUSES = ("requested", "confirmed", "completed", "cancelled")
 
 
 class Booking(TimestampMixin, Base):
@@ -74,6 +79,7 @@ class Booking(TimestampMixin, Base):
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     slot: Mapped[Slot] = relationship(lazy="joined")
     items: Mapped[list["BookingItem"]] = relationship(lazy="selectin", back_populates="booking")
+    __table_args__ = (CheckConstraint("status in (" + ", ".join(repr(v) for v in BOOKING_STATUSES) + ")", name="ck_bookings_status"),)
 
 
 class BookingItem(TimestampMixin, Base):

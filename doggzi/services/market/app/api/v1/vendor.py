@@ -15,7 +15,10 @@ import httpx
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.responses import Response
 from pydantic import BaseModel, Field, field_validator, model_validator
-from sqlalchemy import or_, select
+import logging
+
+from sqlalchemy import or_, select, update
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from ...core import cache, notify
@@ -27,6 +30,7 @@ from ...models import Listing, Order, Product, ProductRequest, SubOrder, Vendor,
 from .logic import aware
 
 router = APIRouter(prefix="/vendor", tags=["vendor panel"])
+log = logging.getLogger("market.vendor")
 IST = ZoneInfo("Asia/Kolkata")
 CATEGORIES = ("treats", "toys", "grooming", "walking", "health")
 ACTIVE = ("accepted", "packed", "out_for_delivery")
@@ -114,16 +118,35 @@ def _out(so: SubOrder) -> SubOrderOut:
     )
 
 
-def sweep_missed(db: Session, vendor_id: uuid.UUID | None = None) -> None:
-    """New sub-orders not accepted in time go to OPS (status missed)."""
-    q = select(SubOrder).where(SubOrder.status == "placed", SubOrder.sla_due_at <= utcnow())
+def sweep_missed(db: Session, vendor_id: uuid.UUID | None = None) -> int:
+    """New sub-orders not accepted in time go to OPS (status missed).
+
+    Each row is updated in its own savepoint: a row the database refuses is logged and skipped, so one bad
+    row can never turn the Vendor panel's order list into a 500."""
+    q = select(SubOrder.id).where(SubOrder.status == "placed", SubOrder.sla_due_at <= utcnow())
     if vendor_id:
         q = q.where(SubOrder.vendor_id == vendor_id)
-    rows = db.scalars(q).all()
-    for so in rows:
-        so.status = "missed"
-    if rows:
-        db.commit()
+    try:
+        ids = db.scalars(q).all()
+    except SQLAlchemyError:
+        log.exception("missed-order sweep: couldn't list expired sub-orders")
+        db.rollback()
+        return 0
+    done = 0
+    for sid in ids:
+        try:
+            with db.begin_nested():
+                db.execute(update(SubOrder).where(SubOrder.id == sid, SubOrder.status == "placed").values(status="missed", updated_at=utcnow()))
+            done += 1
+        except SQLAlchemyError:
+            log.exception("missed-order sweep: skipped sub-order %s", sid)
+    if ids:
+        try:
+            db.commit()
+        except SQLAlchemyError:
+            log.exception("missed-order sweep: commit failed")
+            db.rollback()
+    return done
 
 
 @router.get("/sub-orders", response_model=list[SubOrderOut], summary="My store's open sub-orders (New / Packing / Ready / Out), or by status")

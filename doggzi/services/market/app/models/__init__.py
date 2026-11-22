@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, String, Text, Uuid
+from sqlalchemy import CheckConstraint, JSON, Boolean, DateTime, ForeignKey, Index, Integer, String, Text, Uuid
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -118,6 +118,15 @@ class CartItem(TimestampMixin, Base):
     __table_args__ = (Index("uq_cart_items", "cart_id", "listing_id", unique=True),)
 
 
+# Every status the code may write. The DB CHECK constraints (migration 0004) and the model constraints use these.
+ORDER_STATUSES = ("pending_payment", "paid", "cancelled", "expired")
+SUB_ORDER_STATUSES = ("placed", "accepted", "rejected", "packed", "out_for_delivery", "delivered", "cancelled", "missed")
+
+
+def _in(col: str, values: tuple[str, ...]) -> str:
+    return f"{col} in ({', '.join(repr(v) for v in values)})"
+
+
 class Order(TimestampMixin, Base):
     __tablename__ = "orders"
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid, index=True, nullable=False)
@@ -130,6 +139,7 @@ class Order(TimestampMixin, Base):
     pet_snapshot: Mapped[dict | None] = mapped_column(Json)  # {name, type, breed} shown on the vendor's card
     lines_json: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # priced snapshot until payment
     sub_orders: Mapped[list["SubOrder"]] = relationship(lazy="selectin", order_by="SubOrder.created_at")
+    __table_args__ = (CheckConstraint(_in("status", ORDER_STATUSES), name="ck_orders_status"),)
 
 
 class SubOrder(TimestampMixin, Base):
@@ -153,6 +163,7 @@ class SubOrder(TimestampMixin, Base):
     order: Mapped["Order"] = relationship(lazy="select", viewonly=True)
     vendor: Mapped[Vendor] = relationship(lazy="joined")
     items: Mapped[list["SubOrderItem"]] = relationship(lazy="selectin")
+    __table_args__ = (CheckConstraint(_in("status", SUB_ORDER_STATUSES), name="ck_sub_orders_status"),)
 
 
 class SubOrderItem(TimestampMixin, Base):

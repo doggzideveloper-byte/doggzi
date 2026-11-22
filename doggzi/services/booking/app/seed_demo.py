@@ -39,7 +39,9 @@ def _slot(db: Session, d: date, hh: int, mm: int) -> Slot:
         s = Slot(starts_at=st, ends_at=st + timedelta(minutes=get_settings().slot_minutes), capacity=4, booked_count=0)
         db.add(s)
         db.flush()
+    # Demo bookings must never break ck_slots_capacity (a demo slot grows instead of overfilling).
     s.booked_count += 1
+    s.capacity = max(s.capacity, s.booked_count)
     return s
 
 
