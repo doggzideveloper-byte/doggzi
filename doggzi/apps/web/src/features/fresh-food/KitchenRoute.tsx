@@ -60,7 +60,7 @@ export function KitchenRoute() {
   }, []);
 
   return (
-    <section ref={sec} id="kitchen-to-door" data-reveal="" className={`${s.wrap} ${s.sec} ${s.route}`} style={{ gap: "clamp(20px,3vw,32px)" }}>
+    <section ref={sec} id="kitchen-to-door" data-reveal="" className={`${s.wrap} ${s.sec} ${s.route}`} style={{ gap: "clamp(1.25rem,3vw,2rem)" }}>
       <div data-ri="" className={s.head}>
         <Badge>Kitchen to door</Badge>
         <h2 className="dz-h2">Track every bowl, live</h2>

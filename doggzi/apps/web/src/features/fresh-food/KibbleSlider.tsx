@@ -61,11 +61,11 @@ export const KibbleSlider = forwardRef<SliderHandle, { narrow: boolean }>(functi
       <div className={`${s.slider} ${s.reducedCols} ${cls}`}>
         <div className={`${s.kib} ${s.layer}`}>
           <div className={s.sideHead} style={{ color: "var(--ink-75)", gridTemplateColumns: "1fr" }}>Kibble</div>
-          {ROWS.map((r) => <div key={r.label} className={s.cell} style={{ padding: "10px 0", borderTop: "2px dashed rgba(20,18,16,.25)", color: "rgba(20,18,16,.8)" }}><span aria-hidden="true" className={s.mark} style={{ border: "2px solid rgba(20,18,16,.7)" }}>✗</span><span><strong>{r.label}:</strong> {r.kibble}</span></div>)}
+          {ROWS.map((r) => <div key={r.label} className={s.cell} style={{ padding: "0.625rem 0", borderTop: "2px dashed rgba(20,18,16,.25)", color: "rgba(20,18,16,.8)" }}><span aria-hidden="true" className={s.mark} style={{ border: "2px solid rgba(20,18,16,.7)" }}>✗</span><span><strong>{r.label}:</strong> {r.kibble}</span></div>)}
         </div>
         <div className={s.layer} style={{ background: "var(--dz-paper)" }}>
           <div className={s.sideHead} style={{ color: "var(--dz-green-700)", gridTemplateColumns: "1fr" }}>Doggzi</div>
-          {ROWS.map((r) => <div key={r.label} className={s.cell} style={{ padding: "10px 0", borderTop: "2px dashed rgba(9,164,96,.4)", fontWeight: 600 }}><span aria-hidden="true" className={s.mark} style={{ border: "2px solid var(--dz-ink)", background: "var(--dz-green)", color: "var(--dz-paper)" }}>✓</span><span><strong>{r.label}:</strong> {r.doggzi}</span></div>)}
+          {ROWS.map((r) => <div key={r.label} className={s.cell} style={{ padding: "0.625rem 0", borderTop: "2px dashed rgba(9,164,96,.4)", fontWeight: 600 }}><span aria-hidden="true" className={s.mark} style={{ border: "2px solid var(--dz-ink)", background: "var(--dz-green)", color: "var(--dz-paper)" }}>✓</span><span><strong>{r.label}:</strong> {r.doggzi}</span></div>)}
         </div>
       </div>
     );
@@ -104,7 +104,7 @@ export const KibbleSlider = forwardRef<SliderHandle, { narrow: boolean }>(functi
       <div aria-hidden="true" className={s.divider} style={{ left: `${split}%` }} />
       <div role="slider" tabIndex={0} aria-label="Compare kibble and Doggzi fresh food" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(split)} aria-valuetext={`${Math.round(split)}% kibble shown`}
         onKeyDown={onKey} className={s.handle} style={{ left: `${split}%` }}>
-        <svg viewBox="0 0 32 16" aria-hidden="true" style={{ width: 28, height: 14 }}><path d="M10 2 3 8l7 6M22 2l7 6-7 6" fill="none" stroke="var(--dz-ink)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <svg viewBox="0 0 32 16" aria-hidden="true" style={{ width: "1.75rem", height: "0.875rem" }}><path d="M10 2 3 8l7 6M22 2l7 6-7 6" fill="none" stroke="var(--dz-ink)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </div>
     </div>
   );

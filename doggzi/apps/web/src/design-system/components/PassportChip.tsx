@@ -51,7 +51,7 @@ export function PassportChip({ pet, pop = true }: { pet: Passport; pop?: boolean
           <span className={s.name}>{pet.name}</span>
           <span className={s.breed}>{pet.breed}</span>
         </span>
-        <svg viewBox="0 0 12 8" aria-hidden="true" style={{ width: 12, height: 8, flex: "none" }}>
+        <svg viewBox="0 0 12 8" aria-hidden="true" style={{ width: "0.75rem", height: "0.5rem", flex: "none" }}>
           <path d="M1.5 1.5 6 6l4.5-4.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>

@@ -270,11 +270,11 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
         }}>
         <div className={s.pHead}>
           {ix > 0 && step !== "done" && <button type="button" className={s.round} onClick={back} aria-label="Back">←</button>}
-          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-            <span className={s.kicker} style={{ fontSize: 12 }}>{step === "done" ? "Booking" : `Step ${Math.min(ix + 1, 5)} of 5`}</span>
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
+            <span className={s.kicker} style={{ fontSize: "0.75rem" }}>{step === "done" ? "Booking" : `Step ${Math.min(ix + 1, 5)} of 5`}</span>
             <h2 id="bk-title" className={s.pTitle}>{TITLES[step]}</h2>
           </div>
-          <button type="button" data-close="" className={s.round} style={{ fontSize: 24, fontWeight: 500 }} onClick={close} aria-label="Close booking">×</button>
+          <button type="button" data-close="" className={s.round} style={{ fontSize: "1.5rem", fontWeight: 500 }} onClick={close} aria-label="Close booking">×</button>
         </div>
         <div className={s.progress} aria-hidden="true">{[0, 1, 2, 3, 4].map((k) => <span key={k} data-on={k <= ix} />)}</div>
 
@@ -283,16 +283,16 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
           {step === "cart" && (
             <>
               {!items.length && (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, padding: "32px 8px", textAlign: "center" }}>
-                  <p style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>Nothing in the cart yet.</p>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.875rem", padding: "2rem 0.5rem", textAlign: "center" }}>
+                  <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>Nothing in the cart yet.</p>
                   <a href="#spa" onClick={close} style={{ fontWeight: 600 }}>Browse spa services</a>
                 </div>
               )}
-              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
+              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                 {items.map((i) => (
                   <li key={i.slug} className={s.cartItem} onPointerDown={onDown(i.slug)} onPointerMove={onMove(i.slug)} onPointerUp={onUp(i.slug)} onPointerCancel={onUp(i.slug)}>
-                    <span style={{ flex: 1, minWidth: 0, fontWeight: 600, fontSize: 15, lineHeight: 1.35 }}>{i.name}</span>
-                    <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 18, whiteSpace: "nowrap" }}>{inrPaise(i.price_paise || 0)}</span>
+                    <span style={{ flex: 1, minWidth: 0, fontWeight: 600, fontSize: "0.9375rem", lineHeight: 1.35 }}>{i.name}</span>
+                    <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.125rem", whiteSpace: "nowrap" }}>{inrPaise(i.price_paise || 0)}</span>
                     <button type="button" className={s.x} onClick={() => onRemove(i.slug)} aria-label={`Remove ${i.name}`}>×</button>
                   </li>
                 ))}
@@ -302,13 +302,13 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
           )}
 
           {step === "slot" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.125rem" }}>
               <div role="group" aria-label="Date" className={s.dates}>
                 {dates.map((d) => (
                   <button key={d.k} type="button" className={s.date} aria-pressed={date === d.k} onClick={() => { setDate(d.k); setSlot(null); }}>
-                    <span style={{ fontSize: 12, fontWeight: 500, textTransform: "uppercase" }}>{d.wd}</span>
-                    <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 24, lineHeight: 1 }}>{d.day}</span>
-                    <span style={{ fontSize: 12, fontWeight: 500 }}>{d.mon}</span>
+                    <span style={{ fontSize: "0.75rem", fontWeight: 500, textTransform: "uppercase" }}>{d.wd}</span>
+                    <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.5rem", lineHeight: 1 }}>{d.day}</span>
+                    <span style={{ fontSize: "0.75rem", fontWeight: 500 }}>{d.mon}</span>
                   </button>
                 ))}
               </div>
@@ -328,7 +328,7 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
           )}
 
           {step === "address" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
               {addrs.map((a, i) => (
                 <button key={i} type="button" className={s.addr} aria-pressed={addr === a} onClick={() => setAddr(a)}>{addrText(a)}</button>
               ))}
@@ -336,26 +336,26 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
                 <span style={{ fontWeight: 600 }}>{addrs.length ? "Or add a new address" : "Add your address"}</span>
                 <label className={s.fl}>House / flat<input className={s.in} value={af.line1} autoComplete="address-line1" onChange={(e) => { setAf({ ...af, line1: e.target.value }); setAfErr(null); }} /></label>
                 <label className={s.fl}>Area / sector<input className={s.in} value={af.area} autoComplete="address-line2" onChange={(e) => { setAf({ ...af, area: e.target.value }); setAfErr(null); }} /></label>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.625rem" }}>
                   <label className={s.fl}>Pincode<input className={s.in} value={af.pin} inputMode="numeric" maxLength={6} autoComplete="postal-code" aria-invalid={!!afErr && /pincode/i.test(afErr)} onChange={(e) => { setAf({ ...af, pin: e.target.value.replace(/\D/g, "").slice(0, 6) }); setAfErr(null); }} /></label>
                   <label className={s.fl}>Landmark (optional)<input className={s.in} value={af.landmark} onChange={(e) => { setAf({ ...af, landmark: e.target.value }); setAfErr(null); }} /></label>
                 </div>
                 {afErr && <p role="alert" className={s.err}>{afErr}</p>}
-                <button type="submit" className={s.primary} style={{ height: 48, fontSize: 15, boxShadow: "none" }}>Use this address</button>
+                <button type="submit" className={s.primary} style={{ height: "3rem", fontSize: "0.9375rem", boxShadow: "none" }}>Use this address</button>
               </form>
             </div>
           )}
 
           {step === "verify" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5 }}>We'll text a 6-digit code to confirm it's you. {possessive(pet.name)} passport is saved to your number.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+              <p style={{ margin: 0, fontSize: "0.9375rem", lineHeight: 1.5 }}>We'll text a 6-digit code to confirm it's you. {possessive(pet.name)} passport is saved to your number.</p>
               <label className={s.fl}>Mobile number
-                <span className={s.phone}><span aria-hidden="true" style={{ padding: "0 4px 0 16px", fontWeight: 600 }}>+91</span>
+                <span className={s.phone}><span aria-hidden="true" style={{ padding: "0 0.25rem 0 1rem", fontWeight: 600 }}>+91</span>
                   <input type="tel" inputMode="numeric" maxLength={11} value={phone} autoComplete="tel-national" placeholder="98765 43210" onChange={(e) => { setPhone(e.target.value.replace(/[^\d ]/g, "")); setOtpErr(null); setOtpSent(false); }} />
                 </span>
               </label>
               {otpSent && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                   {devCode && <p role="status" className={s.dev}>Dev only: console OTP provider sent <strong style={{ fontFamily: "var(--font-accent)", letterSpacing: ".2em" }}>{devCode}</strong></p>}
                   <label className={s.fl}>6-digit code
                     <input className={s.otp} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, "").slice(0, 6)); setOtpErr(null); }} />
@@ -377,17 +377,17 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
                   ["Phone", sessionStore.get()?.user.phone || "—"],
                 ].map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
               </dl>
-              {reqErr && <p role="alert" className={s.err} style={{ marginTop: 12 }}>{reqErr}</p>}
-              <p style={{ margin: "14px 0 0", fontSize: 13, lineHeight: 1.5, color: "var(--ink-75)" }}>No online payment. Payment is collected after the service (to be confirmed). {PRICE_NOTE}</p>
+              {reqErr && <p role="alert" className={s.err} style={{ marginTop: "0.75rem" }}>{reqErr}</p>}
+              <p style={{ margin: "0.875rem 0 0", fontSize: "0.8125rem", lineHeight: 1.5, color: "var(--ink-75)" }}>No online payment. Payment is collected after the service (to be confirmed). {PRICE_NOTE}</p>
             </>
           )}
 
           {step === "done" && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, padding: "28px 8px", textAlign: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.125rem", padding: "1.75rem 0.5rem", textAlign: "center" }}>
               <div ref={stamp} className={s.booked}>Booked</div>
-              <p style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>{possessive(pet.name)} spa day is requested.</p>
-              {serverTotal != null && <p style={{ margin: 0, fontSize: 15 }}>Total {inrPaise(serverTotal)}, payable after the service.</p>}
-              <p style={{ margin: 0, fontSize: 15 }}>We'll confirm on WhatsApp shortly.</p>
+              <p style={{ margin: 0, fontSize: "1.125rem", fontWeight: 600 }}>{possessive(pet.name)} spa day is requested.</p>
+              {serverTotal != null && <p style={{ margin: 0, fontSize: "0.9375rem" }}>Total {inrPaise(serverTotal)}, payable after the service.</p>}
+              <p style={{ margin: 0, fontSize: "0.9375rem" }}>We'll confirm on WhatsApp shortly.</p>
             </div>
           )}
         </div>
@@ -395,8 +395,8 @@ export function BookingDrawer({ narrow, items, pet, isDemo, offline, onRemove, o
         <div className={s.foot}>
           {step !== "done" && step !== "verify" && (
             <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-              <span style={{ fontSize: 12, fontWeight: 500 }}>Total</span>
-              <span ref={totalEl} aria-live="polite" style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 26, fontVariantNumeric: "tabular-nums" }} />
+              <span style={{ fontSize: "0.75rem", fontWeight: 500 }}>Total</span>
+              <span ref={totalEl} aria-live="polite" style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.625rem", fontVariantNumeric: "tabular-nums" }} />
             </div>
           )}
           <button type="button" className={s.primary} disabled={primary.dis} style={{ background: step === "review" ? "var(--dz-green)" : undefined }} onClick={() => !primary.dis && primary.fn()}>{primary.label}</button>

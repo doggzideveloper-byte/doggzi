@@ -1,5 +1,5 @@
 /** Line-art icons in the pets-trio style (cream fill, 2.4px ink, round caps). No emoji. */
-const base = { viewBox: "0 0 120 100", "aria-hidden": true, fill: "var(--dz-cream)", stroke: "var(--dz-ink)", strokeWidth: 2.4, strokeLinecap: "round", strokeLinejoin: "round", style: { height: "100%", maxHeight: 140, width: "auto", overflow: "visible" } } as const;
+const base = { viewBox: "0 0 120 100", "aria-hidden": true, fill: "var(--dz-cream)", stroke: "var(--dz-ink)", strokeWidth: 2.4, strokeLinecap: "round", strokeLinejoin: "round", style: { height: "100%", maxHeight: "8.75rem", width: "auto", overflow: "visible" } } as const;
 
 export const BowlIcon = () => (
   <svg {...base}>

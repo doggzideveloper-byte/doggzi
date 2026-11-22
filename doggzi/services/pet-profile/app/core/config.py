@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     auth_jwt_secret: str = ""
     cors_origins: str = ""  # comma-separated; the gateway serves same-origin so usually empty
     breeds_cache_seconds: int = 24 * 3600
+    # Shared secret for service-to-service calls (/internal/*).
+    internal_token: str = ""
 
 
 @lru_cache

@@ -53,7 +53,7 @@ function Bag() {
   }, []);
   const fb = { transformBox: "fill-box", transformOrigin: "50% 100%" } as const;
   return (
-    <svg ref={ref} viewBox="0 0 280 250" role="img" aria-label="A shopping bag filling up with treats and toys" style={{ width: "100%", maxWidth: 400, display: "block", overflow: "visible" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg ref={ref} viewBox="0 0 280 250" role="img" aria-label="A shopping bag filling up with treats and toys" style={{ width: "100%", maxWidth: "25rem", display: "block", overflow: "visible" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="M96 92c0-50 88-50 88 0" fill="none" strokeWidth="6" />
       <g data-bag="" style={fb}><g transform="translate(78 40)"><rect x="0" y="10" width="34" height="9" rx="3" fill="var(--dz-orange)" /><path d="M2 19h30v40H2z" /><path d="M10 34h14M10 42h14" fill="none" strokeWidth="3" /></g></g>
       <g data-bag="" style={fb}><g transform="translate(118 48) rotate(-18)"><rect x="6" y="6" width="44" height="12" rx="5" /><circle cx="6" cy="6" r="7" /><circle cx="6" cy="18" r="7" /><circle cx="50" cy="6" r="7" /><circle cx="50" cy="18" r="7" /><path d="M6 8h44v8H6z" stroke="none" /></g></g>
@@ -176,20 +176,20 @@ export default function MarketplacePage() {
       <main>
         <section className={s.hero}>
           <div className={`${s.wrap} ${s.heroGrid}`}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 18, alignItems: "flex-start", minWidth: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.125rem", alignItems: "flex-start", minWidth: 0 }}>
               <Badge>Marketplace</Badge>
               <h1 className={`dz-display ${s.h1}`}>Treats, toys &amp; more for <span className={s.nameTag}>{pet.name}</span></h1>
               <form role="search" className={s.search} onSubmit={(e) => { e.preventDefault(); toShop(); }}>
-                <svg viewBox="0 0 24 24" aria-hidden="true" style={{ flex: "none", width: 22, height: 22, margin: "0 4px 0 18px" }} fill="none" stroke="var(--dz-ink)" strokeWidth="2.4" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true" style={{ flex: "none", width: "1.375rem", height: "1.375rem", margin: "0 0.25rem 0 1.125rem" }} fill="none" stroke="var(--dz-ink)" strokeWidth="2.4" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>
                 <label htmlFor="mk-q" className="dz-sr-only">Search products</label>
                 <input id="mk-q" type="search" value={q} placeholder="Search treats, toys, brands…" autoComplete="off" onChange={(e) => setQ(e.target.value)} />
               </form>
-              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 14 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.875rem" }}>
                 <div role="radiogroup" aria-label="Shopping for" className={s.toggle}>
                   {(["dog", "cat"] as const).map((k) => <button key={k} type="button" role="radio" aria-checked={mode === k} onClick={() => { setMode(k); setBrand("all"); }}>{k === "dog" ? "Dog" : "Cat"}</button>)}
                 </div>
-                <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 600 }}>
-                  <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 22, height: 22 }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round"><path d="M3 10l2-6h14l2 6" /><path d="M4 10h16v10H4z" /><path d="M10 20v-5h4v5" /></svg>
+                <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9375rem", fontWeight: 600 }}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1.375rem", height: "1.375rem" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round"><path d="M3 10l2-6h14l2 6" /><path d="M4 10h16v10H4z" /><path d="M10 20v-5h4v5" /></svg>
                   Delivered by local stores near you
                 </span>
               </div>
@@ -210,26 +210,26 @@ export default function MarketplacePage() {
           </div>
         </nav>
 
-        {loading && <p className={s.wrap} role="status" style={{ padding: "40px 20px", fontWeight: 600 }}>Stocking the shelves…</p>}
-        {error && <p className={s.wrap} role="alert" style={{ padding: "40px 20px" }}>We couldn't load the shop. <button type="button" onClick={refetch} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button></p>}
+        {loading && <p className={s.wrap} role="status" style={{ padding: "2.5rem 1.25rem", fontWeight: 600 }}>Stocking the shelves…</p>}
+        {error && <p className={s.wrap} role="alert" style={{ padding: "2.5rem 1.25rem" }}>We couldn't load the shop. <button type="button" onClick={refetch} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button></p>}
 
         {picked.length > 0 && (
-          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(40px,6vw,72px)" }}>
-            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(2.5rem,6vw,4.5rem)" }}>
+            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
               <h2 className={s.h2}>Picked for <Sweep>{pet.name}</Sweep></h2>
-              <p style={{ margin: 0, fontSize: 15, color: "rgba(20,18,16,.8)" }}>{mode === "cat" ? `For cats like ${pet.name}` : petKey === "puppy" ? `Small chews and treats sized for a ${pet.breed}` : `Tough toys and gear for a ${pet.breed}`}</p>
+              <p style={{ margin: 0, fontSize: "0.9375rem", color: "rgba(20,18,16,.8)" }}>{mode === "cat" ? `For cats like ${pet.name}` : petKey === "puppy" ? `Small chews and treats sized for a ${pet.breed}` : `Tough toys and gear for a ${pet.breed}`}</p>
             </div>
             <div data-ri="" className={s.picked}>{picked.map((x) => <div key={x.id}>{card(x)}</div>)}</div>
           </section>
         )}
 
-        <section id="shop" data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(40px,6vw,72px)", paddingBottom: "clamp(56px,8vw,104px)", scrollMarginTop: 150 }}>
-          <div data-ri="" style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+        <section id="shop" data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(2.5rem,6vw,4.5rem)", paddingBottom: "clamp(3.5rem,8vw,6.5rem)", scrollMarginTop: "9.375rem" }}>
+          <div data-ri="" style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "0.75rem" }}>
             <h2 className={s.h2}>{cat === "all" ? "Everything" : CATEGORIES.find((c) => c.key === cat)?.label}</h2>
-            <span aria-live="polite" style={{ fontSize: 15, fontWeight: 500 }}>{list.length} product{list.length === 1 ? "" : "s"}</span>
+            <span aria-live="polite" style={{ fontSize: "0.9375rem", fontWeight: 500 }}>{list.length} product{list.length === 1 ? "" : "s"}</span>
           </div>
           <div data-ri="" className={s.filters}>
-            <div role="group" aria-label="Price" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <div role="group" aria-label="Price" style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {PRICES.map((x) => <button key={x.k} type="button" className={s.fchip} aria-pressed={price === x.k} onClick={() => setPrice(price === x.k ? null : x.k)}>{x.label}</button>)}
             </div>
             <label className={s.lbl}>Brand
@@ -239,7 +239,7 @@ export default function MarketplacePage() {
               </select>
             </label>
             <label className={s.lbl} style={{ cursor: "pointer" }}>
-              <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} style={{ width: 20, height: 20, accentColor: "var(--dz-orange)", cursor: "pointer" }} />In stock
+              <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} style={{ width: "1.25rem", height: "1.25rem", accentColor: "var(--dz-orange)", cursor: "pointer" }} />In stock
             </label>
             <label className={s.lbl} style={{ marginLeft: "auto" }}>Sort
               <select className={s.select} value={sort} onChange={(e) => setSort(e.target.value as typeof sort)}>
@@ -249,19 +249,19 @@ export default function MarketplacePage() {
               </select>
             </label>
           </div>
-          {mode === "cat" && <p className={s.soon}><Badge size="sm" style={{ fontSize: 13 }}>Coming soon</Badge>More for cats coming soon.</p>}
+          {mode === "cat" && <p className={s.soon}><Badge size="sm" style={{ fontSize: "0.8125rem" }}>Coming soon</Badge>More for cats coming soon.</p>}
           <div className={s.grid}>{list.map(card)}</div>
           {!loading && !list.length && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "32px 16px", textAlign: "center" }}>
-              <p style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>Nothing matches that yet.</p>
-              <button type="button" className={s.fchip} style={{ height: 46, background: "var(--dz-paper)", boxShadow: "3px 3px 0 var(--dz-ink)" }} onClick={() => { setQ(""); setCat("all"); setPrice(null); setBrand("all"); setInStockOnly(false); }}>Clear filters</button>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem", padding: "2rem 1rem", textAlign: "center" }}>
+              <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>Nothing matches that yet.</p>
+              <button type="button" className={s.fchip} style={{ height: "2.875rem", background: "var(--dz-paper)", boxShadow: "3px 3px 0 var(--dz-ink)" }} onClick={() => { setQ(""); setCat("all"); setPrice(null); setBrand("all"); setInStockOnly(false); }}>Clear filters</button>
             </div>
           )}
         </section>
 
         <section id="why-local" data-reveal="" className={s.band}>
-          <div className={s.wrap} style={{ maxWidth: 1000, paddingTop: "clamp(56px,8vw,104px)", paddingBottom: "clamp(56px,8vw,104px)", display: "flex", flexDirection: "column", gap: "clamp(24px,4vw,36px)" }}>
-            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+          <div className={s.wrap} style={{ maxWidth: "62.5rem", paddingTop: "clamp(3.5rem,8vw,6.5rem)", paddingBottom: "clamp(3.5rem,8vw,6.5rem)", display: "flex", flexDirection: "column", gap: "clamp(1.5rem,4vw,2.25rem)" }}>
+            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: "0.625rem", alignItems: "flex-start" }}>
               <Badge tone="cream">Why buy local</Badge>
               <h2 className="dz-h2">Your money stays in the neighbourhood</h2>
             </div>
@@ -284,14 +284,14 @@ export default function MarketplacePage() {
 
         {/* Meet the stores: hidden until at least one real vendor other than Doggzi Store is live. */}
         {localStores.length > 0 && (
-          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(56px,8vw,104px)" }}>
+          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(3.5rem,8vw,6.5rem)" }}>
             <h2 data-ri="" className="dz-h2">Meet the stores</h2>
             <div data-ri="" className={s.stores}>
               {localStores.map((v) => (
                 <article key={v.id} className={s.store}>
-                  <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 18, letterSpacing: ".06em", textTransform: "uppercase" }}>{v.name}</span>
-                  {v.area && <span style={{ fontSize: 14 }}>{v.area}</span>}
-                  {v.story && <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5 }}>{v.story}</p>}
+                  <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.125rem", letterSpacing: ".06em", textTransform: "uppercase" }}>{v.name}</span>
+                  {v.area && <span style={{ fontSize: "0.875rem" }}>{v.area}</span>}
+                  {v.story && <p style={{ margin: 0, fontSize: "0.9375rem", lineHeight: 1.5 }}>{v.story}</p>}
                   {v.since_year && <Badge size="sm" tone="cream" style={{ alignSelf: "flex-start" }}>Since {v.since_year}</Badge>}
                 </article>
               ))}
@@ -306,7 +306,7 @@ export default function MarketplacePage() {
 
       <button ref={pill} type="button" className={s.cartPill} onClick={() => { lastFocus.current = document.activeElement; setDrawer(true); }} aria-label={count ? `Open cart: ${count} items, ${inrPaise(cartTotal)}` : "Open cart (empty)"}>
         <span className={s.cartIcon}>
-          <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 22, height: 22 }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round"><path d="M5 8h14l-1.5 12h-11z" /><path d="M9 8a3 3 0 0 1 6 0" fill="none" /></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1.375rem", height: "1.375rem" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round"><path d="M5 8h14l-1.5 12h-11z" /><path d="M9 8a3 3 0 0 1 6 0" fill="none" /></svg>
           <span data-count="" className={s.cartCount}>{count}</span>
         </span>
         <span>{count ? inrPaise(cartTotal) : "Cart"}</span>

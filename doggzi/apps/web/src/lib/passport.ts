@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { createStore } from "./store";
-import { useTweaks } from "./tweaks";
+import { createStore } from "@doggzi/ui/lib/store";
+import { useTweaks } from "@doggzi/ui/lib/tweaks";
 import type { Activity, Allergy, LifeStage, PetType } from "./api/petProfile";
 
 export interface Nutrition {
@@ -58,7 +58,4 @@ export function useFrom(): string | null {
   return v;
 }
 
-export const SMALL_BREEDS = new Set(["Beagle", "Shih Tzu", "Pug", "Pomeranian", "Lhasa Apso", "Dachshund", "French Bulldog", "Maltese", "Chihuahua", "Cavalier King Charles Spaniel", "Bichon Frise", "Yorkshire Terrier", "Indian Spitz", "Cocker Spaniel"]);
-export type AvatarVariant = "dog" | "puppy" | "cat";
-export const avatarVariant = (type: PetType | null | undefined, breed?: string | null): AvatarVariant | null =>
-  !type ? null : type === "cat" ? "cat" : breed && SMALL_BREEDS.has(breed) ? "puppy" : "dog";
+export { SMALL_BREEDS, avatarVariant, type AvatarVariant } from "@doggzi/ui/lib/pet";

@@ -63,7 +63,7 @@ export function useSectionReveals(root: RefObject<HTMLElement>, opts: { narrow?:
 export function Sweep({ children }: { children: React.ReactNode }) {
   return (
     <span style={{ position: "relative", display: "inline-block", padding: "0 .14em" }}>
-      <span data-sweep="" aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: ".12em", bottom: ".06em", background: "var(--dz-pink)", borderRadius: 10, transformOrigin: "left center", transform: "rotate(-1.5deg)" }} />
+      <span data-sweep="" aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: ".12em", bottom: ".06em", background: "var(--dz-pink)", borderRadius: "0.625rem", transformOrigin: "left center", transform: "rotate(-1.5deg)" }} />
       <span style={{ position: "relative" }}>{children}</span>
     </span>
   );

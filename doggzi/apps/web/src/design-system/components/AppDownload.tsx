@@ -54,24 +54,24 @@ export function AppDownload({ layout = "compact", align = "start", source = "fre
     <div className={s.root} style={{ alignItems: align === "center" ? "center" : "flex-start" }}>
       {mobile ? (
         <a className={s.badgeLink} href={dev === "iOS" ? SITE.appStoreUrl : SITE.playStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => t(dev === "iOS" ? "app_store" : "play_store")} aria-label={dev === "iOS" ? "Download Doggzi on the App Store" : "Get Doggzi on Google Play"}>
-          <img src={dev === "iOS" ? SITE.appStoreBadge : SITE.playStoreBadge} alt="" style={{ height: 52 }} />
+          <img src={dev === "iOS" ? SITE.appStoreBadge : SITE.playStoreBadge} alt="" style={{ height: "3.25rem" }} />
         </a>
       ) : (
         <div className={s.desk}>
           <div className={s.badges} style={{ flexDirection: layout === "badge" ? "row" : "column" }}>
             <a className={s.badgeLink} href={SITE.appStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => t("app_store")}>
-              <img src={SITE.appStoreBadge} alt="Download on the App Store" style={{ height: 48 }} />
+              <img src={SITE.appStoreBadge} alt="Download on the App Store" style={{ height: "3rem" }} />
             </a>
             <a className={s.badgeLink} href={SITE.playStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => t("play_store")}>
-              <img src={SITE.playStoreBadge} alt="Get it on Google Play" style={{ height: 48 }} />
+              <img src={SITE.playStoreBadge} alt="Get it on Google Play" style={{ height: "3rem" }} />
             </a>
           </div>
           {layout !== "badge" && redirect && (
             <div className={s.qrBox}>
               <div className={s.qr} role="img" aria-label="QR code to get the Doggzi app on your phone"><Qr url={redirect} /></div>
-              <span style={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 120 }}>
+              <span style={{ display: "flex", flexDirection: "column", gap: "0.125rem", maxWidth: "7.5rem" }}>
                 <span className={s.scan}>Scan me</span>
-                <span style={{ fontSize: 13, lineHeight: 1.35 }}>Opens the right store on your phone</span>
+                <span style={{ fontSize: "0.8125rem", lineHeight: 1.35 }}>Opens the right store on your phone</span>
               </span>
             </div>
           )}
@@ -90,14 +90,14 @@ export function AppDownload({ layout = "compact", align = "start", source = "fre
             window.open(`https://wa.me/91${digits}?text=${encodeURIComponent(`Get the Doggzi app: ${url.current}`)}`, "_blank", "noopener");
           }}
         >
-          <label htmlFor={id} style={{ fontWeight: 600, fontSize: 15 }}>Send the link to my phone</label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <label htmlFor={id} style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Send the link to my phone</label>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem" }}>
             <div className={s.field}>
-              <span aria-hidden="true" style={{ padding: "0 4px 0 16px", fontWeight: 600 }}>+91</span>
+              <span aria-hidden="true" style={{ padding: "0 0.25rem 0 1rem", fontWeight: 600 }}>+91</span>
               <input id={id} type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={11} value={phone} placeholder="98765 43210" aria-invalid={!!err} aria-describedby={err ? `${id}-err` : undefined}
                 onChange={(e) => { setPhone(e.target.value.replace(/[^\d ]/g, "")); setErr(null); }} />
             </div>
-            <Button type="submit" variant="greenInk" size="sm" style={{ height: 48 }}>Send via WhatsApp</Button>
+            <Button type="submit" variant="greenInk" size="sm" style={{ height: "3rem" }}>Send via WhatsApp</Button>
           </div>
           {err && <p id={`${id}-err`} role="alert" className={s.err}>{err}</p>}
           <p className={s.note}>Opens WhatsApp with the download link. We never store your number.</p>

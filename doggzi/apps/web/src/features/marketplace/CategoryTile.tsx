@@ -105,7 +105,7 @@ export function CategoryTile({ category, brand, large, muted, label }: { categor
           </g>
         )}
       </svg>
-      <span className={s.tileBrand} style={large ? { fontSize: 16 } : undefined}>{brand}</span>
+      <span className={s.tileBrand} style={large ? { fontSize: "1rem" } : undefined}>{brand}</span>
     </div>
   );
 }

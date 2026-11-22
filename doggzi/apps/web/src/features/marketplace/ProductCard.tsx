@@ -23,7 +23,7 @@ export const ProductCard = memo(function ProductCard({ item, storeLine, inCart, 
         <CategoryTile category={item.category} brand={item.brand} muted={out} />
       </button>
       <h3 className={s.cardName}>{item.name}</h3>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
         <span className={s.price}>{inrPaise(item.price_paise)}</span>
         {item.mrp_paise && <s className={s.mrp}>MRP {inrPaise(item.mrp_paise)}</s>}
       </div>

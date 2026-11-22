@@ -18,7 +18,7 @@ export default function OrderPage() {
   return (
     <div style={{ minHeight: "100vh" }}>
       <Header right={pet && <PassportChip pet={pet} pop={false} />} />
-      <main className="dz-container" style={{ maxWidth: 760, padding: "48px 20px 80px", display: "flex", flexDirection: "column", gap: 20 }}>
+      <main className="dz-container" style={{ maxWidth: "47.5rem", padding: "3rem 1.25rem 5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
         <Badge style={{ alignSelf: "flex-start", background: "var(--dz-pink)" }}>Your order</Badge>
         {!session || session.token === "demo" ? (
           <p>Log in at checkout to track orders. <Link to="/marketplace">Back to the shop</Link></p>
@@ -31,9 +31,9 @@ export default function OrderPage() {
             <h1 className="dz-display" style={{ fontSize: "clamp(2rem,5vw,3rem)" }}>Order {o.id.slice(0, 6).toUpperCase()}</h1>
             <p style={{ margin: 0 }}>Placed {istDate(new Date(o.created_at), { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })} IST · Total {inrPaise(o.total_paise)}{o.status !== "paid" ? ` · ${o.status.replace("_", " ")}` : ""}</p>
             {o.sub_orders.map((so) => (
-              <div key={so.id} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div key={so.id} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <OrderTrack store={so.vendor.name} reference={o.id.slice(0, 6).toUpperCase()} status={so.status} />
-                <ul style={{ margin: 0, paddingLeft: 20, fontSize: 15 }}>{so.items.map((i) => <li key={i.sku}>{i.qty} × {i.name}</li>)}</ul>
+                <ul style={{ margin: 0, paddingLeft: "1.25rem", fontSize: "0.9375rem" }}>{so.items.map((i) => <li key={i.sku}>{i.qty} × {i.name}</li>)}</ul>
               </div>
             ))}
           </>

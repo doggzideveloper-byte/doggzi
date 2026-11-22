@@ -93,33 +93,33 @@ export function PlanPreview({ pet, isDemo }: { pet: Passport; isDemo: boolean })
   const chip = (on: boolean, label: string, onClick: () => void) => <button key={label} type="button" aria-pressed={on} className={s.chip} onClick={onClick}>{label}</button>;
 
   return (
-    <section id="plan-preview" data-reveal="" className={`${s.wrap} ${s.preview}`} style={{ paddingTop: "clamp(56px,8vw,104px)", paddingBottom: "clamp(56px,8vw,104px)" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 24, minWidth: 0 }}>
+    <section id="plan-preview" data-reveal="" className={`${s.wrap} ${s.preview}`} style={{ paddingTop: "clamp(3.5rem,8vw,6.5rem)", paddingBottom: "clamp(3.5rem,8vw,6.5rem)" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", minWidth: 0 }}>
         <div data-ri="" className={s.head}>
           <Badge>{poss} plan</Badge>
           <h2 className="dz-display" style={{ fontSize: "clamp(1.8rem,4.2vw,2.8rem)", lineHeight: 1.08 }}>Your nutritionist needs a few more things about <Sweep>{pet.name}</Sweep></h2>
           <p className={s.muted}>No portions, calories or prices here. Your nutritionist sets those in the app.</p>
         </div>
         <form data-ri="" onSubmit={submit} noValidate className={s.form}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <label htmlFor="ff-weight" className={s.fLabel} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
-              Weight <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 22, fontVariantNumeric: "tabular-nums" }}>{nut.weight != null ? `${nut.weight} kg` : "— kg"}</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+            <label htmlFor="ff-weight" className={s.fLabel} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "0.75rem" }}>
+              Weight <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.375rem", fontVariantNumeric: "tabular-nums" }}>{nut.weight != null ? `${nut.weight} kg` : "— kg"}</span>
             </label>
             <input id="ff-weight" type="range" min={1} max={80} step={0.5} value={nut.weight ?? 15} className={s.range} aria-valuetext={nut.weight != null ? `${nut.weight} kg` : "not set"} onChange={(e) => setNut({ weight: parseFloat(e.target.value) })} />
-            <div aria-hidden="true" style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "rgba(20,18,16,.7)" }}><span>1 kg</span><span>80 kg</span></div>
+            <div aria-hidden="true" style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", color: "rgba(20,18,16,.7)" }}><span>1 kg</span><span>80 kg</span></div>
           </div>
-          <div role="group" aria-labelledby="ff-age-l" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div role="group" aria-labelledby="ff-age-l" style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
             <span id="ff-age-l" className={s.fLabel}>Age</span>
             <div className={s.chips}>
               {stageOpts.map(([k, l]) => chip(nut.stage === k, l, () => setNut({ stage: nut.stage === k ? null : k })))}
-              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 500 }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9375rem", fontWeight: 500 }}>
                 <input type="number" min={0} max={25} step={0.5} inputMode="decimal" value={nut.years} aria-label="Age in years" placeholder="0" className={s.years}
                   onChange={(e) => { const v = e.target.value; if (v === "" || (+v >= 0 && +v <= 25)) setNut({ years: v }); }} />
                 years
               </label>
             </div>
           </div>
-          <div role="group" aria-labelledby="ff-all-l" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div role="group" aria-labelledby="ff-all-l" style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
             <span id="ff-all-l" className={s.fLabel}>Allergies</span>
             <div className={s.chips}>
               {ALLERGIES.map((a) => chip(nut.allergies.includes(a), a, () => {
@@ -130,29 +130,29 @@ export function PlanPreview({ pet, isDemo }: { pet: Passport; isDemo: boolean })
               }))}
             </div>
           </div>
-          <div role="group" aria-labelledby="ff-act-l" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div role="group" aria-labelledby="ff-act-l" style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
             <span id="ff-act-l" className={s.fLabel}>Activity</span>
             <div className={s.chips}>{ACTIVITY.map(([k, l]) => chip(nut.activity === k, l, () => setNut({ activity: nut.activity === k ? null : k })))}</div>
           </div>
           {err && <p role="alert" className={s.err}>{err}</p>}
-          <Button type="submit" block disabled={save.isPending} style={{ height: 58, fontSize: 18 }}>{save.isPending ? "Saving…" : `Save to ${poss} passport`}</Button>
+          <Button type="submit" block disabled={save.isPending} style={{ height: "3.625rem", fontSize: "1.125rem" }}>{save.isPending ? "Saving…" : `Save to ${poss} passport`}</Button>
         </form>
       </div>
 
       <div data-ri="" className={s.sticky}>
         <div className={s.pass}>
           <div className={s.passBar}><span>Doggzi pet passport</span><span>Delhi NCR</span></div>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, padding: "18px 20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1.125rem", padding: "1.125rem 1.25rem" }}>
             <PetAvatar type={pet.type} breed={pet.breed} size={88} border={2.5} />
-            <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
               <span className={s.passName}>{pet.name}</span>
-              <span style={{ fontSize: 15, fontWeight: 500, color: "var(--ink-75)" }}>{pet.type === "cat" ? "Cat" : "Dog"} · {pet.breed}</span>
+              <span style={{ fontSize: "0.9375rem", fontWeight: 500, color: "var(--ink-75)" }}>{pet.type === "cat" ? "Cat" : "Dog"} · {pet.breed}</span>
             </div>
           </div>
           <div className={s.grow} style={{ gridTemplateRows: anyNut ? "1fr" : "0fr" }}>
             <div>
-              <div style={{ borderTop: "2.5px dashed var(--dz-ink)", padding: "14px 20px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
-                <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 14, letterSpacing: ".14em", textTransform: "uppercase", color: "var(--dz-green-700)" }}>Nutrition</span>
+              <div style={{ borderTop: "2.5px dashed var(--dz-ink)", padding: "0.875rem 1.25rem 1.125rem", display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "0.875rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--dz-green-700)" }}>Nutrition</span>
                 <dl className={s.dl}>
                   {vals.map(([k, v]) => (
                     <div key={k} style={{ display: "contents" }}>
@@ -167,7 +167,7 @@ export function PlanPreview({ pet, isDemo }: { pet: Passport; isDemo: boolean })
         </div>
         {saved && (
           <div ref={savedRef} role="status" className={s.savedBox}>
-            <p style={{ margin: 0, fontWeight: 600, fontSize: 17, lineHeight: 1.45 }}>Saved to {poss} passport ✓. Your nutritionist will use this in the app.</p>
+            <p style={{ margin: 0, fontWeight: 600, fontSize: "1.0625rem", lineHeight: 1.45 }}>Saved to {poss} passport ✓. Your nutritionist will use this in the app.</p>
             <AppDownload layout="compact" source="fresh_food_plan" />
           </div>
         )}

@@ -28,7 +28,7 @@ export function FAQ({ set = "explore", heading = "Good questions" }: { set?: Faq
   return (
     <section id="faq" ref={sec} className={s.sec} aria-labelledby={`faq-${set}-h`}>
       <div data-ri="" className={s.head}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem" }}>
           <Badge>FAQ</Badge>
           <Badge tone="draft">Draft answers — confirm before launch</Badge>
         </div>

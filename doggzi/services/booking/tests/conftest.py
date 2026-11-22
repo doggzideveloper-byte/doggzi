@@ -14,12 +14,31 @@ from sqlalchemy.orm import sessionmaker  # noqa: E402
 from sqlalchemy.pool import StaticPool  # noqa: E402
 
 from app.core import cache  # noqa: E402
+from app.core.pets import get_pet_lookup  # noqa: E402
 from app.db import Base, get_db  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import PackageItem, ServiceItem  # noqa: E402
 from app.seed import PACKAGES, item_rows  # noqa: E402
 
 API = "/api/booking/v1"
+
+
+class FakePets:
+    """Pet owners as pet-profile would report them. Unknown ids → 'missing'."""
+
+    def __init__(self):
+        self.owners: dict = {}
+
+    def owner_of(self, pet_id):
+        return self.owners.get(pet_id, "missing")
+
+    def own(self, user_id, pet_id=None):
+        pid = pet_id or uuid.uuid4()
+        self.owners[pid] = user_id
+        return pid
+
+
+PETS = FakePets()
 
 
 @pytest.fixture()
@@ -45,6 +64,8 @@ def client():
             db.close()
 
     app.dependency_overrides[get_db] = _db
+    app.dependency_overrides[get_pet_lookup] = lambda: PETS
+    PETS.owners.clear()
     cache.clear()
     with TestClient(app) as c:
         yield c

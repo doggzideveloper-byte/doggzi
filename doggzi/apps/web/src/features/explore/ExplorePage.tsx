@@ -76,7 +76,7 @@ export default function ExplorePage() {
               {minis.map((m) => (
                 <Link key={m.title} data-ri="" to={pet ? m.to : "/"} className={s.mini} style={{ background: m.bg, color: m.fg, ["--rot" as string]: m.rot }}>
                   {m.icon}
-                  <span style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <span style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                     <span className={s.miniTitle}>{m.title}</span>
                     <span className={s.miniDesc}>{m.desc}</span>
                   </span>
@@ -96,7 +96,7 @@ export default function ExplorePage() {
             {steps.map((st) => (
               <li key={st.n} data-ri="" className={s.step}>
                 <span className={s.num} style={{ background: st.bg, color: st.fg }}>{st.n}</span>
-                <span style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <span style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
                   <span className={s.stepTitle}>{st.t}</span>
                   <span className={s.stepBody}>{st.b}</span>
                 </span>
@@ -118,11 +118,11 @@ export default function ExplorePage() {
                   <h3>{c.label}</h3>
                   <div className={s.cmpGood}>
                     <span className={s.cmpLabel} style={{ color: "var(--dz-green-700)" }}><span aria-hidden="true" className={s.dot} style={{ background: "var(--dz-green)" }} />Doggzi fresh</span>
-                    <span style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.4 }}>{c.doggzi}</span>
+                    <span style={{ fontSize: "1rem", fontWeight: 600, lineHeight: 1.4 }}>{c.doggzi}</span>
                   </div>
                   <div className={s.cmpBad}>
                     <span className={s.cmpLabel} style={{ color: "rgba(20,18,16,.7)" }}><span aria-hidden="true" className={s.dot} style={{ borderColor: "rgba(20,18,16,.7)" }} />Commercial kibble</span>
-                    <span style={{ fontSize: 15, lineHeight: 1.45, color: "rgba(20,18,16,.8)" }}>{c.kibble}</span>
+                    <span style={{ fontSize: "0.9375rem", lineHeight: 1.45, color: "rgba(20,18,16,.8)" }}>{c.kibble}</span>
                   </div>
                 </article>
               ))}
@@ -146,7 +146,7 @@ export default function ExplorePage() {
                     <button type="button" className={s.play} aria-label={`Play video: ${v.title}`} onClick={() => setPlaying((p) => ({ ...p, [v.id]: true }))}>
                       <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" />
                       <span aria-hidden="true" className={s.playBtn}>
-                        <svg viewBox="0 0 24 24" style={{ width: 30, height: 30, marginLeft: 4 }}><path d="M7 4.5v15l12-7.5z" fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round" /></svg>
+                        <svg viewBox="0 0 24 24" style={{ width: "1.875rem", height: "1.875rem", marginLeft: "0.25rem" }}><path d="M7 4.5v15l12-7.5z" fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round" /></svg>
                       </span>
                     </button>
                   )}
@@ -162,7 +162,7 @@ export default function ExplorePage() {
         <section ref={finalRef} data-reveal="" className={s.final}>
           <div className={s.finalInner}>
             <h2 data-ri="" className={`dz-display ${s.finalH}`}>Ready when {petRef} is</h2>
-            <ButtonLink data-ri="" to="/" variant="secondary" size="lg" style={{ padding: "0 32px" }}>Make a passport <span aria-hidden="true">→</span></ButtonLink>
+            <ButtonLink data-ri="" to="/" variant="secondary" size="lg" style={{ padding: "0 2rem" }}>Make a passport <span aria-hidden="true">→</span></ButtonLink>
           </div>
         </section>
       </main>

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.v1 import breeds, pets
+from .api.v1 import breeds, internal, pets
 from .core.config import get_settings
 
 PREFIX = "/api/pet-profile"
@@ -20,6 +20,7 @@ if settings.cors_origins:
 v1 = APIRouter(prefix=f"{PREFIX}/v1")
 v1.include_router(breeds.router)
 v1.include_router(pets.router)
+v1.include_router(internal.router)
 app.include_router(v1)
 
 

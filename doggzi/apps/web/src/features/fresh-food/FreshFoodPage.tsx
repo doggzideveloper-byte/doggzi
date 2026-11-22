@@ -94,20 +94,20 @@ export default function FreshFoodPage() {
         <Hero ref={heroRef} pet={pet} soon={soon} notified={notified} onNotify={notify} visible={heroVis} />
 
         {soon && (
-          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(48px,7vw,80px)", paddingBottom: "clamp(48px,7vw,80px)", gap: 24 }}>
+          <section data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(3rem,7vw,5rem)", paddingBottom: "clamp(3rem,7vw,5rem)", gap: "1.5rem" }}>
             <h2 data-ri="" className="dz-display" style={{ fontSize: "clamp(1.8rem,4.5vw,2.8rem)" }}>Meanwhile, for <Sweep>{pet.name}</Sweep></h2>
             <div className={s.altCards}>
               <Link data-ri="" to="/services" className={s.altCard} style={{ background: "var(--section-services)", color: "var(--dz-paper)" }}>
-                <span className={s.altTitle}>Services →</span><span style={{ fontSize: 16, fontWeight: 500 }}>Grooming, boarding and vet visits for cats, at home</span>
+                <span className={s.altTitle}>Services →</span><span style={{ fontSize: "1rem", fontWeight: 500 }}>Grooming, boarding and vet visits for cats, at home</span>
               </Link>
               <Link data-ri="" to="/marketplace" className={s.altCard} style={{ background: "var(--section-market)", color: "var(--dz-ink)" }}>
-                <span className={s.altTitle}>Marketplace →</span><span style={{ fontSize: 16, fontWeight: 500 }}>Treats, litter and toys from stores near you</span>
+                <span className={s.altTitle}>Marketplace →</span><span style={{ fontSize: "1rem", fontWeight: 500 }}>Treats, litter and toys from stores near you</span>
               </Link>
             </div>
           </section>
         )}
 
-        <section id="kibble-vs-fresh" data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ gap: "clamp(24px,4vw,36px)" }}>
+        <section id="kibble-vs-fresh" data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ gap: "clamp(1.5rem,4vw,2.25rem)" }}>
           <div data-ri="" className={s.head}>
             <Badge>Kibble vs fresh</Badge>
             <h2 className="dz-h2">{reduced ? "Kibble vs fresh, side by side" : "Drag to see the difference"}</h2>
@@ -132,10 +132,10 @@ export default function FreshFoodPage() {
         {!soon && <Switching />}
 
         <section id="download" data-reveal="" className={`${s.wrap} ${s.dlGrid}`}>
-          <div data-ri="" className={s.head} style={{ gap: 12 }}>
+          <div data-ri="" className={s.head} style={{ gap: "0.75rem" }}>
             <Badge>Get the app</Badge>
             <h2 className="dz-h2">Get the app for <Sweep>{pet.name}</Sweep></h2>
-            <p style={{ margin: 0, maxWidth: "40ch", fontSize: 17, lineHeight: 1.6 }}>Trial orders, daily plans, live tracking and quick reorders all live in the Doggzi app.</p>
+            <p style={{ margin: 0, maxWidth: "40ch", fontSize: "1.0625rem", lineHeight: 1.6 }}>Trial orders, daily plans, live tracking and quick reorders all live in the Doggzi app.</p>
           </div>
           <div data-ri=""><AppDownload layout="full" source="fresh_food_download" /></div>
         </section>
@@ -145,9 +145,9 @@ export default function FreshFoodPage() {
 
         <section data-reveal="" className={s.guide}>
           <div className={`${s.wrap} ${s.guideInner}`}>
-            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 620 }}>
+            <div data-ri="" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", maxWidth: "38.75rem" }}>
               <h2 className="dz-display" style={{ fontSize: "clamp(1.9rem,4.5vw,3rem)" }}>Get the Doggzi Fresh Food guide</h2>
-              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55 }}>Everything about the meals and how to serve them, in one PDF.</p>
+              <p style={{ margin: 0, fontSize: "1.0625rem", lineHeight: 1.55 }}>Everything about the meals and how to serve them, in one PDF.</p>
             </div>
             <ButtonA data-ri="" variant="ink" size="lg" href={FRESH_FOOD.guidePdf} download onClick={() => track("fresh_food_guide_download", { source: "guide_band" })}>Download PDF <span aria-hidden="true">↓</span></ButtonA>
           </div>
@@ -159,11 +159,11 @@ export default function FreshFoodPage() {
 
       {barMounted && (
         <div ref={bar} aria-hidden={!barShow} className={s.bar} style={{ transform: barShow ? "none" : "translateY(110%)", visibility: barShow ? "visible" : "hidden" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", minWidth: 0 }}>
             <PetAvatar type={pet.type} breed={pet.breed} size={40} />
             <span style={{ display: "flex", flexDirection: "column", lineHeight: 1.15, minWidth: 0 }}>
-              <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 16, letterSpacing: ".06em", textTransform: "uppercase" }}>Get Doggzi app</span>
-              <span style={{ fontSize: 12, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Fresh meals for {pet.name}</span>
+              <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1rem", letterSpacing: ".06em", textTransform: "uppercase" }}>Get Doggzi app</span>
+              <span style={{ fontSize: "0.75rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Fresh meals for {pet.name}</span>
             </span>
           </div>
           <div style={{ flex: "none", transform: "scale(.82)", transformOrigin: "right center" }}>

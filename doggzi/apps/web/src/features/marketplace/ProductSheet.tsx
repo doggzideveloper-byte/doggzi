@@ -41,43 +41,43 @@ export function ProductSheet({ item, narrow, notified, onAdd, onNotify, onClose 
             else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0]?.focus(); }
           }
         }}>
-        <button type="button" data-close="" className={s.round} style={{ position: "absolute", top: 12, right: 12, zIndex: 2 }} onClick={() => close()} aria-label="Close">×</button>
+        <button type="button" data-close="" className={s.round} style={{ position: "absolute", top: "0.75rem", right: "0.75rem", zIndex: 2 }} onClick={() => close()} aria-label="Close">×</button>
         <div style={{ minWidth: 0 }}><CategoryTile category={item.category} brand={item.brand} large muted={!item.in_stock} /></div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, minWidth: 0 }}>
-          <span className={s.storeChip} style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 13, letterSpacing: ".12em", textTransform: "uppercase", background: "var(--dz-pink-200)", padding: "2px 10px", border: "2px solid var(--dz-ink)" }}>{CATEGORIES.find((c) => c.key === item.category)?.label}</span>
-          <h2 id="sh-title" style={{ margin: 0, paddingRight: 44, fontSize: "clamp(1.2rem,2.4vw,1.5rem)", fontWeight: 600, lineHeight: 1.3 }}>{item.name}</h2>
-          <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 16, letterSpacing: ".06em", textTransform: "uppercase" }}>{item.brand}</span>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-            <span className={s.price} style={{ fontSize: 30 }}>{inrPaise(item.price_paise)}</span>
-            {item.mrp_paise && <s className={s.mrp} style={{ fontSize: 15 }}>MRP {inrPaise(item.mrp_paise)}</s>}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem", minWidth: 0 }}>
+          <span className={s.storeChip} style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "0.8125rem", letterSpacing: ".12em", textTransform: "uppercase", background: "var(--dz-pink-200)", padding: "0.125rem 0.625rem", border: "2px solid var(--dz-ink)" }}>{CATEGORIES.find((c) => c.key === item.category)?.label}</span>
+          <h2 id="sh-title" style={{ margin: 0, paddingRight: "2.75rem", fontSize: "clamp(1.2rem,2.4vw,1.5rem)", fontWeight: 600, lineHeight: 1.3 }}>{item.name}</h2>
+          <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1rem", letterSpacing: ".06em", textTransform: "uppercase" }}>{item.brand}</span>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "0.625rem", flexWrap: "wrap" }}>
+            <span className={s.price} style={{ fontSize: "1.875rem" }}>{inrPaise(item.price_paise)}</span>
+            {item.mrp_paise && <s className={s.mrp} style={{ fontSize: "0.9375rem" }}>MRP {inrPaise(item.mrp_paise)}</s>}
           </div>
-          {item.description && <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55 }}>{item.description}</p>}
-          {pack && <p style={{ margin: 0, fontSize: 15 }}><strong style={{ fontWeight: 600 }}>Pack:</strong> {pack}</p>}
+          {item.description && <p style={{ margin: 0, fontSize: "0.9375rem", lineHeight: 1.55 }}>{item.description}</p>}
+          {pack && <p style={{ margin: 0, fontSize: "0.9375rem" }}><strong style={{ fontWeight: 600 }}>Pack:</strong> {pack}</p>}
           {item.in_stock ? (
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.75rem" }}>
               <div role="group" aria-label="Quantity" className={s.stepper}>
                 <button type="button" aria-label="Decrease quantity" onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
-                <span aria-live="polite" style={{ minWidth: 32, textAlign: "center", fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 22 }}>{qty}</span>
+                <span aria-live="polite" style={{ minWidth: "2rem", textAlign: "center", fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.375rem" }}>{qty}</span>
                 <button type="button" aria-label="Increase quantity" onClick={() => setQty((q) => Math.min(Math.min(10, item.available_qty), q + 1))}>+</button>
               </div>
-              <button type="button" className={s.primary} style={{ flex: "1 1 180px", height: 52, background: "var(--dz-pink)" }} onClick={() => { const el = sheet.current!; onAdd(qty, el); close(); }}>
+              <button type="button" className={s.primary} style={{ flex: "1 1 180px", height: "3.25rem", background: "var(--dz-pink)" }} onClick={() => { const el = sheet.current!; onAdd(qty, el); close(); }}>
                 Add {qty} · {inrPaise(item.price_paise * qty)}
               </button>
             </div>
           ) : (
-            <button type="button" className={s.notify} style={{ height: 52, fontSize: 16 }} onClick={onNotify}>{notified ? "We'll tell you ✓" : "Notify me when it’s back"}</button>
+            <button type="button" className={s.notify} style={{ height: "3.25rem", fontSize: "1rem" }} onClick={onNotify}>{notified ? "We'll tell you ✓" : "Notify me when it’s back"}</button>
           )}
           <div className={s.soldBy}>
-            <span style={{ flex: "none", width: 44, height: 44, borderRadius: 999, background: "var(--dz-paper)", border: "2px solid var(--dz-ink)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 24, height: 24 }} fill="var(--dz-pink-200)" stroke="var(--dz-ink)" strokeWidth="1.9" strokeLinejoin="round"><path d="M3 10l2-6h14l2 6" /><path d="M4 10h16v10H4z" fill="var(--dz-paper)" /><path d="M10 20v-5h4v5" /></svg>
+            <span style={{ flex: "none", width: "2.75rem", height: "2.75rem", borderRadius: "62.4375rem", background: "var(--dz-paper)", border: "2px solid var(--dz-ink)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1.5rem", height: "1.5rem" }} fill="var(--dz-pink-200)" stroke="var(--dz-ink)" strokeWidth="1.9" strokeLinejoin="round"><path d="M3 10l2-6h14l2 6" /><path d="M4 10h16v10H4z" fill="var(--dz-paper)" /><path d="M10 20v-5h4v5" /></svg>
             </span>
-            <span style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-              <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ink-75)" }}>Sold by</span>
-              <span style={{ fontWeight: 600, fontSize: 15 }}>{item.vendor.name}</span>
-              <span style={{ fontSize: 13 }}>{[item.vendor.area, d != null ? `${d} km away` : null].filter(Boolean).join(" · ")}</span>
+            <span style={{ display: "flex", flexDirection: "column", gap: "0.125rem", minWidth: 0 }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--ink-75)" }}>Sold by</span>
+              <span style={{ fontWeight: 600, fontSize: "0.9375rem" }}>{item.vendor.name}</span>
+              <span style={{ fontSize: "0.8125rem" }}>{[item.vendor.area, d != null ? `${d} km away` : null].filter(Boolean).join(" · ")}</span>
             </span>
           </div>
-          <p style={{ margin: 0, fontSize: 14, fontWeight: 500 }}>{DELIVERY_ESTIMATE}</p>
+          <p style={{ margin: 0, fontSize: "0.875rem", fontWeight: 500 }}>{DELIVERY_ESTIMATE}</p>
         </div>
       </div>
     </div>

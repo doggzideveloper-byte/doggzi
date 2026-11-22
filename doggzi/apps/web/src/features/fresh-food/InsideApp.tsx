@@ -87,7 +87,7 @@ export function InsideApp({ onOpen }: { onOpen: (i: number) => void }) {
 
   return (
     <section id="inside-the-app" className={s.band}>
-      <div data-reveal="" className={s.wrap} style={{ paddingTop: "clamp(56px,8vw,104px)", paddingBottom: 8 }}>
+      <div data-reveal="" className={s.wrap} style={{ paddingTop: "clamp(3.5rem,8vw,6.5rem)", paddingBottom: "0.5rem" }}>
         <div data-ri="" className={s.head}>
           <Badge tone="cream">Inside the app</Badge>
           <h2 className="dz-h2">Ordering happens in the app</h2>
@@ -96,13 +96,13 @@ export function InsideApp({ onOpen }: { onOpen: (i: number) => void }) {
       {reduced ? (
         <div className={`${s.wrap} ${s.grid6}`}>
           {APP_SCREENS.map((c, i) => (
-            <figure key={c.src} style={{ margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <figure key={c.src} style={{ margin: 0, display: "flex", flexDirection: "column", gap: "0.625rem" }}>
               <button type="button" className={s.gridShot} onClick={() => onOpen(i)} aria-label={`Enlarge screen ${i + 1}: ${c.title}`}>
                 <img src={c.src} alt={`Doggzi app: ${c.title}`} loading="lazy" />
               </button>
-              <figcaption style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 17, letterSpacing: ".04em", textTransform: "uppercase" }}>{i + 1}. {c.title}</span>
-                <span style={{ fontSize: 14, lineHeight: 1.5 }}>{c.body}</span>
+              <figcaption style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.0625rem", letterSpacing: ".04em", textTransform: "uppercase" }}>{i + 1}. {c.title}</span>
+                <span style={{ fontSize: "0.875rem", lineHeight: 1.5 }}>{c.body}</span>
               </figcaption>
             </figure>
           ))}
@@ -113,7 +113,7 @@ export function InsideApp({ onOpen }: { onOpen: (i: number) => void }) {
             <div className={s.coverText} aria-live="polite">
               <span className={s.coverN}>{active + 1}</span>
               <h3 className={s.coverH}>{sc.title}</h3>
-              <p style={{ margin: 0, maxWidth: "36ch", fontSize: "clamp(15px,1.6vw,18px)", lineHeight: 1.6, textWrap: "pretty" } as React.CSSProperties}>{sc.body}</p>
+              <p style={{ margin: 0, maxWidth: "36ch", fontSize: "clamp(0.9375rem,1.6vw,1.125rem)", lineHeight: 1.6, textWrap: "pretty" } as React.CSSProperties}>{sc.body}</p>
               <div className={s.dots}>
                 {APP_SCREENS.map((_, i) => <button key={i} type="button" className={s.dotBtn} aria-label={`Show screen ${i + 1}`} aria-current={i === active} onClick={() => go(i)} />)}
               </div>
@@ -173,10 +173,10 @@ export function AppWall({ onOpen }: { onOpen: (i: number) => void }) {
     });
   return (
     <section aria-labelledby="ff-wall-h" className={s.wall}>
-      <div data-reveal="" className={s.wrap} style={{ paddingTop: "clamp(48px,7vw,80px)", display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+      <div data-reveal="" className={s.wrap} style={{ paddingTop: "clamp(3rem,7vw,5rem)", display: "flex", flexDirection: "column", gap: "0.625rem", alignItems: "flex-start" }}>
         <span data-ri=""><Badge tone="onDark">App wall</Badge></span>
         <h2 data-ri="" id="ff-wall-h" className="dz-h2" style={{ color: "var(--dz-cream)" }}>Every screen, one tap away</h2>
-        <p data-ri="" style={{ margin: 0, fontSize: 16 }}>Tap any screen for a closer look.</p>
+        <p data-ri="" style={{ margin: 0, fontSize: "1rem" }}>Tap any screen for a closer look.</p>
       </div>
       <div className={s.wallPlane} onMouseEnter={pause} onMouseLeave={play} onFocus={pause} onBlur={play}>
         <div className={s.wallTilt}>
@@ -228,10 +228,10 @@ export function Lightbox({ index, onNav, onClose }: { index: number; onNav: (d: 
         x0.current = null;
         if (Math.abs(dx) > 50) nav(dx < 0 ? 1 : -1);
       }}>
-      <button type="button" data-lb-close="" className={s.lbBtn} style={{ position: "absolute", top: 16, right: 16, fontSize: 26, fontWeight: 500 }} onClick={onClose} aria-label="Close">×</button>
-      <div style={{ display: "flex", alignItems: "center", gap: "clamp(8px,3vw,32px)" }}>
+      <button type="button" data-lb-close="" className={s.lbBtn} style={{ position: "absolute", top: "1rem", right: "1rem", fontSize: "1.625rem", fontWeight: 500 }} onClick={onClose} aria-label="Close">×</button>
+      <div style={{ display: "flex", alignItems: "center", gap: "clamp(0.5rem,3vw,2rem)" }}>
         <button type="button" className={s.lbBtn} onClick={() => nav(-1)} aria-label="Previous screen">←</button>
-        <figure style={{ margin: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+        <figure style={{ margin: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.875rem" }}>
           <img ref={img} src={sc.src} alt={`Doggzi app: ${sc.title}`} draggable={false} className={s.lbImg} />
           <figcaption className={s.lbCap}>{index + 1} / 6 · {sc.title}</figcaption>
         </figure>

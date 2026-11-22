@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("GUEST_JWT_SECRET", "test-guest-secret")
 os.environ.setdefault("AUTH_JWT_SECRET", "test-auth-secret")
+os.environ.setdefault("INTERNAL_TOKEN", "test-internal")
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402

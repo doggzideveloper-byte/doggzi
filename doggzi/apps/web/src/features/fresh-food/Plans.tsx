@@ -15,7 +15,7 @@ const PawStamp = () => {
   }, []);
   return (
     <span ref={ref} aria-hidden="true" className={s.paw}>
-      <svg viewBox="0 0 24 24" style={{ width: 32, height: 32 }} fill="var(--dz-green-700)"><ellipse cx="12" cy="16" rx="5" ry="4.2" /><ellipse cx="5.5" cy="10.5" rx="2" ry="2.6" /><ellipse cx="9.5" cy="6.5" rx="2" ry="2.6" /><ellipse cx="14.5" cy="6.5" rx="2" ry="2.6" /><ellipse cx="18.5" cy="10.5" rx="2" ry="2.6" /></svg>
+      <svg viewBox="0 0 24 24" style={{ width: "2rem", height: "2rem" }} fill="var(--dz-green-700)"><ellipse cx="12" cy="16" rx="5" ry="4.2" /><ellipse cx="5.5" cy="10.5" rx="2" ry="2.6" /><ellipse cx="9.5" cy="6.5" rx="2" ry="2.6" /><ellipse cx="14.5" cy="6.5" rx="2" ry="2.6" /><ellipse cx="18.5" cy="10.5" rx="2" ry="2.6" /></svg>
     </span>
   );
 };

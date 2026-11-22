@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     min_lead_minutes: int = 120
     # Phase 1 demo: pre-fill ~1 in 5 new slots as full so the UI shows real "unavailable" states.
     mock_availability: bool = True
+    pet_profile_url: str = "http://pet-profile:8000"
+    internal_token: str = ""
 
     @property
     def pincodes(self) -> set[str]:

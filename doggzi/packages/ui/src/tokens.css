@@ -1,11 +1,13 @@
 /* Doggzi design tokens: the single source of truth. Never hard-code these values elsewhere. */
-@font-face {
-  font-family: "TAN Songbird";
-  src: url("/brand/fonts/TAN-Songbird.woff2") format("woff2");
-  font-display: swap;
-}
+/* TAN Songbird is commercial and not licensed yet. When the .woff2 arrives, add it to
+   public/brand/fonts/ and restore its @font-face here; until then --font-display falls back to Atma. */
 
 :root {
+  /* Density. Every size token (type, spacing, radius, container, header) is in rem, so this one
+     value scales the whole UI together. Phones and tablets stay at 100%; desktops get the denser
+     look of the Claude Design files (about 87.5% of the mobile scale). */
+  --root-scale: 100%;
+
   /* Brand colour */
   --dz-orange: #F65322;
   --dz-orange-600: #D9431A;
@@ -39,18 +41,18 @@
   --fs-small: 0.875rem;
 
   /* Shape */
-  --r-sm: 10px;
-  --r-md: 18px;
-  --r-lg: 28px;
-  --r-pill: 999px;
+  --r-sm: 0.625rem;
+  --r-md: 1.125rem;
+  --r-lg: 1.75rem;
+  --r-pill: 62.4375rem;
   --stroke: 2.5px solid var(--dz-ink);
   --shadow-sticker: 4px 4px 0 var(--dz-ink);
   --shadow-sticker-hover: 6px 6px 0 var(--dz-ink);
   --shadow-sticker-press: 0 0 0 var(--dz-ink);
 
   /* Spacing (4px base) */
-  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
-  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
+  --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem;
 
   /* Motion: keep in sync with motion.ts */
   --dur-fast: 180ms;
@@ -63,10 +65,10 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* Layout */
-  --container: 1200px;
-  --gutter: 20px;
-  --header-h: clamp(72px, 2vw + 56px, 84px);
-  --mark-size: clamp(56px, 4vw + 26px, 64px);
+  --container: 75rem;
+  --gutter: 1.25rem;
+  --header-h: clamp(4.5rem, 2vw + 3.5rem, 5.25rem);
+  --mark-size: clamp(3.5rem, 4vw + 1.625rem, 4rem);
 
   /* Line-art illustration style */
   --art-stroke: 2.4px;
@@ -78,6 +80,12 @@
 }
 
 html { background: var(--dz-cream); color: var(--dz-ink); font-family: var(--font-body); }
+
+@media (min-width: 1024px) {
+  :root { --root-scale: 87.5%; }
+}
+
+html { font-size: var(--root-scale); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

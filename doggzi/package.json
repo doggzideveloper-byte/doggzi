@@ -1,0 +1,11 @@
+{
+  "name": "doggzi",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev:web": "npm run dev -w @doggzi/web",
+    "dev:console": "npm run dev -w @doggzi/console",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

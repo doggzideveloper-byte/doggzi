@@ -56,7 +56,7 @@ export default function ChoosePage() {
     el.animate(
       [
         { transform: `translate(${r.left}px,${r.top}px) scale(${r.width / W},${r.height / H})`, borderRadius: `${(28 * W) / r.width}px / ${(28 * H) / r.height}px` },
-        { transform: "none", borderRadius: "0px" },
+        { transform: "none", borderRadius: "0" },
       ],
       { duration: 600, easing: css.inOut, fill: "forwards" },
     ).onfinish = go;
@@ -96,7 +96,7 @@ export default function ChoosePage() {
         <>
           <p className={s.lead}>What we can do for {pet.name}</p>
           <ul className={s.pills}>{t.services.map((x) => <li key={x}>{x}</li>)}</ul>
-          <p className={s.foot} style={{ display: "flex", alignItems: "center", gap: 8 }}><span aria-hidden="true" className={s.dot} style={{ marginTop: 0 }} />Booked &amp; tracked end to end</p>
+          <p className={s.foot} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}><span aria-hidden="true" className={s.dot} style={{ marginTop: 0 }} />Booked &amp; tracked end to end</p>
         </>
       );
     else
@@ -111,7 +111,7 @@ export default function ChoosePage() {
         {bar}
         <div className={s.backBody}>{body}</div>
         <div className={s.cta}>
-          <Button data-continue="" block variant={c.key === "fresh" ? "primary" : c.key === "svc" ? "green" : "pink"} tabIndex={flipped === c.key ? 0 : -1} style={{ height: 50, fontSize: 17 }}
+          <Button data-continue="" block variant={c.key === "fresh" ? "primary" : c.key === "svc" ? "green" : "pink"} tabIndex={flipped === c.key ? 0 : -1} style={{ height: "3.125rem", fontSize: "1.0625rem" }}
             onClick={(e) => { e.stopPropagation(); cont(c.key); }}>
             Continue →
           </Button>
@@ -139,7 +139,7 @@ export default function ChoosePage() {
               key={c.key}
               ref={(el) => (wraps.current[c.key] = el)}
               className={s.card}
-              style={mobile && flipped === c.key ? { height: 400 } : undefined}
+              style={mobile && flipped === c.key ? { height: "25rem" } : undefined}
               flipped={flipped === c.key}
               dimmed={!!flipped && flipped !== c.key}
               reduced={reduced}
@@ -148,7 +148,7 @@ export default function ChoosePage() {
               frontStyle={{ background: c.bg, color: c.fg }}
               front={
                 <span className={s.front} style={{ position: "absolute", inset: 0 }}>
-                  <Badge size="sm" style={{ alignSelf: "flex-start", fontSize: 13 }}>{c.badge}</Badge>
+                  <Badge size="sm" style={{ alignSelf: "flex-start", fontSize: "0.8125rem" }}>{c.badge}</Badge>
                   <span className={s.icon}>{icon[c.key]}</span>
                   <span className={s.title}>{c.title}</span>
                   <span className={s.desc}>{desc[c.key]}</span>

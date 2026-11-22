@@ -260,8 +260,8 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
           }
         }}>
         <div className={s.pHead}>
-          {ix > 0 && step !== "done" && !busy && <button type="button" className={s.round} style={{ fontSize: 18, fontWeight: 600 }} onClick={back} aria-label="Back">←</button>}
-          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+          {ix > 0 && step !== "done" && !busy && <button type="button" className={s.round} style={{ fontSize: "1.125rem", fontWeight: 600 }} onClick={back} aria-label="Back">←</button>}
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
             <span className={s.kicker}>{step === "done" ? "Thank you" : `Step ${ix + 1} of 4`}</span>
             <h2 id="ck-title" className={s.pTitle}>{TITLES[step]}</h2>
           </div>
@@ -275,30 +275,30 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
           {step === "cart" && (
             <>
               {!count && (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, padding: "32px 8px", textAlign: "center" }}>
-                  <p style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>Your cart is empty.</p>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.875rem", padding: "2rem 0.5rem", textAlign: "center" }}>
+                  <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>Your cart is empty.</p>
                   <a href="#shop" onClick={close} style={{ fontWeight: 600 }}>Start shopping</a>
                 </div>
               )}
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {groups.map((g) => {
                   const d = distanceKm(g.vendor);
                   return (
                     <div key={g.vendor.id} className={s.group}>
                       <div className={s.groupHead}>
-                        <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 16, letterSpacing: ".06em", textTransform: "uppercase" }}>{g.vendor.name}</span>
-                        <span style={{ fontSize: 13, fontWeight: 500 }}>{d != null ? `${d} km away` : g.vendor.area}</span>
+                        <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1rem", letterSpacing: ".06em", textTransform: "uppercase" }}>{g.vendor.name}</span>
+                        <span style={{ fontSize: "0.8125rem", fontWeight: 500 }}>{d != null ? `${d} km away` : g.vendor.area}</span>
                       </div>
-                      <ul style={{ margin: 0, padding: 10, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+                      <ul style={{ margin: 0, padding: "0.625rem", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                         {g.lines.map(({ item, qty }) => (
                           <li key={item.id} className={s.line} onPointerDown={onDown(item.id)} onPointerMove={onMove(item.id)} onPointerUp={onUp(item.id)} onPointerCancel={onUp(item.id)}>
-                            <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+                            <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                               <span className={s.cardName} style={{ minHeight: 0 }}>{item.name}</span>
-                              <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 16 }}>{inrPaise(item.price_paise * qty)}</span>
+                              <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1rem" }}>{inrPaise(item.price_paise * qty)}</span>
                             </span>
                             <span role="group" aria-label={`Quantity of ${item.name}`} className={`${s.stepper} ${s.stepperSm}`}>
                               <button type="button" aria-label={qty === 1 ? `Remove ${item.name}` : `One less ${item.name}`} onClick={() => setQty(item.id, qty - 1)}>−</button>
-                              <span style={{ minWidth: 20, textAlign: "center", fontWeight: 700 }}>{qty}</span>
+                              <span style={{ minWidth: "1.25rem", textAlign: "center", fontWeight: 700 }}>{qty}</span>
                               <button type="button" aria-label={`One more ${item.name}`} disabled={qty >= Math.min(10, item.available_qty)} onClick={() => setQty(item.id, qty + 1)}>+</button>
                             </span>
                           </li>
@@ -312,17 +312,17 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
                   );
                 })}
               </div>
-              {count > 0 && <p style={{ margin: "12px 0 0", fontSize: 13, color: "rgba(20,18,16,.7)" }}>Swipe an item left to remove it. Delivery fee: draft, set per store.</p>}
+              {count > 0 && <p style={{ margin: "0.75rem 0 0", fontSize: "0.8125rem", color: "rgba(20,18,16,.7)" }}>Swipe an item left to remove it. Delivery fee: draft, set per store.</p>}
             </>
           )}
 
           {step === "address" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
               {addrs.map((a, i) => <button key={i} type="button" className={s.addr} aria-pressed={addr === a} onClick={() => { setAddr(a); setPayErr(null); }}>{addrText(a)}</button>)}
               {blocked.map((g) => (
                 <div key={g.vendor.id} role="alert" className={s.blocked}>
-                  <p style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>{g.vendor.name} can't deliver to {addr!.pincode} yet.</p>
-                  <button type="button" className={s.fchip} style={{ alignSelf: "flex-start", height: 44, background: "var(--dz-paper)" }} onClick={() => g.lines.forEach((l) => setQty(l.item.id, 0))}>Remove its items</button>
+                  <p style={{ margin: 0, fontSize: "0.9375rem", fontWeight: 600 }}>{g.vendor.name} can't deliver to {addr!.pincode} yet.</p>
+                  <button type="button" className={s.fchip} style={{ alignSelf: "flex-start", height: "2.75rem", background: "var(--dz-paper)" }} onClick={() => g.lines.forEach((l) => setQty(l.item.id, 0))}>Remove its items</button>
                 </div>
               ))}
               {payErr && <p role="alert" className={s.err}>{payErr}</p>}
@@ -332,21 +332,21 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
                 <label className={s.fl}>Area / sector<input className={s.in} value={af.area} autoComplete="address-line2" onChange={(e) => { setAf({ ...af, area: e.target.value }); setAfErr(null); }} /></label>
                 <label className={s.fl}>Pincode<input className={s.in} value={af.pin} inputMode="numeric" maxLength={6} autoComplete="postal-code" onChange={(e) => { setAf({ ...af, pin: e.target.value.replace(/\D/g, "").slice(0, 6) }); setAfErr(null); }} /></label>
                 {afErr && <p role="alert" className={s.err}>{afErr}</p>}
-                <button type="submit" className={s.primary} style={{ height: 48, fontSize: 15, boxShadow: "none" }}>Use this address</button>
+                <button type="submit" className={s.primary} style={{ height: "3rem", fontSize: "0.9375rem", boxShadow: "none" }}>Use this address</button>
               </form>
             </div>
           )}
 
           {step === "verify" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5 }}>We'll text a 6-digit code to confirm it's you.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+              <p style={{ margin: 0, fontSize: "0.9375rem", lineHeight: 1.5 }}>We'll text a 6-digit code to confirm it's you.</p>
               <label className={s.fl}>Mobile number
-                <span className={s.phone}><span aria-hidden="true" style={{ padding: "0 4px 0 16px", fontWeight: 600 }}>+91</span>
+                <span className={s.phone}><span aria-hidden="true" style={{ padding: "0 0.25rem 0 1rem", fontWeight: 600 }}>+91</span>
                   <input type="tel" inputMode="numeric" maxLength={11} value={phone} autoComplete="tel-national" placeholder="98765 43210" onChange={(e) => { setPhone(e.target.value.replace(/[^\d ]/g, "")); setOtpErr(null); setOtpSent(false); }} />
                 </span>
               </label>
               {otpSent && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                   {devCode && <p role="status" className={s.note}>Dev only: console OTP provider sent <strong style={{ fontFamily: "var(--font-accent)", letterSpacing: ".2em" }}>{devCode}</strong></p>}
                   <label className={s.fl}>6-digit code<input className={s.otp} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, "").slice(0, 6)); setOtpErr(null); }} /></label>
                 </div>
@@ -365,21 +365,21 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
                   ["Estimate", DELIVERY_ESTIMATE],
                 ].map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
               </dl>
-              {busy && <p role="status" className={s.note} style={{ marginTop: 14, fontSize: 14, fontWeight: 600 }}>Payment (test mode): confirming…</p>}
-              {payErr && <p role="alert" className={s.err} style={{ marginTop: 12 }}>{payErr}</p>}
-              <p style={{ margin: "14px 0 0", fontSize: 13, lineHeight: 1.5, color: "var(--ink-75)" }}>Test mode: no real payment is taken. The total is recomputed on the server and stock is reserved before payment. Razorpay will replace this step.</p>
+              {busy && <p role="status" className={s.note} style={{ marginTop: "0.875rem", fontSize: "0.875rem", fontWeight: 600 }}>Payment (test mode): confirming…</p>}
+              {payErr && <p role="alert" className={s.err} style={{ marginTop: "0.75rem" }}>{payErr}</p>}
+              <p style={{ margin: "0.875rem 0 0", fontSize: "0.8125rem", lineHeight: 1.5, color: "var(--ink-75)" }}>Test mode: no real payment is taken. The total is recomputed on the server and stock is reserved before payment. Razorpay will replace this step.</p>
             </>
           )}
 
           {step === "done" && order && (
             <>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "20px 4px", textAlign: "center" }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", padding: "1.25rem 0.25rem", textAlign: "center" }}>
                 <div ref={stamp} className={s.stamp}>Packed with love</div>
-                <p style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>{possessive(pet.name)} order is with the store.</p>
-                <p style={{ margin: 0, fontSize: 15 }}>Total {inrPaise(order.total_paise)}</p>
+                <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>{possessive(pet.name)} order is with the store.</p>
+                <p style={{ margin: 0, fontSize: "0.9375rem" }}>Total {inrPaise(order.total_paise)}</p>
                 {!local && <Link to={`/orders/${order.id}`} onClick={onClose} style={{ fontWeight: 600 }}>Track this order →</Link>}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 {order.sub_orders.map((so) => <OrderTrack key={so.id} store={so.vendor.name} reference={order.id.slice(0, 6).toUpperCase()} status={so.status} />)}
               </div>
             </>
@@ -389,8 +389,8 @@ export function CheckoutDrawer({ narrow, lines, byId, pet, isDemo, offline, setQ
         <div className={s.foot}>
           {step !== "done" && step !== "verify" && (
             <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-              <span style={{ fontSize: 12, fontWeight: 500 }}>Total</span>
-              <span ref={totalEl} aria-live="polite" style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 26, fontVariantNumeric: "tabular-nums" }} />
+              <span style={{ fontSize: "0.75rem", fontWeight: 500 }}>Total</span>
+              <span ref={totalEl} aria-live="polite" style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.625rem", fontVariantNumeric: "tabular-nums" }} />
             </div>
           )}
           <button type="button" className={s.primary} disabled={primary.dis} style={{ background: step === "pay" ? "var(--dz-pink)" : undefined }} onClick={() => !primary.dis && primary.fn()}>{primary.label}</button>
@@ -409,10 +409,10 @@ export function OrderTrack({ store, reference, status }: { store: string; refere
   }, []);
   return (
     <div className={s.track}>
-      <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 15, letterSpacing: ".08em", textTransform: "uppercase" }}>{store} · order {reference}</span>
-      <div style={{ position: "relative", height: 40, margin: "0 12px" }}>
-        <span aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: 30, height: 2.5, background: "var(--dz-ink)" }} />
-        <svg ref={van} viewBox="0 0 72 46" aria-hidden="true" style={{ position: "absolute", left: `calc(${(at / 4) * 100}% - 14px)`, top: 0, width: 44, height: 28 }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2.4" strokeLinejoin="round">
+      <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "0.9375rem", letterSpacing: ".08em", textTransform: "uppercase" }}>{store} · order {reference}</span>
+      <div style={{ position: "relative", height: "2.5rem", margin: "0 0.75rem" }}>
+        <span aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: "1.875rem", height: "0.15625rem", background: "var(--dz-ink)" }} />
+        <svg ref={van} viewBox="0 0 72 46" aria-hidden="true" style={{ position: "absolute", left: `calc(${(at / 4) * 100}% - 14px)`, top: 0, width: "2.75rem", height: "1.75rem" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2.4" strokeLinejoin="round">
           <path d="M2 8h44v28H2z" /><path d="M46 14h14l10 12v10H46z" fill="var(--dz-pink)" /><circle cx="16" cy="38" r="6" fill="var(--dz-ink)" /><circle cx="58" cy="38" r="6" fill="var(--dz-ink)" />
         </svg>
       </div>

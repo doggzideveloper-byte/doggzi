@@ -137,7 +137,7 @@ export const Hero = forwardRef<HTMLElement, Props>(function Hero({ pet, soon, no
               {notified ? (
                 <p role="status" className={s.notified}>Saved to {poss} passport. We'll let you know ✓</p>
               ) : (
-                <Button variant="secondary" style={{ height: 56, fontSize: 18, padding: "0 28px" }} onClick={onNotify}>Notify me</Button>
+                <Button variant="secondary" style={{ height: "3.5rem", fontSize: "1.125rem", padding: "0 1.75rem" }} onClick={onNotify}>Notify me</Button>
               )}
             </>
           )}

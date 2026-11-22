@@ -3,5 +3,6 @@
 **/__pycache__/
 **/.pytest_cache/
 **/*.db
-apps/web/node_modules/
-apps/web/dist/
+**/node_modules/
+**/dist/
+tools/visual/out/

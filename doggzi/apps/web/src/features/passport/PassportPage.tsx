@@ -26,7 +26,7 @@ function Paw() {
     return () => a.cancel();
   }, []);
   return (
-    <svg ref={ref} viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, flex: "none" }} fill="var(--dz-cream)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round">
+    <svg ref={ref} viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1.25rem", height: "1.25rem", flex: "none" }} fill="var(--dz-cream)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round">
       <ellipse cx="12" cy="16" rx="5" ry="4.2" /><ellipse cx="5.5" cy="10.5" rx="2" ry="2.6" /><ellipse cx="9.5" cy="6.5" rx="2" ry="2.6" /><ellipse cx="14.5" cy="6.5" rx="2" ry="2.6" /><ellipse cx="18.5" cy="10.5" rx="2" ry="2.6" />
     </svg>
   );
@@ -261,7 +261,7 @@ export function PassportPage() {
             <div className={s.cardBar}><span>Doggzi pet passport</span><span>Delhi NCR</span></div>
             <div className={s.cardBody}>
               <PetAvatar type={type} breed={breed} size={104} border={2.5} animate placeholder="?" />
-              <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                 <span className={s.label}>Name</span>
                 <div aria-live="polite" className={s.petName}>
                   {trimmed ? trimmed.toUpperCase().split("").map((l, i) => <span key={i} className={s.letter} style={{ animation: letterAnim }}>{l}</span>) : <span style={{ color: "var(--ink-25)" }}>Your pet</span>}
@@ -300,7 +300,7 @@ export function PassportPage() {
 
             <div className={s.field}>
               <label htmlFor="dz-breed" className={s.q}>
-                <span className={s.step}>Step 3</span>Breed <span style={{ fontWeight: 400, fontSize: 15, color: "rgba(20,18,16,.65)" }}>(optional)</span>
+                <span className={s.step}>Step 3</span>Breed <span style={{ fontWeight: 400, fontSize: "0.9375rem", color: "rgba(20,18,16,.65)" }}>(optional)</span>
               </label>
               <input id="dz-breed" role="combobox" className={s.input} aria-expanded={showList} aria-controls="dz-breed-list" aria-autocomplete="list"
                 aria-activedescendant={showList && options[active] ? `dz-opt-${active}` : undefined}
@@ -323,12 +323,12 @@ export function PassportPage() {
                       {o.pinned && <span className={s.popular}>Popular</span>}
                     </li>
                   ))}
-                  {options.length === 0 && <li style={{ padding: "12px 14px", fontSize: 15, color: "rgba(20,18,16,.7)" }}>No match — we'll save it as Mixed / Not sure.</li>}
+                  {options.length === 0 && <li style={{ padding: "0.75rem 0.875rem", fontSize: "0.9375rem", color: "rgba(20,18,16,.7)" }}>No match — we'll save it as Mixed / Not sure.</li>}
                 </ul>
               )}
             </div>
 
-            <Button type="submit" size="lg" block disabled={approved} style={{ marginTop: 6 }}>
+            <Button type="submit" size="lg" block disabled={approved} style={{ marginTop: "0.375rem" }}>
               {editing ? "Save passport" : "Create passport"} <span aria-hidden="true">→</span>
             </Button>
           </form>

@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from ...core import cache
 from ...core.config import get_settings
+from ...core.pets import PetLookup, get_pet_lookup, require_own_pet
 from ...core.security import AuthUser, get_user
 from ...db import get_db
 from ...models import Booking, BookingItem, ServiceItem, Slot
@@ -39,7 +40,8 @@ def slots(date_: date = Query(alias="date"), db: Session = Depends(get_db)) -> l
 
 
 @router.post("/bookings", response_model=BookingOut, status_code=status.HTTP_201_CREATED, summary="Request a booking (login required)")
-def create_booking(body: BookingIn, user: AuthUser = Depends(get_user), db: Session = Depends(get_db)) -> BookingOut:
+def create_booking(body: BookingIn, user: AuthUser = Depends(get_user), db: Session = Depends(get_db), pets: PetLookup = Depends(get_pet_lookup)) -> BookingOut:
+    require_own_pet(pets, body.pet_id, user.id)
     slugs = list(dict.fromkeys(body.item_slugs))
     items = {i.slug: i for i in db.scalars(select(ServiceItem).where(ServiceItem.slug.in_(slugs), ServiceItem.is_active.is_(True)))}
     missing = [s for s in slugs if s not in items]

@@ -46,7 +46,7 @@ export function Testimonials({ tag, heading = "Happy tails", list = TESTIMONIALS
             <figure key={i} aria-hidden={i >= items.length || undefined} className={`${s.card} ${t.placeholder ? s.ph : ""}`}>
               <div className={s.who}>
                 <PetAvatar type={t.type} breed={t.breed} size={52} bg="var(--dz-paper)" />
-                <span style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
+                <span style={{ display: "flex", flexDirection: "column", gap: "0.125rem", minWidth: 0 }}>
                   <span className={s.pet}>{t.pet}</span>
                   <span className={s.meta}>{t.parent} · {t.area}</span>
                 </span>

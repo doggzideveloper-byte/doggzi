@@ -1,25 +1,25 @@
-.main { max-width: var(--container); margin: 0 auto; padding: clamp(24px, 5vw, 56px) var(--gutter) 80px; display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 4vw, 48px); }
-.intro { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.main { max-width: var(--container); margin: 0 auto; padding: clamp(1.5rem, 5vw, 3.5rem) var(--gutter) 5rem; display: flex; flex-direction: column; align-items: center; gap: clamp(1.75rem, 4vw, 3rem); }
+.intro { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; }
 .h1 { font-size: clamp(2.1rem, 5.5vw, 4rem); line-height: 1.08; }
-.sub { margin: 0; font-size: 18px; line-height: 1.6; color: var(--ink-75); }
-.cards { width: 100%; max-width: 1020px; display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 3vw, 32px); }
-.card { flex: 1 1 280px; max-width: 340px; height: clamp(300px, 30vw + 120px, 400px); }
+.sub { margin: 0; font-size: 1.125rem; line-height: 1.6; color: var(--ink-75); }
+.cards { width: 100%; max-width: 63.75rem; display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(1.25rem, 3vw, 2rem); }
+.card { flex: 1 1 17.5rem; max-width: 21.25rem; height: clamp(18.75rem, 30vw + 7.5rem, 25rem); }
 @media (max-width: 640px) { .card { max-width: none; } }
-.front { padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+.front { padding: 1.375rem 1.375rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .icon { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
 .title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 2.6vw + 1rem, 2.5rem); line-height: 1; letter-spacing: .02em; text-transform: uppercase; }
-.desc { font-size: 16px; font-weight: 500; line-height: 1.45; }
-.backBar { border-bottom: var(--stroke); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-family: var(--font-accent); font-weight: 700; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; }
-.backBody { flex: 1; min-height: 0; padding: 14px 18px 0; display: flex; flex-direction: column; gap: 10px; color: var(--dz-ink); }
-.lead { margin: 0; font-weight: 600; font-size: 17px; line-height: 1.3; }
-.dotList { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
-.dotList li { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; line-height: 1.4; }
-.dot { flex: none; width: 9px; height: 9px; margin-top: 5px; border-radius: 999px; background: var(--dz-green); border: 1.5px solid var(--dz-ink); }
-.pills { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
-.pills li { font-size: 14px; font-weight: 500; padding: 5px 12px; border: 2px solid var(--dz-ink); border-radius: var(--r-pill); background: var(--dz-cream); }
+.desc { font-size: 1rem; font-weight: 500; line-height: 1.45; }
+.backBar { border-bottom: var(--stroke); padding: 0.625rem 1.125rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-family: var(--font-accent); font-weight: 700; font-size: 0.9375rem; letter-spacing: .12em; text-transform: uppercase; }
+.backBody { flex: 1; min-height: 0; padding: 0.875rem 1.125rem 0; display: flex; flex-direction: column; gap: 0.625rem; color: var(--dz-ink); }
+.lead { margin: 0; font-weight: 600; font-size: 1.0625rem; line-height: 1.3; }
+.dotList { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.4375rem; }
+.dotList li { display: flex; gap: 0.5625rem; align-items: flex-start; font-size: 0.875rem; line-height: 1.4; }
+.dot { flex: none; width: 0.5625rem; height: 0.5625rem; margin-top: 0.3125rem; border-radius: 62.4375rem; background: var(--dz-green); border: 1.5px solid var(--dz-ink); }
+.pills { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pills li { font-size: 0.875rem; font-weight: 500; padding: 0.3125rem 0.75rem; border: 2px solid var(--dz-ink); border-radius: var(--r-pill); background: var(--dz-cream); }
 .prices { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
-.prices li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 7px 0; border-bottom: 1.5px dashed rgba(20, 18, 16, .3); font-size: 15px; }
-.foot { margin: auto 0 0; font-size: 15px; }
-.cta { padding: 12px 18px 18px; }
+.prices li { display: flex; justify-content: space-between; align-items: baseline; gap: 0.625rem; padding: 0.4375rem 0; border-bottom: 1.5px dashed rgba(20, 18, 16, .3); font-size: 0.9375rem; }
+.foot { margin: auto 0 0; font-size: 0.9375rem; }
+.cta { padding: 0.75rem 1.125rem 1.125rem; }
 .handoff { position: fixed; inset: 0; z-index: 40; border: var(--stroke); transform-origin: 0 0; }
-@media (max-width: 640px) { .card { height: auto; min-height: 220px; } }
+@media (max-width: 640px) { .card { height: auto; min-height: 13.75rem; } }

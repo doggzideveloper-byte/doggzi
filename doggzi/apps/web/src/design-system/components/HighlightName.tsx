@@ -31,7 +31,7 @@ export function HighlightName({ children, delay = 380, onView = false, color = "
   }, [delay, onView]);
   return (
     <span style={{ position: "relative", display: "inline-block", padding: "0 .14em" }}>
-      <span ref={ref} aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: ".12em", bottom: ".06em", background: color, borderRadius: 10, transformOrigin: "left center", transform: "rotate(-1.5deg)" }} />
+      <span ref={ref} aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: ".12em", bottom: ".06em", background: color, borderRadius: "0.625rem", transformOrigin: "left center", transform: "rotate(-1.5deg)" }} />
       <span style={{ position: "relative" }}>{children}</span>
     </span>
   );

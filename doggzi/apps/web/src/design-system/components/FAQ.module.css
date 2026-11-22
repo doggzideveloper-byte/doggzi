@@ -1,12 +1,12 @@
-.sec { max-width: 860px; margin: 0 auto; padding: clamp(56px, 8vw, 104px) var(--gutter); display: flex; flex-direction: column; gap: clamp(24px, 4vw, 36px); scroll-margin-top: 84px; }
-.head { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-.list { display: flex; flex-direction: column; gap: 12px; }
+.sec { max-width: 53.75rem; margin: 0 auto; padding: clamp(3.5rem, 8vw, 6.5rem) var(--gutter); display: flex; flex-direction: column; gap: clamp(1.5rem, 4vw, 2.25rem); scroll-margin-top: 5.25rem; }
+.head { display: flex; flex-direction: column; gap: 0.625rem; align-items: flex-start; }
+.list { display: flex; flex-direction: column; gap: 0.75rem; }
 .item { background: var(--dz-paper); border: var(--stroke); border-radius: var(--r-md); box-shadow: 2px 2px 0 var(--dz-ink); transition: box-shadow var(--dur-fast) var(--ease-out); }
 .open { box-shadow: var(--shadow-sticker); }
-.q { width: 100%; min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 18px 12px 20px; background: transparent; border: 0; border-radius: 16px; cursor: pointer; text-align: left; font: 600 17px/1.35 var(--font-body); color: var(--dz-ink); }
-.icon { flex: none; width: 34px; height: 34px; border-radius: var(--r-pill); border: 2px solid var(--dz-ink); background: var(--dz-cream); display: flex; align-items: center; justify-content: center; font: 500 24px/1 var(--font-body); transition: transform 450ms var(--ease-out), background var(--dur-fast); }
+.q { width: 100%; min-height: 3.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 1.125rem 0.75rem 1.25rem; background: transparent; border: 0; border-radius: 1rem; cursor: pointer; text-align: left; font: 600 1.0625rem/1.35 var(--font-body); color: var(--dz-ink); }
+.icon { flex: none; width: 2.125rem; height: 2.125rem; border-radius: var(--r-pill); border: 2px solid var(--dz-ink); background: var(--dz-cream); display: flex; align-items: center; justify-content: center; font: 500 1.5rem/1 var(--font-body); transition: transform 450ms var(--ease-out), background var(--dur-fast); }
 .open .icon { transform: rotate(45deg); background: var(--dz-pink); }
 .panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 450ms var(--ease-out); }
 .open .panel { grid-template-rows: 1fr; }
 .panel > div { overflow: hidden; }
-.a { margin: 0; padding: 0 20px 20px; font-size: 16px; line-height: 1.6; color: rgba(20, 18, 16, .85); max-width: 62ch; text-wrap: pretty; }
+.a { margin: 0; padding: 0 1.25rem 1.25rem; font-size: 1rem; line-height: 1.6; color: rgba(20, 18, 16, .85); max-width: 62ch; text-wrap: pretty; }

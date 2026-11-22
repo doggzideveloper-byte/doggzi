@@ -8,7 +8,7 @@ export function Switching() {
     <section id="switching" data-reveal="" className={s.band}>
       <div className={`${s.wrap} ${s.sec}`}>
         <div data-ri="" className={s.head}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem" }}>
             <Badge tone="cream">Switching from kibble</Badge>
             <Badge tone="draft">Draft ratios — confirm before launch</Badge>
           </div>
@@ -18,14 +18,14 @@ export function Switching() {
         <ol className={s.days}>
           {TRANSITION.map((t) => (
             <li key={t.days} data-ri="" className={s.day}>
-              <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: 18, letterSpacing: ".08em", textTransform: "uppercase" }}>{t.days}</span>
-              <div aria-hidden="true" style={{ width: "100%", maxWidth: 170, display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <span style={{ fontFamily: "var(--font-accent)", fontWeight: 700, fontSize: "1.125rem", letterSpacing: ".08em", textTransform: "uppercase" }}>{t.days}</span>
+              <div aria-hidden="true" style={{ width: "100%", maxWidth: "10.625rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <div className={s.miniBowl}>
                   <div style={{ width: `${t.fresh}%`, background: "var(--dz-orange)", borderRight: t.fresh > 0 && t.fresh < 100 ? "var(--stroke)" : 0 }} />
                 </div>
                 <div className={s.miniFoot} />
               </div>
-              <span style={{ fontSize: 15, fontWeight: 500, textAlign: "center" }}>{t.fresh >= 100 ? "All fresh" : `${t.fresh}% fresh · ${100 - t.fresh}% kibble`}</span>
+              <span style={{ fontSize: "0.9375rem", fontWeight: 500, textAlign: "center" }}>{t.fresh >= 100 ? "All fresh" : `${t.fresh}% fresh · ${100 - t.fresh}% kibble`}</span>
             </li>
           ))}
         </ol>

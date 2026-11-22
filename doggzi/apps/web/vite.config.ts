@@ -10,6 +10,8 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   server: {
     port: 5173,
+    // packages/ui lives outside this app's root
+    fs: { allow: [fileURLToPath(new URL("../..", import.meta.url))] },
     host: true,
     proxy: { "/api": { target: gateway, changeOrigin: true }, "/app": { target: gateway, changeOrigin: true } },
   },

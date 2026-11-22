@@ -40,11 +40,11 @@ function PackageCard({ item, pet, petName, inCart, onAdd }: { item: Item; pet: R
       <div className={s.sceneBox}>
         <ServiceScene sequence={steps.map((x) => x.scene)} pet={pet!} petName={petName} onStep={onStep} label={`Illustration: ${petName} going through ${steps.map((x) => x.label.toLowerCase()).join(", then ")}`} />
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "0.75rem" }}>
         <h3 className={s.pkgTitle}>{item.name}</h3>
         <span className={s.price}>{inrPaise(item.price_paise!)}</span>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         <span className={s.kicker}>What's included</span>
         <ul ref={listRef} className={s.checks}>
           {steps.map((st, k) => (
@@ -131,12 +131,12 @@ export default function ServicesPage() {
       <main>
         <section className={s.hero}>
           <div className={`${s.wrap} ${s.heroGrid}`}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: "flex-start", minWidth: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", alignItems: "flex-start", minWidth: 0 }}>
               <Badge>Services</Badge>
               <h1 className={`dz-display ${s.h1}`}>Spa day for <span className={s.nameTag}>{pet.name}</span></h1>
               <p style={{ margin: 0, maxWidth: "36ch", fontSize: "clamp(1.05rem,1.8vw,1.25rem)", lineHeight: 1.55, fontWeight: 500 }}>Doorstep grooming, training &amp; boarding across Delhi NCR.</p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                <ButtonA variant="ink" href={pet.type === "cat" ? "#spa" : "#packages"} style={{ height: 56, fontSize: 17 }}>{pet.type === "cat" ? "See spa services ↓" : "See packages ↓"}</ButtonA>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                <ButtonA variant="ink" href={pet.type === "cat" ? "#spa" : "#packages"} style={{ height: "3.5rem", fontSize: "1.0625rem" }}>{pet.type === "cat" ? "See spa services ↓" : "See packages ↓"}</ButtonA>
                 <a href="#spa" className={s.outline}>Build your own spa</a>
               </div>
             </div>
@@ -146,9 +146,9 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {loading && <p className={s.wrap} style={{ padding: "48px 20px", fontWeight: 600 }} role="status">Fetching {possessive(pet.name)} services…</p>}
+        {loading && <p className={s.wrap} style={{ padding: "3rem 1.25rem", fontWeight: 600 }} role="status">Fetching {possessive(pet.name)} services…</p>}
         {error && (
-          <p className={s.wrap} style={{ padding: "48px 20px" }} role="alert">
+          <p className={s.wrap} style={{ padding: "3rem 1.25rem" }} role="alert">
             We couldn't load services right now. <button type="button" onClick={() => refetch()} style={{ font: "inherit", fontWeight: 600, textDecoration: "underline", background: "none", border: 0, cursor: "pointer" }}>Try again</button>
           </p>
         )}
@@ -158,7 +158,7 @@ export default function ServicesPage() {
             <div data-ri="" className={s.head}>
               <Badge>Grooming packages</Badge>
               <h2 className="dz-h2">The full pamper, start to finish</h2>
-              <Badge tone="draft" size="sm" style={{ fontSize: 13 }}>Package contents: draft, to confirm</Badge>
+              <Badge tone="draft" size="sm" style={{ fontSize: "0.8125rem" }}>Package contents: draft, to confirm</Badge>
             </div>
             <div className={s.pkgGrid}>
               {packages.map((i) => <PackageCard key={i.slug} item={i} pet={petKey} petName={pet.name} inCart={cart.includes(i.slug)} onAdd={(e) => toggle(i.slug, e)} />)}
@@ -172,8 +172,8 @@ export default function ServicesPage() {
               <div data-ri="" className={s.head}>
                 <Badge tone="cream">Build your own spa</Badge>
                 <h2 className="dz-h2">Pick what <Sweep>{pet.name}</Sweep> needs</h2>
-                <p style={{ margin: 0, fontSize: 14, color: "var(--ink-75)" }}>{PRICE_NOTE}</p>
-                {pet.type === "cat" && <Badge tone="draft" size="sm" style={{ fontSize: 13 }}>Cat services: draft list, to confirm</Badge>}
+                <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--ink-75)" }}>{PRICE_NOTE}</p>
+                {pet.type === "cat" && <Badge tone="draft" size="sm" style={{ fontSize: "0.8125rem" }}>Cat services: draft list, to confirm</Badge>}
               </div>
               <div className={s.spaGrid}>
                 {spa.map((i) => {
@@ -181,9 +181,9 @@ export default function ServicesPage() {
                   return (
                     <article key={i.slug} data-ri="" data-card="" className={s.spa}>
                       <div className={s.sceneBoxPaper}><ServiceScene scene={i.scene} pet={petKey} petName={pet.name} /></div>
-                      <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, lineHeight: 1.3, minHeight: "2.6em" }}>{i.name}</h3>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                        <span className={s.price} style={{ fontSize: 20 }}>{inrPaise(i.price_paise!)}</span>
+                      <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 600, lineHeight: 1.3, minHeight: "2.6em" }}>{i.name}</h3>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
+                        <span className={s.price} style={{ fontSize: "1.25rem" }}>{inrPaise(i.price_paise!)}</span>
                         <button type="button" className={`${s.add} ${s.addSm}`} aria-pressed={on} aria-label={on ? `Remove ${i.name}` : `Add ${i.name}`} onClick={(e) => toggle(i.slug, e)}>{on ? "Added ✓" : "Add +"}</button>
                       </div>
                     </article>
@@ -204,28 +204,28 @@ export default function ServicesPage() {
               {extras.map((i) => {
                 const meta = EXTRAS[i.group], on = cart.includes(i.slug);
                 return (
-                  <article key={i.slug} data-ri="" data-card="" className={s.pkg} style={{ gap: 12, padding: "16px 16px 20px" }}>
+                  <article key={i.slug} data-ri="" data-card="" className={s.pkg} style={{ gap: "0.75rem", padding: "1rem 1rem 1.25rem" }}>
                     <div className={s.sceneBox}><ServiceScene scene={i.scene} pet={petKey} petName={pet.name} /></div>
                     <h3 className={s.pkgTitle} style={{ fontSize: "clamp(1.4rem,2.2vw,1.7rem)" }}>{meta.title}</h3>
-                    <span style={{ fontSize: 15, lineHeight: 1.45 }}>{meta.sub}</span>
-                    <span className={s.price} style={{ fontSize: 20 }}>{i.price_mode === "fixed" ? `${inrPaise(i.price_paise!)} / month` : i.price_mode === "on_request" ? "On request" : "Subject to availability"}</span>
+                    <span style={{ fontSize: "0.9375rem", lineHeight: 1.45 }}>{meta.sub}</span>
+                    <span className={s.price} style={{ fontSize: "1.25rem" }}>{i.price_mode === "fixed" ? `${inrPaise(i.price_paise!)} / month` : i.price_mode === "on_request" ? "On request" : "Subject to availability"}</span>
                     {i.price_mode === "fixed" ? (
                       <button type="button" className={s.add} style={{ marginTop: "auto" }} aria-pressed={on} onClick={(e) => toggle(i.slug, e)}>{on ? "Added ✓" : `Add + · ${inrPaise(i.price_paise!)}`}</button>
                     ) : (
-                      <ButtonA variant="greenInk" href={ask(meta.title.toLowerCase())} target="_blank" rel="noopener noreferrer" style={{ marginTop: "auto", fontSize: 17 }} onClick={() => track("whatsapp_ask", { service: i.slug })}>Ask on WhatsApp</ButtonA>
+                      <ButtonA variant="greenInk" href={ask(meta.title.toLowerCase())} target="_blank" rel="noopener noreferrer" style={{ marginTop: "auto", fontSize: "1.0625rem" }} onClick={() => track("whatsapp_ask", { service: i.slug })}>Ask on WhatsApp</ButtonA>
                     )}
                   </article>
                 );
               })}
             </div>
-            <p data-ri="" style={{ margin: 0, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, fontSize: 15 }}>
-              <Badge size="sm" style={{ borderStyle: "dashed", background: "transparent", fontSize: 13 }}>Coming soon</Badge>Walking and vet consults
+            <p data-ri="" style={{ margin: 0, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.625rem", fontSize: "0.9375rem" }}>
+              <Badge size="sm" style={{ borderStyle: "dashed", background: "transparent", fontSize: "0.8125rem" }}>Coming soon</Badge>Walking and vet consults
             </p>
           </section>
         )}
 
         <section id="how-booking-works" data-reveal="" className={s.band}>
-          <div className={`${s.wrap} ${s.sec}`} style={{ gap: "clamp(28px,4vw,48px)" }}>
+          <div className={`${s.wrap} ${s.sec}`} style={{ gap: "clamp(1.75rem,4vw,3rem)" }}>
             <div data-ri="" className={s.head}>
               <Badge tone="cream">How a booking works</Badge>
               <h2 className="dz-h2">Four steps to spa-fresh</h2>
@@ -249,7 +249,7 @@ export default function ServicesPage() {
 
       <button ref={pill} type="button" className={s.cartPill} onClick={openCart} aria-label={cart.length ? `Open cart: ${cartItems.length} items, ${inrPaise(total)}` : "Open cart (empty)"}>
         <span className={s.cartIcon}>
-          <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 22, height: 22 }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round"><path d="M5 8h14l-1.5 12h-11z" /><path d="M9 8a3 3 0 0 1 6 0" fill="none" /></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1.375rem", height: "1.375rem" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.8" strokeLinejoin="round"><path d="M5 8h14l-1.5 12h-11z" /><path d="M9 8a3 3 0 0 1 6 0" fill="none" /></svg>
           <span data-count="" className={s.count}>{cartItems.length}</span>
         </span>
         <span>{cartItems.length ? inrPaise(total) : "Cart"}</span>

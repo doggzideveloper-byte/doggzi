@@ -1,0 +1,22 @@
+{
+  "name": "@doggzi/ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Doggzi design system shared by apps/web and apps/console: tokens, motion and primitives. Consumed as TypeScript source.",
+  "exports": {
+    "./global.css": "./src/global.css",
+    "./tokens.css": "./src/tokens.css",
+    "./console.css": "./src/console.css",
+    "./motion": "./src/motion.ts",
+    "./lib/*": "./src/lib/*.ts",
+    "./components/*": "./src/components/*.tsx",
+    "./components/petArt": "./src/components/petArt.ts",
+    "./components": "./src/components/index.ts"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "motion": "^12.4.7"
+  }
+}

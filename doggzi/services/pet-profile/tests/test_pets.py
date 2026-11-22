@@ -114,3 +114,16 @@ def test_claim_requires_user_token(client):
     out = _guest(client)
     r = client.post(f"{API}/pets/claim", headers={**auth(out["guest_token"]), "X-Guest-Token": out["guest_token"]})
     assert r.status_code == 401
+
+
+def test_internal_owner_lookup(client):
+    out = _guest(client)
+    pid = out["pet"]["id"]
+    assert client.get(f"{API}/internal/pets/{pid}").status_code == 403
+    assert client.get(f"{API}/internal/pets/{pid}", headers={"X-Internal-Token": "wrong"}).status_code == 403
+    h = {"X-Internal-Token": "test-internal"}
+    assert client.get(f"{API}/internal/pets/{pid}", headers=h).json()["owner_user_id"] is None
+    uid = uuid.uuid4()
+    client.post(f"{API}/pets/claim", headers={**auth(user_token(uid)), "X-Guest-Token": out["guest_token"]})
+    assert client.get(f"{API}/internal/pets/{pid}", headers=h).json()["owner_user_id"] == str(uid)
+    assert client.get(f"{API}/internal/pets/{uuid.uuid4()}", headers=h).status_code == 404

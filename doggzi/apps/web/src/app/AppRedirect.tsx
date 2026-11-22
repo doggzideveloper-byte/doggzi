@@ -12,5 +12,5 @@ export default function AppRedirect() {
     const target = d === "iOS" ? SITE.appStoreUrl : d === "Android" ? SITE.playStoreUrl : "/fresh-food#download";
     window.location.replace(target);
   }, []);
-  return <p style={{ padding: 24 }}>Taking you to the Doggzi app…</p>;
+  return <p style={{ padding: "1.5rem" }}>Taking you to the Doggzi app…</p>;
 }
