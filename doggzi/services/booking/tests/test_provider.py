@@ -247,3 +247,16 @@ def test_customer_number_only_for_the_job_under_way_or_next(client):
     jobs = {j["id"]: j for j in client.get(f"{P}/jobs", params={"date": d}, headers=h).json()}
     assert jobs[early]["phone_visible"] and jobs[early]["customer_phone"] == "+919876543210" and jobs[early]["address"]["line1"] == "Flat 12B"
     assert not jobs[late]["phone_visible"] and jobs[late]["customer_phone"] == "98xxxxxx10" and jobs[late]["address"] is None
+
+
+def test_demo_codes_only_in_demo_mode(client, monkeypatch):
+    from app.core.config import get_settings
+
+    _, h = _provider()
+    bid, _ = _book(client)
+    job = _accept(client, h)
+    assert job["demo_codes"] is None
+    monkeypatch.setattr(get_settings(), "seed_demo", True)
+    d = (datetime.now(IST).date() + timedelta(days=1)).isoformat()
+    j = client.get(f"{P}/jobs", params={"date": d}, headers=h).json()[0]
+    assert j["demo_codes"]["start"] == codes.code_for(uuid.UUID(bid), "start")

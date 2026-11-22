@@ -37,7 +37,17 @@ function ActiveJob({ j, firstName, help }: { j: Job; firstName: string; help: st
       else flash(errMsg(e));
     },
   });
-  const tick = useMutation({ mutationFn: (done: boolean[]) => provider.checklist(j.id, done), onSuccess: update, onError: (e) => flash(errMsg(e)) });
+  // Ticks flip instantly (optimistic) and roll back if saving fails.
+  const tick = useMutation({
+    mutationFn: (done: boolean[]) => provider.checklist(j.id, done),
+    onMutate: (done) => {
+      const prev = qc.getQueryData<Job[]>(["pv", "jobs"]);
+      qc.setQueryData<Job[]>(["pv", "jobs"], (old) => old?.map((x) => (x.id === j.id ? { ...x, checklist: x.checklist.map((c, i) => ({ ...c, done: done[i] })) } : x)));
+      return { prev };
+    },
+    onSuccess: update,
+    onError: (e, _d, ctx) => { if (ctx?.prev) qc.setQueryData(["pv", "jobs"], ctx.prev); flash(errMsg(e)); },
+  });
   const photo = useMutation({ mutationFn: ({ w, f }: { w: "before" | "after"; f: File }) => provider.photo(j.id, w, f), onSuccess: (nj) => { update(nj); flash("Photo added."); }, onError: (e) => flash(errMsg(e)) });
   const release = useMutation({
     mutationFn: () => provider.step(j.id, "release"),
@@ -69,7 +79,9 @@ function ActiveJob({ j, firstName, help }: { j: Job; firstName: string; help: st
           <input id={`code-${j.id}`} ref={codeRef} className={s.codeInput} inputMode="numeric" autoComplete="off" maxLength={4} value={code} disabled={locked}
             aria-invalid={!!codeErr} aria-describedby={`code-${j.id}-err`} onChange={(e) => { setCode(e.target.value.replace(/\D/g, "").slice(0, 4)); setCodeErr(null); }}
             onKeyDown={(e) => { if (e.key === "Enter" && code.length === 4 && !locked) run.mutate(); }} />
-          <span className={s.muted} style={{ fontSize: "0.75rem" }}>The customer sees this code on their booking page.</span>
+          {j.demo_codes ? (
+            <span className={s.muted} style={{ fontSize: "0.75rem" }}>Demo: the customer's code is <strong style={{ fontFamily: "var(--font-accent)", letterSpacing: ".2em" }}>{j.demo_codes[codeKind]}</strong></span>
+          ) : <span className={s.muted} style={{ fontSize: "0.75rem" }}>Ask the customer for the code on their booking page.</span>}
           {(codeErr || locked) && <p id={`code-${j.id}-err`} role="alert" className={s.err}>{locked ? "Code locked after 5 tries. Ask OPS for help." : codeErr}</p>}
         </div>
       )}
@@ -78,7 +90,7 @@ function ActiveJob({ j, firstName, help }: { j: Job; firstName: string; help: st
           <legend>Service checklist</legend>
           {j.checklist.map((c, k) => (
             <label key={c.label} className={s.checkItem} data-done={c.done}>
-              <input type="checkbox" checked={c.done} disabled={tick.isPending} onChange={() => tick.mutate(j.checklist.map((x, i) => (i === k ? !x.done : x.done)))} />
+              <input type="checkbox" checked={c.done} onChange={() => tick.mutate(j.checklist.map((x, i) => (i === k ? !x.done : x.done)))} />
               {c.label}
             </label>
           ))}

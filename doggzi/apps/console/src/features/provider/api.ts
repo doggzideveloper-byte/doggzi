@@ -7,7 +7,7 @@ export type Step = "accepted" | "travel" | "arrived" | "in_service" | "completed
 export interface Job {
   id: string; ref: string; step: Step; slot_start: string; slot_end: string; services: Service[]; pet: Pet; area: string; address: Record<string, string> | null;
   customer_phone: string; phone_visible: boolean; earning_paise: number; total_paise: number; pay_after_service: boolean; collected_mode: string | null;
-  checklist: { label: string; done: boolean }[]; photos: Record<string, boolean>; code_locked: Record<string, boolean>;
+  checklist: { label: string; done: boolean }[]; photos: Record<string, boolean>; code_locked: Record<string, boolean>; demo_codes: { start: string; end: string } | null;
 }
 export interface Profile { id: string; name: string; rating: number; jobs_done: number; is_online: boolean; skills: string[]; skill_options: { key: string; label: string }[]; areas: string[]; docs: { name: string; status: string }[]; help_whatsapp: string | null; demo: boolean }
 export interface DayHours { on: boolean; from: number; to: number }

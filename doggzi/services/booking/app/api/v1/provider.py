@@ -126,6 +126,7 @@ class JobOut(BaseModel):
     checklist: list[ChecklistItem]
     photos: dict
     code_locked: dict
+    demo_codes: dict | None = None  # SEED_DEMO only: what the customer would read out
 
 
 class CodeIn(BaseModel):
@@ -191,7 +192,14 @@ def _job(b: Booking, db: Session) -> JobOut:
         customer_phone=(b.customer_phone or "") if visible else mask(b.customer_phone), phone_visible=visible,
         earning_paise=b.earning_paise or dispatch.earning_for(b), total_paise=b.total_paise, pay_after_service=b.pay_after_service, collected_mode=b.collected_mode,
         checklist=[ChecklistItem(**c) for c in (b.checklist or [])], photos={k: True for k in (b.photos or {})}, code_locked=locked,
+        demo_codes={"start": codes.code_for(b.id, "start"), "end": codes.code_for(b.id, "end")} if visible and _demo() else None,
     )
+
+
+def _demo() -> bool:
+    from ...core.config import get_settings
+
+    return get_settings().seed_demo
 
 
 def _my_job(db: Session, p: Provider, job_id: uuid.UUID, lock: bool = False) -> Booking:
