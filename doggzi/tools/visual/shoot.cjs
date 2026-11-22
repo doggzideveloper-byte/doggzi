@@ -1,5 +1,5 @@
 // Visual-diff capture for apps/web. Usage:
-//   NODE_PATH=$(npm root -g) node shoot.cjs <baseUrl> <outDir> [widths=375,390,768,1440]
+//   NODE_PATH=$(npm root -g) node shoot.cjs <baseUrl> <outDir> [widths=375,390,768,1440,1920]
 // Deterministic: reduced motion forced, fixed demo passport, desktop device, fonts awaited, scroll pass for reveals.
 const { chromium } = require('playwright');
 const fs = require('fs');
@@ -17,7 +17,7 @@ const PAGES = [
 ];
 
 (async () => {
-  const [base, out, w = '375,390,768,1440'] = process.argv.slice(2);
+  const [base, out, w = '375,390,768,1440,1920'] = process.argv.slice(2);
   fs.mkdirSync(out, { recursive: true });
   const b = await chromium.launch();
   for (const width of w.split(',').map(Number)) {
