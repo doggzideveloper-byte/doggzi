@@ -46,3 +46,16 @@ export async function api<T>(service: string, path: string, opts: Opts = {}): Pr
 }
 
 export const errMsg = (e: unknown, fallback = "Something went wrong. Try again.") => (e instanceof ApiError && e.message && !/^Request failed/.test(e.message) ? e.message : fallback);
+
+/** Authenticated file download (CSV exports): fetch with the session token, then save as `filename`. */
+export async function download(service: string, path: string, filename: string) {
+  const s = session.get();
+  const res = await fetch(`/api/${service}/v1${path}`, { headers: s ? { Authorization: `Bearer ${s.token}` } : {} });
+  if (res.status === 401) { session.set(null); location.assign("/console/login?reason=signin"); return; }
+  if (!res.ok) throw new ApiError(res.status, null, "Couldn't download the file. Try again.");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(await res.blob());
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}

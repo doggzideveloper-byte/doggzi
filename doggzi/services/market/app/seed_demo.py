@@ -76,10 +76,12 @@ def seed(db: Session) -> str:
     doggzi = db.scalar(select(Vendor).where(Vendor.is_doggzi.is_(True)))
     if not doggzi:
         return "no Doggzi Store (catalog migration not run)"
-    if not doggzi.story:
-        doggzi.story = "Doggzi's own shop, stocked by people who love pets."
-        doggzi.since_year, doggzi.hours_text, doggzi.commission_bps = 2024, "Mon–Sun, 9 am – 9 pm", 1000
-        doggzi.phone = doggzi.phone or "+919000000002"
+    # Fill only what's missing (the catalog migration already gives Doggzi Store a story).
+    doggzi.story = doggzi.story or "Doggzi's own shop, stocked by people who love pets."
+    doggzi.since_year = doggzi.since_year or 2024
+    doggzi.hours_text = doggzi.hours_text or "Mon–Sun, 9 am – 9 pm"
+    doggzi.commission_bps = doggzi.commission_bps or 1000  # DRAFT 10%
+    doggzi.phone = doggzi.phone or "+919000000002"
     if not db.scalar(select(VendorMember).where(VendorMember.user_id == user_id("+919000000002"))):
         db.add(VendorMember(vendor_id=doggzi.id, user_id=user_id("+919000000002"), phone="+919000000002", name="Meera Shah", role="owner"))
         made.append("Meera → Doggzi Store")

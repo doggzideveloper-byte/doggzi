@@ -4,6 +4,7 @@ import { panelsFor, useSession, type Role } from "@/lib/session";
 import LoginPage from "@/features/login/LoginPage";
 
 const ProviderApp = lazy(() => import("@/features/provider/ProviderApp"));
+const VendorApp = lazy(() => import("@/features/vendor/VendorApp"));
 const Soon = lazy(() => import("./Soon"));
 
 /** Signed in with one of `roles`, else back to the login (with a reason). */
@@ -30,7 +31,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/provider/:tab?" element={<Guard roles={["PROVIDER"]}><ProviderApp /></Guard>} />
-        <Route path="/vendor/*" element={<Guard roles={["VENDOR"]}><Soon panel="Vendor" /></Guard>} />
+        <Route path="/vendor/:tab?" element={<Guard roles={["VENDOR"]}><VendorApp /></Guard>} />
         <Route path="/admin/*" element={<Guard roles={["ADMIN", "OPS"]}><Soon panel="Admin" /></Guard>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

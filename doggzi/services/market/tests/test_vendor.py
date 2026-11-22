@@ -208,3 +208,15 @@ def test_demo_seed_twice_without_duplicates(ctx):
     assert sorted(cols) == ["accepted", "out_for_delivery", "packed", "placed"]
     arjun = auth(console_token(seed_demo.user_id("+919000000005")))
     assert c.get(f"{V}/store", headers=arjun).json()["name"] == "Paws Corner" and c.get(f"{V}/sub-orders", headers=arjun).json() == []
+
+
+def test_demo_seed_sets_draft_commission(ctx):
+    c, S = ctx
+    from app import seed_demo
+
+    with S() as s:
+        seed_demo.seed(s)
+        d = s.scalar(select(Vendor).where(Vendor.is_doggzi.is_(True)))
+        assert d.commission_bps == 1000 and d.hours_text
+        so = s.scalars(select(SubOrder).where(SubOrder.vendor_id == d.id)).first()
+        assert so.commission_paise == so.subtotal_paise // 10

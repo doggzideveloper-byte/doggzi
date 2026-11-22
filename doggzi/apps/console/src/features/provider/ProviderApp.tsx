@@ -10,7 +10,7 @@ import { Hours } from "./Hours";
 import { Offers } from "./Offers";
 import { Profile } from "./Profile";
 import { Today } from "./Today";
-import { Switch, UiProvider, useUi } from "./shared";
+import { MuteButton, Switch, UiProvider, useUi } from "./shared";
 import s from "./pv.module.css";
 
 type Tab = "offers" | "today" | "hours" | "earnings" | "profile";
@@ -26,10 +26,10 @@ function Panel() {
   const ses = useSession()!;
   const nav = useNavigate();
   const qc = useQueryClient();
-  const { flash, muted, setMuted } = useUi();
+  const { flash, muted } = useUi();
   const params = useParams();
   const tab = (TABS.some(([k]) => k === params.tab) ? params.tab : "today") as Tab;
-  const go = (t: Tab) => nav(`/provider/${t}`, { replace: true });
+  const go = (t: Tab) => { nav(`/provider/${t}`, { replace: true }); window.scrollTo(0, 0); };
 
   const me = useQuery({ queryKey: ["pv", "me"], queryFn: provider.me });
   const offers = useQuery({ queryKey: ["pv", "offers"], queryFn: provider.offers, refetchInterval: 10_000, refetchIntervalInBackground: true });
@@ -84,9 +84,7 @@ function Panel() {
               </select>
             </label>
           )}
-          <button type="button" className={s.iconBtn} aria-pressed={muted} aria-label={muted ? "Unmute alerts" : "Mute alerts"} onClick={() => setMuted(!muted)}>
-            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="var(--dz-ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="var(--dz-cream)" /><path d={muted ? "M16 9l5 6M21 9l-5 6" : "M16 8c2 2 2 6 0 8M19 5c4 4 4 10 0 14"} /></svg>
-          </button>
+          <MuteButton className={s.iconBtn} />
           <button type="button" className={s.pillBtn} onClick={() => { session.set(null); nav("/login", { replace: true }); }}>Log out</button>
         </header>
 
@@ -122,5 +120,5 @@ function Panel() {
 }
 
 export default function ProviderApp() {
-  return <UiProvider><Panel /></UiProvider>;
+  return <UiProvider toastBottom="5rem"><Panel /></UiProvider>;
 }
