@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from ...core.facets import brand_display, brand_key
 from ...core.time import utcnow
 from ...models import Listing, Order, StockReservation, SubOrder, Vendor
 from ...schemas.market import ListingOut, OrderOut, SubOrderItemOut, SubOrderOut, VendorOut
@@ -31,7 +32,7 @@ def listing_out(item: Listing, reserved: int = 0) -> ListingOut:
     p = item.product
     avail = max(0, item.stock_qty - reserved)
     return ListingOut(
-        id=item.id, sku=item.sku, name=p.name, brand=p.brand, category=p.category, pet_types=list(p.pet_types or []),  # type: ignore[arg-type]
+        id=item.id, sku=item.sku, name=p.name, brand=brand_display(p.brand), brand_key=brand_key(p.brand), category=p.category, pet_types=list(p.pet_types or []),  # type: ignore[arg-type]
         description=p.description, pack_size=p.pack_size, price_paise=item.price_paise, mrp_paise=item.mrp_paise,
         in_stock=avail > 0, available_qty=avail, photo_url=item.photo_url, popularity_rank=p.popularity_rank, vendor=vendor_out(item.vendor),
     )

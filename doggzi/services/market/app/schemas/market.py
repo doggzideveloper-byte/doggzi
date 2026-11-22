@@ -27,6 +27,7 @@ class ListingOut(BaseModel):
     sku: str
     name: str
     brand: str
+    brand_key: str
     category: Category
     pet_types: list[PetType]
     description: str | None
@@ -43,6 +44,26 @@ class ListingOut(BaseModel):
 class CatalogOut(BaseModel):
     items: list[ListingOut]
     vendors: list[VendorOut]
+
+
+class FacetOption(BaseModel):
+    key: str
+    label: str
+    count: int
+
+
+class Facets(BaseModel):
+    category: list[FacetOption]
+    price: list[FacetOption]
+    brand: list[FacetOption] = Field(description="Normalised brand groups, most products first")
+    pet: list[FacetOption]
+    in_stock: int = Field(description="How many results remain with 'In stock only' on")
+
+
+class BrowseOut(BaseModel):
+    items: list[ListingOut]
+    total: int
+    facets: Facets
 
 
 class CartItemIn(BaseModel):

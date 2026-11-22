@@ -4,7 +4,7 @@ import type { Category } from "@/content/marketplace";
 
 export interface MVendor { id: string; name: string; slug: string; area: string | null; story: string | null; since_year: number | null; delivery_fee_paise: number; serviceable_pincodes: string[]; is_doggzi: boolean }
 export interface MListing {
-  id: string; sku: string; name: string; brand: string; category: Category; pet_types: PetType[]; description: string | null; pack_size: string | null;
+  id: string; sku: string; name: string; brand: string; brand_key?: string; category: Category; pet_types: PetType[]; description: string | null; pack_size: string | null;
   price_paise: number; mrp_paise: number | null; in_stock: boolean; available_qty: number; photo_url: string | null; popularity_rank: number; vendor: MVendor;
 }
 export interface MCart { groups: { vendor: MVendor; lines: { id: string; listing: MListing; qty: number; line_total_paise: number }[]; subtotal_paise: number; delivery_fee_paise: number }[]; item_count: number; total_paise: number }
@@ -14,12 +14,16 @@ export interface MOrder {
   sub_orders: { id: string; vendor: MVendor; subtotal_paise: number; delivery_fee_paise: number; status: SubStatus; sla_due_at: string | null; items: { sku: string; name: string; qty: number; price_paise_at_order: number }[] }[];
   lines: { listing_id: string; sku: string; name: string; qty: number; price_paise: number; vendor_id: string }[];
 }
+export interface MFacet { key: string; label: string; count: number }
+export interface MBrowse { items: MListing[]; total: number; facets: { category: MFacet[]; price: MFacet[]; brand: MFacet[]; pet: MFacet[]; in_stock: number } }
 export interface MAddress { line1: string; line2?: string; landmark?: string; city: string; pincode: string }
 
 const S = "market";
 const cartHdr = (cartId: string) => ({ "X-Cart-Id": cartId });
 export const market = {
   catalog: (petType: PetType) => api<{ items: MListing[]; vendors: MVendor[] }>(S, `/catalog?pet_type=${petType}`),
+  /** Shop grid with filters + facet counts (query string built by features/marketplace/filters.ts). */
+  browse: (query: string) => api<MBrowse>(S, `/browse?${query}`),
   cart: (cartId: string) => api<MCart>(S, "/cart", { headers: cartHdr(cartId) }),
   setItem: (cartId: string, listing_id: string, qty: number) => api<MCart>(S, "/cart/items", { body: { listing_id, qty }, headers: cartHdr(cartId) }),
   createOrder: (token: string, body: { address: MAddress; lines: { listing_id: string; qty: number }[]; client_total_paise?: number }) =>

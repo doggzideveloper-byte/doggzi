@@ -1,16 +1,21 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
 import { Badge, FAQ, Header, PassportChip, SiteFooter, Sweep, Testimonials, useSectionReveals } from "@/design-system/components";
 import { css, ms } from "@/design-system/motion";
-import { CATEGORIES, DELIVERY_COMPARE, PICK_RULES, type Category } from "@/content/marketplace";
+import { CATEGORIES, DELIVERY_COMPARE, PICK_RULES } from "@/content/marketplace";
 import { track } from "@/lib/analytics";
-import type { MListing } from "@/lib/api/market";
+import { isUnreachable } from "@/lib/api/client";
+import { market, type MListing } from "@/lib/api/market";
 import type { PetType } from "@/lib/api/petProfile";
 import { useNarrow } from "@/lib/device";
 import { inrPaise } from "@/lib/format";
 import { avatarVariant, useFrom, usePet } from "@/lib/passport";
 import { isReduced } from "@/lib/reducedMotion";
 import { CheckoutDrawer } from "./CheckoutDrawer";
+import { FilterPanel, ResultCount } from "./FilterPanel";
+import { FilterSheet } from "./FilterSheet";
+import { browseLocal, PRICE_BUCKETS, SORTS, toQuery, useFilters, type Filters } from "./filters";
 import { cartStore, notifyStore, setQty as setQtyRaw, storeLine, useMarketCatalog, usePruneCart } from "./data";
 import { ProductCard } from "./ProductCard";
 import { ProductSheet } from "./ProductSheet";
@@ -24,12 +29,6 @@ const ICONS: Record<string, string> = {
   walking: "M12 2v3M12 5a4 3.5 0 1 1 0 7a4 3.5 0 1 1 0-7M12 12v6M10 18h4v4h-4z",
   health: "M9 2h6v3H9zM7 5h10v16H7zM12 9v8M8 13h8",
 };
-const PRICES = [
-  { k: "u250", label: "Under ₹250", lo: 0, hi: 25000 },
-  { k: "250", label: "₹250–₹500", lo: 25000, hi: 50000 },
-  { k: "500", label: "₹500–₹1,000", lo: 50000, hi: 100000 },
-  { k: "1000", label: "₹1,000+", lo: 100000, hi: Infinity },
-];
 const COMPARE = [
   { k: "Who you support", us: "A pet store in your neighbourhood", them: "A distant warehouse" },
   { k: "Where the money goes", us: "The store’s share goes straight to the local owner, via Razorpay Route", them: "Mostly to a large platform" },
@@ -76,13 +75,25 @@ export default function MarketplacePage() {
   const { all, forPet, vendors, offline, loading, error, refetch } = useMarketCatalog();
   const lines = cartStore.use();
   const notified = notifyStore.use();
-  const [mode, setMode] = useState<PetType>(pet?.type === "cat" ? "cat" : "dog");
-  const [q, setQ] = useState("");
-  const [cat, setCat] = useState<Category | "all">("all");
-  const [price, setPrice] = useState<string | null>(null);
-  const [brand, setBrand] = useState("all");
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [sort, setSort] = useState<"popular" | "low" | "new">("popular");
+  const petDefault: PetType = pet?.type === "cat" ? "cat" : "dog";
+  const { f, set, clear, active } = useFilters(petDefault);
+  /** Hero toggle + "Picked for": "Both" keeps the passport's pet for the personal picks. */
+  const mode: PetType = f.pet === "both" ? petDefault : f.pet;
+  const query = useDeferredValue(toQuery(f));
+  const shop = useQuery({ queryKey: ["market", "browse", query], queryFn: () => market.browse(query), enabled: !offline && !!pet, staleTime: 30_000, placeholderData: keepPreviousData, retry: (n, e) => !isUnreachable(e) && n < 1 });
+  const local = useMemo(() => (offline ? browseLocal(all, f) : null), [offline, all, f]);
+  const view = local || shop.data || null;
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const sideRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = sideRef.current;
+    if (!el) return;
+    const fit = () => el.classList.toggle(s.sideStick, el.offsetHeight < window.innerHeight - (parseFloat(getComputedStyle(el).top) || 160) - 16);
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    window.addEventListener("resize", fit);
+    return () => { ro.disconnect(); window.removeEventListener("resize", fit); };
+  }, [loading]);
   const [sheet, setSheet] = useState<MListing | null>(null);
   const [drawer, setDrawer] = useState(false);
   const lastFocus = useRef<Element | null>(null);
@@ -91,7 +102,6 @@ export default function MarketplacePage() {
   const pill = useRef<HTMLButtonElement>(null);
   usePruneCart(all, !loading);
   useSectionReveals(root, { narrow, deps: [loading] });
-  useEffect(() => setMode(pet?.type === "cat" ? "cat" : "dog"), [pet?.type]);
 
   useEffect(() => {
     const el = overlay.current;
@@ -144,17 +154,22 @@ export default function MarketplacePage() {
 
   if (!pet) return <Navigate to="/" replace />;
   const petKey = avatarVariant(pet.type, pet.breed);
-  const list0 = forPet(mode);
-  const qn = q.trim().toLowerCase();
-  const pr = PRICES.find((x) => x.k === price);
-  let list = list0.filter((x) => (cat === "all" || x.category === cat) && (!qn || `${x.name} ${x.brand}`.toLowerCase().includes(qn)) && (!pr || (x.price_paise >= pr.lo && x.price_paise < pr.hi)) && (brand === "all" || x.brand === brand) && (!inStockOnly || x.in_stock));
-  list = [...list].sort(sort === "low" ? (a, b) => a.price_paise - b.price_paise : sort === "new" ? (a, b) => b.popularity_rank - a.popularity_rank : (a, b) => a.popularity_rank - b.popularity_rank);
+  const list = view?.items || [];
+  const facets = view?.facets || null;
+  const catCount = (k: string) => facets?.category.find((c) => c.key === k)?.count ?? (k === "all" ? forPet(mode).length : forPet(mode).filter((x) => x.category === k).length);
+  const brandLabel = (k: string) => facets?.brand.find((b) => b.key === k)?.label || k;
+  const chips: { label: string; patch: Partial<Filters> }[] = [
+    ...(f.cat ? [{ label: CATEGORIES.find((c) => c.key === f.cat)!.label, patch: { cat: null } }] : []),
+    ...f.price.map((k) => ({ label: PRICE_BUCKETS.find((b) => b.key === k)!.label, patch: { price: f.price.filter((x) => x !== k) } })),
+    ...f.brand.map((k) => ({ label: brandLabel(k), patch: { brand: f.brand.filter((x) => x !== k) } })),
+    ...(f.pet !== petDefault ? [{ label: f.pet === "both" ? "Dogs & cats" : f.pet === "cat" ? "Cats" : "Dogs", patch: { pet: petDefault } }] : []),
+    ...(f.stock ? [{ label: "In stock only", patch: { stock: false } }] : []),
+  ];
   const rule = mode === "cat" ? PICK_RULES.cat : petKey === "puppy" ? PICK_RULES.small : PICK_RULES.large;
   const picked = all
     .filter((x) => x.pet_types.some((t) => rule.pet_types.includes(t)) && (mode === "dog" ? x.pet_types.includes("dog") : x.pet_types.includes("cat")) && (!rule.categories || rule.categories.includes(x.category)) && (!rule.max_price_paise || x.price_paise <= rule.max_price_paise) && x.in_stock)
     .sort((a, b) => a.popularity_rank - b.popularity_rank)
     .slice(0, 8);
-  const brands = [...new Set(list0.map((x) => x.brand))].sort((a, b) => a.localeCompare(b));
   const count = lines.reduce((t, l) => t + (byId.has(l.listing_id) ? l.qty : 0), 0);
   const cartTotal = (() => {
     const fees = new Map<string, number>();
@@ -182,11 +197,11 @@ export default function MarketplacePage() {
               <form role="search" className={s.search} onSubmit={(e) => { e.preventDefault(); toShop(); }}>
                 <svg viewBox="0 0 24 24" aria-hidden="true" style={{ flex: "none", width: "1.375rem", height: "1.375rem", margin: "0 0.25rem 0 1.125rem" }} fill="none" stroke="var(--dz-ink)" strokeWidth="2.4" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>
                 <label htmlFor="mk-q" className="dz-sr-only">Search products</label>
-                <input id="mk-q" type="search" value={q} placeholder="Search treats, toys, brands…" autoComplete="off" onChange={(e) => setQ(e.target.value)} />
+                <input id="mk-q" type="search" value={f.q} placeholder="Search treats, toys, brands…" autoComplete="off" onChange={(e) => set({ q: e.target.value })} />
               </form>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.875rem" }}>
                 <div role="radiogroup" aria-label="Shopping for" className={s.toggle}>
-                  {(["dog", "cat"] as const).map((k) => <button key={k} type="button" role="radio" aria-checked={mode === k} onClick={() => { setMode(k); setBrand("all"); }}>{k === "dog" ? "Dog" : "Cat"}</button>)}
+                  {(["dog", "cat"] as const).map((k) => <button key={k} type="button" role="radio" aria-checked={f.pet === k} onClick={() => set({ pet: k, brand: [] })}>{k === "dog" ? "Dog" : "Cat"}</button>)}
                 </div>
                 <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9375rem", fontWeight: 600 }}>
                   <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1.375rem", height: "1.375rem" }} fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="2" strokeLinejoin="round"><path d="M3 10l2-6h14l2 6" /><path d="M4 10h16v10H4z" /><path d="M10 20v-5h4v5" /></svg>
@@ -201,10 +216,10 @@ export default function MarketplacePage() {
         <nav aria-label="Categories" className={s.rail}>
           <div className={`${s.wrap} ${s.railInner} dz-noscrollbar`}>
             {[{ key: "all" as const, label: "All" }, ...CATEGORIES].map((c) => (
-              <button key={c.key} type="button" className={s.chip} aria-pressed={cat === c.key} onClick={() => { setCat(c.key); const sh = document.getElementById("shop"); if (sh && sh.getBoundingClientRect().top > 200) toShop(); }}>
+              <button key={c.key} type="button" className={s.chip} aria-pressed={(f.cat || "all") === c.key} onClick={() => { set({ cat: c.key === "all" ? null : c.key }); const sh = document.getElementById("shop"); if (sh && sh.getBoundingClientRect().top > 200) toShop(); }}>
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="var(--dz-paper)" stroke="var(--dz-ink)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d={ICONS[c.key]} /></svg>
                 <span>{c.label}</span>
-                <span className={s.count}>{c.key === "all" ? list0.length : list0.filter((x) => x.category === c.key).length}</span>
+                <span className={s.count}>{catCount(c.key)}</span>
               </button>
             ))}
           </div>
@@ -224,39 +239,38 @@ export default function MarketplacePage() {
         )}
 
         <section id="shop" data-reveal="" className={`${s.wrap} ${s.sec}`} style={{ paddingTop: "clamp(2.5rem,6vw,4.5rem)", paddingBottom: "clamp(3.5rem,8vw,6.5rem)", scrollMarginTop: "9.375rem" }}>
-          <div data-ri="" style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "0.75rem" }}>
-            <h2 className={s.h2}>{cat === "all" ? "Everything" : CATEGORIES.find((c) => c.key === cat)?.label}</h2>
-            <span aria-live="polite" style={{ fontSize: "0.9375rem", fontWeight: 500 }}>{list.length} product{list.length === 1 ? "" : "s"}</span>
-          </div>
-          <div data-ri="" className={s.filters}>
-            <div role="group" aria-label="Price" style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              {PRICES.map((x) => <button key={x.k} type="button" className={s.fchip} aria-pressed={price === x.k} onClick={() => setPrice(price === x.k ? null : x.k)}>{x.label}</button>)}
+          <h2 data-ri="" className={s.h2}>{f.cat ? CATEGORIES.find((c) => c.key === f.cat)?.label : "Everything"}</h2>
+          <div data-ri="" className={s.shopGrid}>
+            <aside className={s.side} aria-label="Filters"><div ref={sideRef}><FilterPanel f={f} set={set} facets={facets} /></div></aside>
+            <div className={s.shopMain}>
+              <div className={s.toolbar}>
+                <button type="button" className={s.filtersBtn} aria-haspopup="dialog" onClick={() => { lastFocus.current = document.activeElement; setFiltersOpen(true); }}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="var(--dz-ink)" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+                  Filters{active > 0 && <span className={s.badgeN} aria-label={`${active} active`}>{active}</span>}
+                </button>
+                <ResultCount n={view ? view.total : 0} />
+                <label className={s.lbl}><span className={s.lblText}>Sort</span>
+                  <select className={s.select} value={f.sort} onChange={(e) => set({ sort: e.target.value as Filters["sort"] })}>
+                    {SORTS.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}
+                  </select>
+                </label>
+              </div>
+              {chips.length > 0 && (
+                <div className={s.applied} aria-label="Applied filters">
+                  {chips.map((c) => <button key={c.label} type="button" className={s.appliedChip} onClick={() => set(c.patch)} aria-label={`Remove filter: ${c.label}`}>{c.label}<span aria-hidden="true">×</span></button>)}
+                  <button type="button" className={s.flink} style={{ alignSelf: "center" }} onClick={clear}>Clear all</button>
+                </div>
+              )}
+              {f.pet === "cat" && <p className={s.soon}><Badge size="sm" style={{ fontSize: "0.8125rem" }}>Coming soon</Badge>More for cats coming soon.</p>}
+              <div className={`${s.grid} ${shop.isPlaceholderData ? s.gridBusy : ""}`} aria-busy={shop.isFetching || undefined}>{list.map(card)}</div>
+              {!loading && view && !list.length && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem", padding: "2rem 1rem", textAlign: "center" }}>
+                  <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>Nothing matches that yet.</p>
+                  <button type="button" className={s.fchip} style={{ height: "2.875rem", background: "var(--dz-paper)", boxShadow: "3px 3px 0 var(--dz-ink)" }} onClick={() => { clear(); }}>Clear filters</button>
+                </div>
+              )}
             </div>
-            <label className={s.lbl}>Brand
-              <select className={s.select} value={brand} onChange={(e) => setBrand(e.target.value)}>
-                <option value="all">All brands</option>
-                {brands.map((b) => <option key={b} value={b}>{b}</option>)}
-              </select>
-            </label>
-            <label className={s.lbl} style={{ cursor: "pointer" }}>
-              <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} style={{ width: "1.25rem", height: "1.25rem", accentColor: "var(--dz-orange)", cursor: "pointer" }} />In stock
-            </label>
-            <label className={s.lbl} style={{ marginLeft: "auto" }}>Sort
-              <select className={s.select} value={sort} onChange={(e) => setSort(e.target.value as typeof sort)}>
-                <option value="popular">Popular</option>
-                <option value="low">Price: low to high</option>
-                <option value="new">New</option>
-              </select>
-            </label>
           </div>
-          {mode === "cat" && <p className={s.soon}><Badge size="sm" style={{ fontSize: "0.8125rem" }}>Coming soon</Badge>More for cats coming soon.</p>}
-          <div className={s.grid}>{list.map(card)}</div>
-          {!loading && !list.length && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem", padding: "2rem 1rem", textAlign: "center" }}>
-              <p style={{ margin: 0, fontSize: "1.0625rem", fontWeight: 600 }}>Nothing matches that yet.</p>
-              <button type="button" className={s.fchip} style={{ height: "2.875rem", background: "var(--dz-paper)", boxShadow: "3px 3px 0 var(--dz-ink)" }} onClick={() => { setQ(""); setCat("all"); setPrice(null); setBrand("all"); setInStockOnly(false); }}>Clear filters</button>
-            </div>
-          )}
         </section>
 
         <section id="why-local" data-reveal="" className={s.band}>
@@ -316,6 +330,10 @@ export default function MarketplacePage() {
         <ProductSheet item={sheet} narrow={narrow} notified={notified.includes(sheet.sku)}
           onAdd={(qty, el) => addToCart(sheet, qty, el)} onNotify={() => onNotify(sheet)}
           onClose={() => { setSheet(null); (lastFocus.current as HTMLElement | null)?.focus?.({ preventScroll: true }); }} />
+      )}
+      {filtersOpen && (
+        <FilterSheet f={f} set={set} clear={clear} active={active} facets={facets} total={view ? view.total : 0}
+          onClose={() => { setFiltersOpen(false); (lastFocus.current as HTMLElement | null)?.focus?.({ preventScroll: true }); }} />
       )}
       {drawer && (
         <CheckoutDrawer narrow={narrow} lines={lines} byId={byId} pet={pet} isDemo={isDemo} offline={offline} setQty={setQty}

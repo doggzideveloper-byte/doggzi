@@ -5,11 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ...core import cache
+from ...core import cache, facets as fx
 from ...core.config import get_settings
 from ...db import get_db
 from ...models import Listing, Product, Vendor
-from ...schemas.market import CatalogOut, ListingOut, VendorOut
+from ...schemas.market import BrowseOut, CatalogOut, ListingOut, VendorOut
 from .logic import listing_out, reserved_qty, vendor_out
 
 router = APIRouter(tags=["catalog"])
@@ -50,6 +50,39 @@ def catalog(
     res = reserved_qty(db, [r.id for r in rows])
     vendors = db.scalars(select(Vendor).where(Vendor.is_active.is_(True)).order_by(Vendor.is_doggzi, Vendor.name)).all()
     out = CatalogOut(items=[listing_out(r, res.get(r.id, 0)) for r in rows], vendors=[vendor_out(v) for v in vendors])
+    cache.set(key, out.model_dump(mode="json"), get_settings().catalog_cache_seconds)
+    return out
+
+
+def _csv(v: str, allowed: set[str] | None = None, limit: int = 40) -> frozenset[str]:
+    out = {x.strip().lower() for x in v.split(",") if x.strip()}
+    return frozenset(sorted(x for x in out if allowed is None or x in allowed)[:limit])
+
+
+@router.get("/browse", response_model=BrowseOut, summary="Shop grid: filters, sort and facet counts (each facet counted with the other filters applied)")
+def browse(
+    pet: Literal["dog", "cat", "both"] = "both",
+    cat: Literal["treats", "toys", "grooming", "walking", "health"] | None = None,
+    price: str = Query(default="", max_length=80, description="Comma list of under-250, 250-500, 500-1000, 1000-plus"),
+    brand: str = Query(default="", max_length=600, description="Comma list of brand keys (from facets.brand)"),
+    in_stock: bool = False,
+    q: str = Query(default="", max_length=60),
+    sort: Literal["popular", "price_asc", "price_desc", "new"] = "popular",
+    db: Session = Depends(get_db),
+) -> BrowseOut:
+    f = fx.Filters(pet=pet, category=cat, prices=_csv(price, {k for k, *_ in fx.PRICE_BUCKETS}), brands=_csv(brand), in_stock=in_stock, q=q, sort=sort)
+    key = f"market:browse:v1:{f.pet}:{f.category}:{','.join(sorted(f.prices))}:{','.join(sorted(f.brands))}:{int(f.in_stock)}:{f.q.strip().lower()}:{f.sort}"
+    hit = cache.get(key)
+    if hit is not None:
+        return BrowseOut(**hit)
+    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True))
+    listings = [r for r in db.scalars(stmt) if set(r.product.pet_types or []) & {"dog", "cat"}]
+    res = reserved_qty(db, [r.id for r in listings])
+    outs = [listing_out(r, res.get(r.id, 0)) for r in listings]
+    rows = [fx.Row(id=o.id, name=o.name, brand=r.product.brand, category=o.category, pet_types=list(o.pet_types), price_paise=o.price_paise,
+                   in_stock=o.in_stock, popularity_rank=o.popularity_rank, payload=o) for r, o in zip(listings, outs)]
+    b = fx.browse(rows, f)
+    out = BrowseOut(items=[r.payload for r in b["items"]], total=b["total"], facets=b["facets"])
     cache.set(key, out.model_dump(mode="json"), get_settings().catalog_cache_seconds)
     return out
 

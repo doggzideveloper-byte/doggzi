@@ -155,3 +155,70 @@ def test_inactive_vendor_hidden(ctx):
 
     cache.clear()
     assert _items(c) == []
+
+
+# ---- PAGE_05 section 4b: browse filters, brand grouping, facet counts ----
+def _browse(c, **params):
+    r = c.get(f"{API}/browse", params=params)
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+def _facet(b, name, key):
+    return next(o["count"] for o in b["facets"][name] if o["key"] == key)
+
+
+def test_brand_names_are_grouped_for_display():
+    from app.core.facets import brand_display, brand_key
+
+    assert {brand_key(x) for x in ("Super Fun", "Super fun toy", "Superfun Twistee", "super  FUN")} == {"superfun"}
+    assert brand_display("Super fun twistee") == "Super Fun"
+    assert brand_key("Zippy paws") == brand_key("ZippyPaws") == "zippypaws"
+    assert brand_key("Super Chewers") != brand_key("Super breath") != "superfun"
+
+
+def test_browse_brand_facet_merges_variants(ctx):
+    c, _ = ctx
+    b = _browse(c)
+    labels = {o["label"]: o for o in b["facets"]["brand"]}
+    assert "Super Fun" in labels and not {"Super fun toy", "Superfun Twistee"} & set(labels)
+    sf = labels["Super Fun"]
+    got = _browse(c, brand=sf["key"])
+    assert got["total"] == sf["count"] == 5 and {i["brand"] for i in got["items"]} == {"Super Fun"}
+    assert b["facets"]["brand"] == sorted(b["facets"]["brand"], key=lambda o: (-o["count"], o["label"].lower()))
+
+
+def test_browse_facet_counts_ignore_their_own_filter(ctx):
+    c, _ = ctx
+    allc = _browse(c)
+    b = _browse(c, cat="treats", price="under-250,250-500")
+    # category counts are computed with the price filter only, so "All" = sum of categories
+    cats = b["facets"]["category"]
+    assert cats[0]["count"] == sum(o["count"] for o in cats[1:])
+    assert b["total"] == _facet(b, "category", "treats")
+    # price counts use the category filter only
+    assert sum(o["count"] for o in b["facets"]["price"]) == _facet(allc, "category", "treats")
+    assert all(i["category"] == "treats" and i["price_paise"] < 50_000 for i in b["items"])
+    # every count matches the result of clicking it
+    for o in b["facets"]["brand"][:4]:
+        assert _browse(c, cat="treats", price="under-250,250-500", brand=o["key"])["total"] == o["count"]
+
+
+def test_browse_pet_stock_sort_and_bad_params(ctx):
+    c, S = ctx
+    b = _browse(c)
+    assert _facet(b, "pet", "both") == b["total"] == 50
+    assert _facet(b, "pet", "dog") == _browse(c, pet="dog")["total"] == 48
+    assert _facet(b, "pet", "cat") == _browse(c, pet="cat")["total"] == 4
+    with S() as s:
+        li = s.query(Listing).filter_by(sku="DZ-MKT-001").one()
+        li.stock_qty = 0
+        s.commit()
+    from app.core import cache
+    cache.clear()
+    b2 = _browse(c, in_stock="true", q="twistee")
+    assert all(i["in_stock"] for i in b2["items"]) and "DZ-MKT-001" not in {i["sku"] for i in b2["items"]}
+    p = [i["price_paise"] for i in _browse(c, sort="price_asc")["items"]]
+    assert p == sorted(p)
+    assert _browse(c, price="bogus,1000-plus")["total"] == _facet(b, "price", "1000-plus")
+    assert c.get(f"{API}/browse", params={"pet": "hamster"}).status_code == 422
