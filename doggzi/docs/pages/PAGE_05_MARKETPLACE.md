@@ -24,6 +24,16 @@ Section colour: **pink**. Text on pink is ink.
 4. **Product grid:** card = tile or photo, name, brand, **MRP ₹X struck through** (only when an MRP has been entered) next to the **Doggzi price**, the store name and distance chip ("Doggzi Store · 2.1 km"), and **Add +**. Adding uses the same fly-to-cart arc as Services, and the cart pill shows the item count.
    - Filters: price range, brand, pet type and in stock. Sort: popular, price low→high, new.
    - Out of stock: the card greys out with a "Notify me" option.
+4b. **Revision 1: left filter sidebar (desktop, 1024px and up).** A sticky left column, about 260px wide, beside the product grid:
+   - **Category:** a radio list with counts (All, Treats, Toys, Grooming & hygiene, Walking gear, Health & supplements). This stays in sync with the category rail.
+   - **Price:** checkboxes for Under ₹250 · ₹250–₹500 · ₹500–₹1,000 · ₹1,000+ (more than one can be ticked), each with a count.
+   - **Brand:** a searchable checkbox list with counts. It shows the top 6 brands plus "Show all (N)". Brand names are normalised for display (for example, "Super Fun", "Super fun toy" and "Superfun Twistee" are grouped as **Super Fun**).
+   - **Pet:** Dog / Cat / Both.
+   - **Availability:** an "In stock only" toggle.
+   - Applied filters also show as removable chips above the grid, with "Clear all". The result count animates when it changes ("32 products"). **Sort** stays at the top-right of the grid.
+   - Filters are saved in the URL (`?cat=treats&price=250-500&brand=jerhigh`) so a filtered page can be shared.
+   - Tablet and mobile: the sidebar becomes a **Filters** button with a badge showing the active count, which opens a bottom sheet with the same sections and "Show N products".
+
 5. **Product sheet** (bottom sheet on mobile, modal on desktop): bigger visual, description, size or pack, a quantity stepper, "Sold by" with the store card, and delivery estimate text from config.
 6. **Why buy local, the "Compare" band.** It compares **Doggzi** with a generic "big warehouse app" (never named) on: who you're supporting (a local store vs a warehouse), where the money goes (the store's share goes to the local owner via Razorpay Route), returns handled by a store you can call, and delivery time from config. **No competitor prices**, because scraping other platforms breaks their terms and prices change by the minute.
 7. **Meet the stores:** a carousel of vendor cards (name, area, a one-line story, "since 20XX", a line-art storefront) taken from vendor profiles. It's hidden until there's at least one real vendor other than Doggzi Store.
