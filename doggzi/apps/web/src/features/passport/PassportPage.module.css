@@ -3,7 +3,7 @@
 .wordmark { width: min(100%, 32.5rem); min-width: 10rem; display: block; }
 .trio { width: min(100%, 35rem); }
 .formCol { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
-.h1 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); line-height: 1.1; }
+.h1 { font-size: calc(clamp(1.9rem, 4.2vw, 2.9rem) * var(--h1-scale)); line-height: 1.1; }
 .nameTag { background: var(--dz-pink); border: var(--stroke); border-radius: var(--r-sm); padding: 0 .18em; box-shadow: 3px 3px 0 var(--dz-ink); display: inline-block; transform: rotate(-1.5deg); }
 .card { position: relative; background: var(--dz-paper); border: var(--stroke); border-radius: var(--r-lg); box-shadow: var(--shadow-sticker); overflow: hidden; transform-origin: 0 0; }
 .cardBar { background: var(--dz-orange); color: var(--dz-paper); padding: 0.625rem 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; border-bottom: var(--stroke); font-family: var(--font-accent); font-weight: 700; font-size: 0.9375rem; letter-spacing: .14em; text-transform: uppercase; }

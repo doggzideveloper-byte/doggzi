@@ -30,7 +30,7 @@ export default function OrderPage() {
           <p role="alert">{q.error instanceof ApiError && q.error.status === 404 ? "We couldn't find that order on your account." : "We couldn't load this order. Try again in a moment."}</p>
         ) : o ? (
           <>
-            <h1 className="dz-display" style={{ fontSize: "clamp(2rem,5vw,3rem)" }}>Order {o.id.slice(0, 6).toUpperCase()}</h1>
+            <h1 className="dz-display" style={{ fontSize: "calc(clamp(2rem,5vw,3rem) * var(--h1-scale))" }}>Order {o.id.slice(0, 6).toUpperCase()}</h1>
             <p style={{ margin: 0 }}>Placed {istDate(new Date(o.created_at), { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })} IST · Total {inrPaise(o.total_paise)}{o.status !== "paid" ? ` · ${o.status.replace("_", " ")}` : ""}</p>
             {o.sub_orders.map((so) => (
               <div key={so.id} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>

@@ -1,6 +1,6 @@
 .root { min-height: 100vh; overflow-x: clip; }
 .hero { position: relative; z-index: 0; max-width: var(--container); margin: 0 auto; padding: clamp(1.75rem, 6vw, 4.5rem) var(--gutter) 0; display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
-.h1 { font-size: clamp(3rem, 10vw, 6.5rem); line-height: .95; }
+.h1 { font-size: calc(clamp(3rem, 10vw, 6.5rem) * var(--h1-scale)); line-height: .95; }
 .tagline { margin: 0; font-family: var(--font-accent); font-weight: 700; font-size: clamp(1.1rem, 2.4vw, 1.5rem); letter-spacing: .12em; text-transform: uppercase; color: var(--dz-orange-600); }
 .lede { margin: 0; max-width: 40ch; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; text-wrap: pretty; }
 .heroTrio { width: clamp(13.75rem, 30vw, 20rem); display: block; margin: clamp(0.75rem, 3vw, 1.75rem) 0 -2.75rem; }

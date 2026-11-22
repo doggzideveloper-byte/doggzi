@@ -132,7 +132,7 @@ export const Hero = forwardRef<HTMLElement, Props>(function Hero({ pet, soon, no
             </>
           ) : (
             <>
-              <h1 className={`dz-display ${s.h1}`} style={{ fontSize: "clamp(2.4rem,6vw,4.2rem)" }}>Fresh meals for <span className={s.nameTag}>{pet.name}</span> are coming soon</h1>
+              <h1 className={`dz-display ${s.h1}`} style={{ fontSize: "calc(clamp(2.4rem,6vw,4.2rem) * var(--h1-scale))" }}>Fresh meals for <span className={s.nameTag}>{pet.name}</span> are coming soon</h1>
               <p className={s.heroP}>We're finishing our cat recipes. Tap Notify me and we'll tell you first.</p>
               {notified ? (
                 <p role="status" className={s.notified}>Saved to {poss} passport. We'll let you know ✓</p>

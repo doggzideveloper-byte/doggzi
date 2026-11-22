@@ -84,6 +84,15 @@ html { background: var(--dz-cream); color: var(--dz-ink); font-family: var(--fon
 @media (min-width: 1024px) {
   :root { --root-scale: 87.5%; }
 }
+/* Wide screens: page H1s ~20% smaller and a fixed 56px logo disc (<=1024px is untouched). */
+:root { --h1-scale: 1; }
+@media (min-width: 1280px) {
+  :root { --h1-scale: 0.8; --mark-size: 56px; }
+}
+/* Very wide screens: use the side margins (~1200px of content instead of ~1050px). */
+@media (min-width: 1600px) {
+  :root { --container: 85.75rem; }
+}
 
 html { font-size: var(--root-scale); }
 

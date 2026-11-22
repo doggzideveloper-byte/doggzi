@@ -1,6 +1,6 @@
 .main { max-width: var(--container); margin: 0 auto; padding: clamp(1.5rem, 5vw, 3.5rem) var(--gutter) 5rem; display: flex; flex-direction: column; align-items: center; gap: clamp(1.75rem, 4vw, 3rem); }
 .intro { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; }
-.h1 { font-size: clamp(2.1rem, 5.5vw, 4rem); line-height: 1.08; }
+.h1 { font-size: calc(clamp(2.1rem, 5.5vw, 4rem) * var(--h1-scale)); line-height: 1.08; }
 .sub { margin: 0; font-size: 1.125rem; line-height: 1.6; color: var(--ink-75); }
 .cards { width: 100%; max-width: 63.75rem; display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(1.25rem, 3vw, 2rem); }
 .card { flex: 1 1 17.5rem; max-width: 21.25rem; height: clamp(18.75rem, 30vw + 7.5rem, 25rem); }
