@@ -5,7 +5,7 @@ import LoginPage from "@/features/login/LoginPage";
 
 const ProviderApp = lazy(() => import("@/features/provider/ProviderApp"));
 const VendorApp = lazy(() => import("@/features/vendor/VendorApp"));
-const Soon = lazy(() => import("./Soon"));
+const AdminApp = lazy(() => import("@/features/admin/AdminApp"));
 
 /** Signed in with one of `roles`, else back to the login (with a reason). */
 function Guard({ roles, children }: { roles: Role[]; children: ReactNode }) {
@@ -32,7 +32,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/provider/:tab?" element={<Guard roles={["PROVIDER"]}><ProviderApp /></Guard>} />
         <Route path="/vendor/:tab?" element={<Guard roles={["VENDOR"]}><VendorApp /></Guard>} />
-        <Route path="/admin/*" element={<Guard roles={["ADMIN", "OPS"]}><Soon panel="Admin" /></Guard>} />
+        <Route path="/admin/:mod?" element={<Guard roles={["ADMIN", "OPS"]}><AdminApp /></Guard>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

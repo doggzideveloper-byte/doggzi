@@ -39,10 +39,13 @@ def pins(v: str | list[str]) -> list[str]:
 
 # ---------- customers ----------
 def customer_rows(who: Staff, up: Upstream, db: Session) -> list[dict]:
-    with ThreadPoolExecutor(4) as ex:
-        fu, fb, fm, fp = (ex.submit(up.get, "auth", "/customers"), ex.submit(up.get, "booking", "/customers"), ex.submit(up.get, "market", "/customers"),
-                          ex.submit(up.get, "pets", "/pets"))
+    with ThreadPoolExecutor(5) as ex:
+        fu, fb, fm, fp, fv = (ex.submit(up.get, "auth", "/customers"), ex.submit(up.get, "booking", "/customers"), ex.submit(up.get, "market", "/customers"),
+                              ex.submit(up.get, "pets", "/pets"), ex.submit(up.get, "booking", "/providers"))
         users, bk, mk, pets = fu.result(), fb.result(), fm.result(), fp.result()
+        # Providers still onboarding have a login but no console role yet: they are partners, not customers.
+        partners = {p["user_id"] for p in fv.result()}
+    users = [u for u in users if u["user_id"] not in partners]
     profiles = {str(p.user_id): p for p in db.scalars(select(CustomerProfile))}
     by_owner: dict = {}
     for p in pets:

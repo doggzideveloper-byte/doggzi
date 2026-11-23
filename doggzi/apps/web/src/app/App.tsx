@@ -4,6 +4,7 @@ import { AnimatePresence, LazyMotion, m } from "motion/react";
 import { PetSprite, ToastProvider } from "@/design-system/components";
 import { page } from "@/design-system/motion";
 import { useReduced } from "@/lib/reducedMotion";
+import { heartbeat } from "@/lib/heartbeat";
 import { tweaksEnabled } from "@/lib/tweaks";
 import { PassportPage } from "@/features/passport/PassportPage";
 import { Tweaks } from "./Tweaks";
@@ -32,6 +33,7 @@ function Page({ children }: { children: React.ReactNode }) {
 
 function ScrollManager() {
   const { pathname, hash } = useLocation();
+  useEffect(() => heartbeat(pathname), [pathname]);
   useEffect(() => {
     if (hash) {
       const t = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" }), 400);

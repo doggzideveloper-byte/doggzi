@@ -23,3 +23,14 @@ Items agreed but not being built yet. Each needs a Claude Design file first unle
 ## Vendor panel follow-ups
 - Photo storage (Azure Blob) for product and shop photos; admin approval queue.
 - Vendors editing their own delivery pincodes (today: via OPS).
+
+## Admin panel follow-ups
+- apps/web still renders FAQs, testimonials, Shorts and site config from `src/content/*`. Switch it to read
+  `GET /api/admin/v1/content/public` (live items only) so the Content module takes effect on the site.
+  Until then, Content edits are stored, audited and served, but the public pages don't change.
+- Real Razorpay: refunds, Route transfers and nightly reconciliation against Razorpay settlements.
+  Today they run in test mode: refunds are recorded, transfers and reconciliation are computed from orders.
+- Funnel events the site doesn't send yet: "Plan saved" (currently "Plan previews" = pets with a Fresh Food
+  plan preview) and "Guide downloads". Add them as anonymous events next to the live-visitors heartbeat.
+- Vendor photo approval only records the decision; serving approved photos needs photo storage (see above).
+- Provider payouts: "Mark paid" and payout generation per fortnight (today: list and amount owed only).

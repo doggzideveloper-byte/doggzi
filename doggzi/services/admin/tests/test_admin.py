@@ -58,7 +58,9 @@ def test_ops_sees_masked_phones_everywhere(ctx):
         assert digits not in body and "9876543210" not in body, path
     assert c.get(API + "/bookings", headers=ops).json()[0]["customer_phone"] == "+91 98xxx xx210"
     assert c.get(API + "/bookings", headers=adm).json()[0]["customer_phone"] == "+91 98765 43210"
-    assert c.get(API + "/customers", headers=adm).json()[0]["phone"] == "+91 98765 43210"
+    rows = c.get(API + "/customers", headers=adm).json()
+    assert [r["name"] for r in rows] == ["Ananya Iyer"]  # providers still onboarding are not customers
+    assert rows[0]["phone"] == "+91 98765 43210"
 
 
 def test_me_reports_role(ctx):

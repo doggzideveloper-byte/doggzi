@@ -33,6 +33,7 @@ services:
       GUEST_JWT_SECRET: ${GUEST_JWT_SECRET:?set GUEST_JWT_SECRET in .env}
       AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?set AUTH_JWT_SECRET in .env}
       INTERNAL_TOKEN: ${INTERNAL_TOKEN:?set INTERNAL_TOKEN in .env}
+      SEED_DEMO: ${SEED_DEMO:-false}
     depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_started } }
 
   notification:

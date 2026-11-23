@@ -24,6 +24,7 @@ from app.main import app  # noqa: E402
 API = "/api/admin/v1"
 PHONE = "+919876543210"
 UID = str(uuid.uuid4())
+PARTNER = str(uuid.uuid4())  # a provider still onboarding: has a login, no console role
 
 
 def booking_card(**kw) -> dict:
@@ -65,7 +66,8 @@ class FakeUp:
             extra = {"refund": {"status": "cancelled", "refund_status": "refunded", "refunded_paise": 71900}, "cancel": {"status": "cancelled"}}.get(act, {})
             return {"before": "placed", **sub_order(**extra)}
         if (svc, path) == ("auth", "/customers"):
-            return [{"user_id": UID, "name": "Ananya Iyer", "phone": PHONE, "since": "2026-11-01T00:00:00"}]
+            return [{"user_id": UID, "name": "Ananya Iyer", "phone": PHONE, "since": "2026-11-01T00:00:00"},
+                    {"user_id": PARTNER, "name": "Kavya Menon", "phone": "+919811177700", "since": "2026-11-01T00:00:00"}]
         if (svc, path) in (("booking", "/customers"),):
             return {UID: {"bookings": 2, "address": {"line2": "Sector 56", "city": "Gurgaon", "pincode": "122011"}, "phones": [PHONE]}}
         if (svc, path) == ("market", "/customers"):
@@ -87,7 +89,7 @@ class FakeUp:
         if svc == "market" and path.startswith("/vendors/"):
             return {"before": self.vendor, **self.vendor, **{k: v for k, v in body.items() if k in ("stage", "paused", "commission_pct", "pincodes")}}
         if (svc, path) == ("booking", "/providers"):
-            return [{"id": str(uuid.uuid4()), "user_id": str(uuid.uuid4()), "name": "Ravi Kumar", "phone": "+919000000001", "stage": "live", "paused": False, "is_online": True,
+            return [{"id": str(uuid.uuid4()), "user_id": PARTNER, "name": "Ravi Kumar", "phone": "+919000000001", "stage": "live", "paused": False, "is_online": True,
                      "rating": 4.8, "jobs_done": 126, "skills": ["bath"], "skill_labels": ["Bath"], "areas": ["122011"], "docs": [], "owed_paise": 920000, "created_at": "2026-11-01T00:00:00"}]
         if (svc, path) == ("booking", "/stats"):
             return {"bookings": 9, "gmv_paise": 900000, "by_column": {"requested": 1, "completed": 8}, "overdue": [booking_card(overdue=True)], "applications": []}
