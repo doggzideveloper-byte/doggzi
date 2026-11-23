@@ -5,12 +5,27 @@ from sqlalchemy.orm import Session
 
 from ...core.facets import brand_display, brand_key
 from ...core.time import utcnow
-from ...models import Listing, Order, StockReservation, SubOrder, Vendor
+from ...models import Listing, Order, Product, StockReservation, SubOrder, Vendor
 from ...schemas.market import ListingOut, OrderOut, SubOrderItemOut, SubOrderOut, VendorOut
 
 
 def aware(d: datetime) -> datetime:
     return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+
+
+def sellable():
+    """Where-clauses for listings shoppers may see and buy (statement must join Listing.product and Listing.vendor)."""
+    return (Listing.is_active.is_(True), Vendor.is_active.is_(True), Vendor.holiday_mode.is_(False), Vendor.paused.is_(False), Vendor.stage == "live",
+            Product.is_blocked.is_(False))
+
+
+def is_sellable(x: Listing) -> bool:
+    v = x.vendor
+    return bool(x.is_active and v.is_active and not v.holiday_mode and not v.paused and v.stage == "live" and not x.product.is_blocked)
+
+
+def store_visible():
+    return (Vendor.is_active.is_(True), Vendor.paused.is_(False), Vendor.stage == "live")
 
 
 def vendor_out(v: Vendor) -> VendorOut:

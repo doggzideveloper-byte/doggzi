@@ -108,6 +108,9 @@ class Provider(TimestampMixin, Base):
     weekly_hours: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # 7 x {on, from, to} Mon..Sun, IST hours
     days_off: Mapped[list[str]] = mapped_column(StrArray, nullable=False, default=list)  # YYYY-MM-DD (IST)
     docs: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # [{name, status}]
+    # Admin panel onboarding pipeline: dispatch only offers jobs to 'live' providers. Pausing sets is_active=false.
+    stage: Mapped[str] = mapped_column(String(12), nullable=False, default="live")
+    __table_args__ = (CheckConstraint("stage in ('applied', 'idcheck', 'skills', 'areas', 'training', 'live')", name="ck_providers_stage"),)
 
 
 class Offer(TimestampMixin, Base):

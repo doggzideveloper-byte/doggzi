@@ -89,7 +89,7 @@ def eligible(db: Session, b: Booking) -> list[Provider]:
     need = skills_needed(db, b)
     pin = (b.address_json or {}).get("pincode")
     tried = set(db.scalars(select(Offer.provider_id).where(Offer.booking_id == b.id)))
-    ps = db.scalars(select(Provider).where(Provider.is_active.is_(True), Provider.is_online.is_(True))).all()
+    ps = db.scalars(select(Provider).where(Provider.is_active.is_(True), Provider.is_online.is_(True), Provider.stage == "live")).all()
     ok = [p for p in ps if p.id not in tried and need <= set(p.skills or []) and pin in (p.areas or []) and _works_then(p, b) and not _busy(db, p, b)]
     return sorted(ok, key=lambda p: (-p.rating, p.jobs_done, p.created_at))
 

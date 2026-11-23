@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     max_qty_per_line: int = 10
     # Vendor SLA to accept a new sub-order (minutes; after that it goes to OPS).
     accept_sla_minutes: int = 10
+    deliver_sla_minutes: int = 90  # after acceptance (Admin panel SLA countdown)
     # Console (Vendor panel)
     session_redis_url: str = ""  # shared with auth: "log out of all devices"
     internal_token: str = ""

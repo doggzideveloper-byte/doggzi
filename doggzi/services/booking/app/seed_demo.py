@@ -32,6 +32,15 @@ def user_id(phone: str) -> uuid.UUID:
     return uuid.uuid5(DEMO_NS, phone)
 
 
+def customer_id(phone: str | None) -> uuid.UUID:
+    """Demo customers are auth users with uuid5(phone) ids (services/auth seed_demo DEMO_CUSTOMERS)."""
+    return uuid.uuid5(DEMO_NS, phone) if phone else DEMO_CUSTOMER
+
+
+def pet_id(phone: str, name: str) -> uuid.UUID:
+    return uuid.uuid5(DEMO_NS, f"pet:{phone}:{name}")  # same as services/pet-profile seed_demo
+
+
 def _slot(db: Session, d: date, hh: int, mm: int) -> Slot:
     st = datetime.combine(d, time(hh, mm), IST)
     s = db.scalar(select(Slot).where(Slot.starts_at == st))
@@ -48,7 +57,7 @@ def _slot(db: Session, d: date, hh: int, mm: int) -> Slot:
 def _booking(db: Session, slot: Slot, slugs: list[str], pet: dict, phone: str, line2: str, note: str | None = None) -> Booking:
     items = {i.slug: i for i in db.scalars(select(ServiceItem).where(ServiceItem.slug.in_(slugs)))}
     total = sum(items[s].price_paise or 0 for s in slugs)
-    b = Booking(user_id=DEMO_CUSTOMER, pet_id=uuid.uuid4(), slot_id=slot.id, address_json={**AREA, "line2": line2}, status="requested", total_paise=total,
+    b = Booking(user_id=customer_id(phone), pet_id=pet_id(phone, pet["name"]), slot_id=slot.id, address_json={**AREA, "line2": line2}, status="requested", total_paise=total,
                 notes=note, customer_phone=phone, pet_snapshot=pet, pay_after_service=True)
     db.add(b)
     db.flush()
@@ -82,8 +91,48 @@ def demo_offer(db: Session, p: Provider) -> Offer:
     return o
 
 
-def seed(db: Session) -> str:
+# Admin panel: more providers (three live, three in the onboarding pipeline).
+MORE_PROVIDERS = [
+    ("+919100000011", "Sana Ali", ["bath", "dry", "massage"], 4.9, 210, "live"), ("+919100000012", "Vikram Rao", ["trim", "style"], 4.6, 88, "live"),
+    ("+919100000013", "Pooja Nair", ["bath", "dental"], 4.7, 64, "live"), ("+919100000014", "Farhan Sheikh", ["bath", "dry"], 5.0, 0, "training"),
+    ("+919100000015", "Megha Joshi", ["bath", "dry"], 5.0, 0, "idcheck"), ("+919100000016", "Tarun Singh", ["boarding"], 5.0, 0, "applied"),
+]
+
+
+def seed_admin(db: Session) -> list[str]:
     made = []
+    # Older demo data used one shared customer id; give each booking its customer's own id (demo rows only).
+    for b in db.scalars(select(Booking).where(Booking.user_id == DEMO_CUSTOMER)).unique():
+        b.user_id = customer_id(b.customer_phone)
+        if b.pet_snapshot and b.customer_phone:
+            b.pet_id = pet_id(b.customer_phone, b.pet_snapshot.get("name", ""))
+    if db.scalar(select(Provider).where(Provider.user_id == user_id(MORE_PROVIDERS[0][0]))):
+        return made
+    ps = {}
+    for phone, name, skills, rating, done, stage in MORE_PROVIDERS:
+        p = Provider(user_id=user_id(phone), name=name, phone=phone, skills=skills, areas=["122011", "122018", "122002", "122003"], rating=rating, jobs_done=done,
+                     weekly_hours=HOURS, days_off=[], stage=stage, is_online=stage == "live",
+                     docs=[{"name": "Aadhaar / ID", "status": "Verified" if stage == "live" else "In review"}, {"name": "Grooming certificate", "status": "Verified" if stage == "live" else "Missing"},
+                           {"name": "Police verification", "status": "Verified" if stage == "live" else "Missing"}])
+        db.add(p)
+        ps[name] = p
+    db.flush()
+    today = datetime.now(IST).date()
+    simba = _booking(db, _slot(db, today, 18, 30), ["full-package"], {"name": "Simba", "type": "dog", "breed": "Golden Retriever"}, "+919810098100", "Sector 49")
+    simba.dispatch_status = "ops_queue"
+    leo = _booking(db, _slot(db, today, 14, 0), ["trimming-package"], {"name": "Leo", "type": "dog", "breed": "Beagle"}, "+919900112233", "DLF Phase 3")
+    _assign(db, ps["Vikram Rao"], leo, "travel")
+    kiara = _booking(db, _slot(db, today, 10, 30), ["bath-blow-dry"], {"name": "Kiara", "type": "dog", "breed": "Indie / Desi"}, "+919811122233", "Sector 45")
+    _assign(db, ps["Pooja Nair"], kiara, "in_service")
+    mx = _booking(db, _slot(db, today, 17, 0), ["breed-styling"], {"name": "Max", "type": "dog", "breed": "German Shepherd"}, "+919822233344", "DLF Phase 2")
+    mx.status, mx.dispatch_status = "cancelled", "closed"
+    mx.slot.booked_count -= 1
+    made.append("Admin board + providers pipeline")
+    return made
+
+
+def seed(db: Session) -> str:
+    made = seed_admin(db)
     for phone, name, skills, rating, done in PROVIDERS:
         p = db.scalar(select(Provider).where(Provider.user_id == user_id(phone)))
         if not p:

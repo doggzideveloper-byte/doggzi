@@ -10,7 +10,7 @@ from ...core.config import get_settings
 from ...db import get_db
 from ...models import Listing, Product, Vendor
 from ...schemas.market import BrowseOut, CatalogOut, ListingOut, VendorOut
-from .logic import listing_out, reserved_qty, vendor_out
+from .logic import is_sellable, listing_out, reserved_qty, sellable, store_visible, vendor_out
 
 router = APIRouter(tags=["catalog"])
 
@@ -29,7 +29,7 @@ def catalog(
     hit = cache.get(key)
     if hit is not None:
         return CatalogOut(**hit)
-    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True), Vendor.holiday_mode.is_(False))
+    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(*sellable())
     if category:
         stmt = stmt.where(Product.category == category)
     if q.strip():
@@ -48,7 +48,7 @@ def catalog(
     }[sort]
     rows.sort(key=order)
     res = reserved_qty(db, [r.id for r in rows])
-    vendors = db.scalars(select(Vendor).where(Vendor.is_active.is_(True)).order_by(Vendor.is_doggzi, Vendor.name)).all()
+    vendors = db.scalars(select(Vendor).where(*store_visible()).order_by(Vendor.is_doggzi, Vendor.name)).all()
     out = CatalogOut(items=[listing_out(r, res.get(r.id, 0)) for r in rows], vendors=[vendor_out(v) for v in vendors])
     cache.set(key, out.model_dump(mode="json"), get_settings().catalog_cache_seconds)
     return out
@@ -75,7 +75,7 @@ def browse(
     hit = cache.get(key)
     if hit is not None:
         return BrowseOut(**hit)
-    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(Listing.is_active.is_(True), Vendor.is_active.is_(True), Vendor.holiday_mode.is_(False))
+    stmt = select(Listing).join(Listing.product).join(Listing.vendor).where(*sellable())
     listings = [r for r in db.scalars(stmt) if set(r.product.pet_types or []) & {"dog", "cat"}]
     res = reserved_qty(db, [r.id for r in listings])
     outs = [listing_out(r, res.get(r.id, 0)) for r in listings]
@@ -90,14 +90,14 @@ def browse(
 @router.get("/listings/{listing_id}", response_model=ListingOut)
 def get_listing(listing_id: uuid.UUID, db: Session = Depends(get_db)) -> ListingOut:
     item = db.get(Listing, listing_id)
-    if not item or not item.is_active:
+    if not item or not is_sellable(item):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Product not found")
     return listing_out(item, reserved_qty(db, [item.id]).get(item.id, 0))
 
 
 @router.get("/vendors/{slug}", response_model=VendorOut)
 def get_vendor(slug: str, db: Session = Depends(get_db)) -> VendorOut:
-    v = db.scalar(select(Vendor).where(Vendor.slug == slug, Vendor.is_active.is_(True)))
+    v = db.scalar(select(Vendor).where(Vendor.slug == slug, *store_visible()))
     if not v:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Store not found")
     return vendor_out(v)

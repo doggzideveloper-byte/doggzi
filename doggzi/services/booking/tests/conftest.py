@@ -8,6 +8,7 @@ os.environ["MOCK_AVAILABILITY"] = "false"
 os.environ["DISPATCH_SWEEP_SECONDS"] = "0"
 os.environ["NOTIFICATION_URL"] = ""
 os.environ["SESSION_REDIS_URL"] = ""
+os.environ["INTERNAL_TOKEN"] = "test-internal"
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402

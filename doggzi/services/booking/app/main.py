@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
 
-from .api.v1 import admin, provider, public
+from .api.v1 import admin, admin_internal, provider, public
 from .core.config import get_settings
 
 PREFIX = "/api/booking"
@@ -41,6 +41,7 @@ v1 = APIRouter(prefix=f"{PREFIX}/v1")
 v1.include_router(public.router)
 v1.include_router(admin.router)
 v1.include_router(provider.router)
+v1.include_router(admin_internal.router)
 app.include_router(v1)
 
 

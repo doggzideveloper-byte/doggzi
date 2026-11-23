@@ -13,7 +13,7 @@ from ...core.time import utcnow
 from ...db import get_db
 from ...models import Cart, Listing, Order, StockReservation, SubOrder, SubOrderItem
 from ...schemas.market import OrderCreatedOut, OrderIn, OrderOut, PaymentOut
-from .logic import aware, order_out, reserved_qty
+from .logic import aware, is_sellable, order_out, reserved_qty
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -26,7 +26,7 @@ def create_order(body: OrderIn, user: AuthUser = Depends(get_user), db: Session 
         qty[line.listing_id] += line.qty
     # Lock the listing rows so two checkouts can't reserve the same last units.
     listings = {x.id: x for x in db.scalars(select(Listing).where(Listing.id.in_(list(qty))).with_for_update(of=Listing))}
-    missing = [str(i) for i in qty if i not in listings or not listings[i].is_active or not listings[i].vendor.is_active or listings[i].vendor.holiday_mode]
+    missing = [str(i) for i in qty if i not in listings or not is_sellable(listings[i])]
     if missing:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Some items are no longer sold")
     for lid, q in qty.items():

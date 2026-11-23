@@ -17,6 +17,7 @@ server {
     set $booking     http://${BOOKING_UPSTREAM};
     set $auth        http://${AUTH_UPSTREAM};
     set $market      http://${MARKET_UPSTREAM};
+    set $admin       http://${ADMIN_UPSTREAM};
     set $web         http://${WEB_UPSTREAM};
     set $console     http://${CONSOLE_UPSTREAM};
     client_max_body_size 1m;
@@ -41,6 +42,7 @@ server {
     location /api/booking/     { proxy_pass $booking; }
     location /api/auth/        { proxy_pass $auth; }
     location /api/market/      { proxy_pass $market; }
+    location /api/admin/       { proxy_pass $admin; }
     # notification is internal only (auth → notification); never exposed publicly.
     location /api/notification/ { return 404; }
     location /api/             { return 404; }

@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 from .core.config import get_settings
 from .core.time import utcnow
 from .db import SessionLocal
-from .models import Listing, Order, Product, SubOrder, SubOrderItem, Vendor, VendorMember
+from .models import Listing, Order, Product, ProductRequest, SubOrder, SubOrderItem, Vendor, VendorMember
 
 DEMO_NS = uuid.UUID("6f1c2a8e-3b7d-4c55-9e0a-d0991e5f0d01")  # same as services/auth
 DEMO_CUSTOMER = uuid.uuid5(DEMO_NS, "demo-customer")
@@ -32,6 +32,38 @@ def user_id(phone: str) -> uuid.UUID:
     return uuid.uuid5(DEMO_NS, phone)
 
 
+PIPELINE = [  # Admin panel: stores still onboarding
+    ("Paws & Claws", "paws-and-claws", "+919100000021", "Sector 29, Gurgaon", "razorpay"),
+    ("Happy Tails Pet Shop", "happy-tails", "+919100000022", "DLF Phase 4, Gurgaon", "docs"),
+    ("The Pet Corner", "the-pet-corner", "+919100000023", "Sector 14, Gurgaon", "applied"),
+]
+
+
+def seed_admin(db: Session, doggzi: Vendor) -> list[str]:
+    made = []
+    # Older demo data used one shared customer id; give each order its customer's own id (demo rows only).
+    for o in db.scalars(select(Order).where(Order.user_id == DEMO_CUSTOMER)):
+        if o.customer_phone:
+            o.user_id = user_id(o.customer_phone)
+    if db.scalar(select(Vendor).where(Vendor.slug == PIPELINE[0][1])):
+        return made
+    for name, slug, phone, area, stage in PIPELINE:
+        db.add(Vendor(name=name, slug=slug, phone=phone, area=area, serviceable_pincodes=["122001", "122002", "122011"], delivery_fee_paise=4900, commission_bps=1200,
+                      stage=stage, kyc_status="verified" if stage == "razorpay" else "pending", hours_text="Mon–Sun, 10 am – 8 pm"))
+    # One order the store turned down: it waits for OPS to reassign or refund.
+    so = new_sub_order(db, doggzi, 35, "placed", k=1)
+    so.status, so.reject_reason = "rejected", "Out of stock"
+    for it in so.items:
+        it.listing.stock_qty += it.qty
+    # A vendor photo and a product request waiting for approval.
+    x = db.scalar(select(Listing).where(Listing.vendor_id == doggzi.id).order_by(Listing.sku))
+    if x and x.photo_status == "none":
+        x.photo_status, x.photo_meta = "pending", {"name": "shelf-photo.jpg", "size": 182000, "at": utcnow().isoformat()}
+    db.add(ProductRequest(vendor_id=doggzi.id, name="Himalaya Erina-EP Tick & Flea Shampoo 200 ml", brand="Himalaya", category="grooming", price_paise=29900))
+    made.append("Admin pipeline + needs-OPS order")
+    return made
+
+
 def new_sub_order(db: Session, v: Vendor, minutes_ago: int = 0, status: str = "placed", k: int | None = None) -> SubOrder:
     """One paid order from a demo customer to this store, at a given step."""
     s = get_settings()
@@ -43,7 +75,7 @@ def new_sub_order(db: Session, v: Vendor, minutes_ago: int = 0, status: str = "p
     lines = [(x, rnd.choice([1, 1, 2])) for x in picks]
     sub = sum(x.price_paise * q for x, q in lines)
     addr = {"line1": "Flat 12B, Tower 4", "line2": area, "city": "Gurgaon", "pincode": "122011"}
-    o = Order(user_id=DEMO_CUSTOMER, address_json=addr, total_paise=sub + v.delivery_fee_paise, status="paid", payment_mode="mock", customer_phone=phone, pet_snapshot=pet,
+    o = Order(user_id=user_id(phone), address_json=addr, total_paise=sub + v.delivery_fee_paise, status="paid", payment_mode="mock", customer_phone=phone, pet_snapshot=pet,
               lines_json=[{"listing_id": str(x.id), "sku": x.sku, "name": x.product.name, "qty": q, "price_paise": x.price_paise, "vendor_id": str(v.id)} for x, q in lines])
     o.created_at = when
     db.add(o)
@@ -105,6 +137,8 @@ def seed(db: Session) -> str:
             if days > 2:
                 so.payout_status, so.settled_at = "settled", so.delivered_at + timedelta(days=2)
         made.append("Doggzi Store orders")
+    db.flush()
+    made += seed_admin(db, doggzi)
     db.commit()
     return ", ".join(made) or "nothing new"
 

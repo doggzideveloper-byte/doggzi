@@ -7,6 +7,7 @@ os.environ.setdefault("AUTH_JWT_SECRET", "test-auth-secret")
 os.environ.setdefault("PAYMENTS_MODE", "mock")
 os.environ["NOTIFICATION_URL"] = ""
 os.environ["SESSION_REDIS_URL"] = ""
+os.environ["INTERNAL_TOKEN"] = "test-internal"
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402

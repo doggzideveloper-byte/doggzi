@@ -127,3 +127,20 @@ def test_internal_owner_lookup(client):
     client.post(f"{API}/pets/claim", headers={**auth(user_token(uid)), "X-Guest-Token": out["guest_token"]})
     assert client.get(f"{API}/internal/pets/{pid}", headers=h).json()["owner_user_id"] == str(uid)
     assert client.get(f"{API}/internal/pets/{uuid.uuid4()}", headers=h).status_code == 404
+
+
+def test_internal_admin_pets_and_stats(client):
+    import uuid as _u
+    from datetime import datetime, timedelta, timezone
+
+    H = {"X-Internal-Token": "test-internal"}
+    owner = str(_u.uuid4())
+    assert client.post("/api/pet-profile/v1/internal/pets", json={"owner_user_id": owner, "name": "Mishti", "type": "cat", "breed": "persian"}).status_code == 403
+    r = client.post("/api/pet-profile/v1/internal/pets", json={"owner_user_id": owner, "name": "Mishti", "type": "cat", "breed": "persian"}, headers=H)
+    assert r.status_code == 201 and r.json()["breed"] == "Persian"
+    assert client.post("/api/pet-profile/v1/internal/pets", json={"owner_user_id": owner, "name": "Rex", "type": "dog", "breed": "Dragon"}, headers=H).status_code == 422
+    mine = client.get("/api/pet-profile/v1/internal/pets", params={"owners": owner}, headers=H).json()
+    assert [p["name"] for p in mine] == ["Mishti"]
+    now = datetime.now(timezone.utc)
+    st = client.get("/api/pet-profile/v1/internal/stats", params={"from": (now - timedelta(hours=1)).isoformat(), "to": (now + timedelta(hours=1)).isoformat()}, headers=H).json()
+    assert st["passports"] >= 1 and st["plans"] == 0

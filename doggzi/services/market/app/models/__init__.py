@@ -43,6 +43,10 @@ class Vendor(TimestampMixin, Base):
     hours_text: Mapped[str | None] = mapped_column(String(80))
     photos: Mapped[list] = mapped_column(Json, nullable=False, default=list)  # [{name, size, status}] (upload stubbed)
     low_stock_threshold: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
+    # Admin panel: onboarding pipeline (only 'live' stores sell) and an OPS pause switch.
+    stage: Mapped[str] = mapped_column(String(12), nullable=False, default="live")
+    paused: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    __table_args__ = (CheckConstraint("stage in ('applied', 'docs', 'razorpay', 'live')", name="ck_vendors_stage"),)
 
 
 class VendorMember(TimestampMixin, Base):
@@ -81,6 +85,9 @@ class Product(TimestampMixin, Base):
     pack_size: Mapped[str | None] = mapped_column(String(40))
     popularity_rank: Mapped[int] = mapped_column(Integer, nullable=False, default=1000)
     source_flags: Mapped[list[str]] = mapped_column(StrArray, nullable=False, default=list)
+    # Admin panel: blocked products never show on the site; brand_confirmed clears a 'brand_mismatch' flag.
+    is_blocked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    brand_confirmed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
 
 class Listing(TimestampMixin, Base):
@@ -160,10 +167,15 @@ class SubOrder(TimestampMixin, Base):
     delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     payout_status: Mapped[str] = mapped_column(String(10), nullable=False, default="on_hold")  # on_hold|released|settled
     settled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Admin panel: refunds (Razorpay test mode / mock until keys arrive).
+    refund_status: Mapped[str] = mapped_column(String(12), nullable=False, default="none")  # none|refunded
+    refunded_paise: Mapped[int | None] = mapped_column(Integer)
+    refunded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     order: Mapped["Order"] = relationship(lazy="select", viewonly=True)
     vendor: Mapped[Vendor] = relationship(lazy="joined")
     items: Mapped[list["SubOrderItem"]] = relationship(lazy="selectin")
-    __table_args__ = (CheckConstraint(_in("status", SUB_ORDER_STATUSES), name="ck_sub_orders_status"),)
+    __table_args__ = (CheckConstraint(_in("status", SUB_ORDER_STATUSES), name="ck_sub_orders_status"),
+                      CheckConstraint("refund_status in ('none', 'refunded')", name="ck_sub_orders_refund_status"))
 
 
 class SubOrderItem(TimestampMixin, Base):

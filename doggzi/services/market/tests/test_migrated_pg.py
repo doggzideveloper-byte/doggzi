@@ -74,8 +74,9 @@ def _paid_sub_order(c, S, store_id) -> str:
 
 
 def _status(S, sid) -> str:
+    # Raw SQL: also works after a downgrade has removed columns the model knows about.
     with S() as s:
-        return s.get(SubOrder, uuid.UUID(sid)).status
+        return s.execute(text("select status from sub_orders where id = :i"), {"i": uuid.UUID(sid)}).scalar_one()
 
 
 def test_every_sub_order_status_is_allowed_by_the_migrated_schema(pg):

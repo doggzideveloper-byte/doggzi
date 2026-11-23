@@ -96,3 +96,31 @@ def test_internal_grant_creates_a_vendor_login(team, monkeypatch):
     assert again["user_id"] == r.json()["user_id"] and again["created_user"] is False
     assert _login(c, sender, "9811100011").json()["user"]["roles"] == ["VENDOR"]
     assert c.post(f"{API}/internal/memberships", json={**body, "role": "GOD"}, headers={"X-Internal-Token": "t0k"}).status_code == 422
+
+
+def test_admin_internal_members_customers_and_remove(team, monkeypatch):
+    c, sender, _ = team
+    from app.core import sessions
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "internal_token", "t0k")
+    H = {"X-Internal-Token": "t0k"}
+    assert c.get(f"{API}/internal/members").status_code == 403
+    members = {m["phone"]: m for m in c.get(f"{API}/internal/members", headers=H).json()}
+    assert members["+919000000005"]["roles"] == ["VENDOR", "PROVIDER"] and members["+919000000003"]["roles"] == ["ADMIN"]
+    cust = c.post(f"{API}/internal/users", json={"phone": "98111 77788", "name": "Kavya Rao", "must_be_new": True}, headers=H).json()
+    assert cust["created_user"] is True and cust["phone"] == "+919811177788"
+    assert c.post(f"{API}/internal/users", json={"phone": "9811177788", "must_be_new": True}, headers=H).status_code == 409
+    customers = c.get(f"{API}/internal/customers", headers=H).json()
+    phones = {x["phone"] for x in customers}
+    assert "+919811177788" in phones and "+919876543210" in phones  # demo customers too
+    assert not phones & set(members)  # team members are not listed as customers
+    assert c.get(f"{API}/internal/users/{cust['user_id']}", headers=H).json()["name"] == "Kavya Rao"
+    # Removing access ends every console session of that person straight away.
+    ops = members["+919000000004"]["user_id"]
+    tok = _login(c, sender, "9000000004").json()["access_token"]
+    r = c.delete(f"{API}/internal/members/{ops}", headers=H).json()
+    assert r["removed"] == ["OPS"]
+    assert sessions.current(__import__("uuid").UUID(ops)) == 1
+    assert c.get(f"{API}/console/me", headers={"Authorization": f"Bearer {tok}"}).status_code == 401
+    assert c.post(f"{API}/console/otp/request", json={"phone": "9000000004"}).status_code in (200, 403)

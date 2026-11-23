@@ -202,7 +202,7 @@ def test_demo_seed_twice_without_duplicates(ctx):
         seed_demo.seed(s)
         n = len(s.scalars(select(SubOrder.id)).all())
         seed_demo.seed(s)
-        assert len(s.scalars(select(SubOrder.id)).all()) == n == 11
+        assert len(s.scalars(select(SubOrder.id)).all()) == n == 12  # 4 open + 7 delivered + 1 rejected (waiting for OPS)
     h = auth(console_token(seed_demo.user_id("+919000000002")))
     cols = [r["status"] for r in c.get(f"{V}/sub-orders", headers=h).json()]
     assert sorted(cols) == ["accepted", "out_for_delivery", "packed", "placed"]
